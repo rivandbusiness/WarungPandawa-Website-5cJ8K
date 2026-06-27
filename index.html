@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung Pandawa - Menu Pembeli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root { --primary: #ff6b35; --secondary: #004e64; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; --bg: #f7f9fb; --card: #ffffff; --text: #2b2d42; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background-color: var(--bg); color: var(--text); }
+        .container { max-width: 500px; margin: auto; background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { margin: 5px 0; font-size: 26px; color: var(--secondary); }
+        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 12px 0; border-bottom: 2px solid #f0f0f0; font-size: 11px; font-weight: bold; }
+        .step { color: #ccc; transition: all 0.3s; display: flex; align-items: center; gap: 5px; }
+        .step.active { color: var(--primary); }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        input[type="text"], select { width: 100%; padding: 12px; box-sizing: border-box; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 15px; }
+        .search-container { position: relative; margin-bottom: 15px; }
+        .search-container i { position: absolute; left: 12px; top: 15px; color: #aaa; }
+        .search-container input { padding-left: 35px; width: 100%; padding: 12px 12px 12px 35px; box-sizing: border-box; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 15px; }
+        .filter-buttons { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; }
+        .btn-filter { background: #eee; border: none; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .btn-filter.active { background: var(--secondary); color: white; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #fff; border: 1px solid #eaeaea; border-radius: 14px; margin-bottom: 12px; }
+        .menu-info { display: flex; flex-direction: column; gap: 4px; }
+        .menu-nama { font-weight: 600; font-size: 16px; }
+        .menu-harga { font-size: 13px; color: #666; }
+        .menu-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; width: max-content; font-weight: 600; }
+        .quantity-control { display: flex; align-items: center; gap: 14px; }
+        .btn-qty { background-color: var(--primary); color: white; border: none; width: 32px; height: 32px; cursor: pointer; border-radius: 50%; font-size: 16px; font-weight: bold; }
+        .qty-num { font-weight: 700; font-size: 16px; width: 20px; text-align: center; }
+        .btn-block { background-color: var(--secondary); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
+        .btn-secondary { background-color: #6c757d; margin-top: 10px; }
+        .summary-card { background: #f8f9fa; padding: 18px; border-radius: 14px; margin-bottom: 15px; border: 1px solid #eee; }
+        .summary-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; }
+        .total-highlight { font-size: 18px; font-weight: bold; color: var(--primary); border-top: 1px dashed #ddd; padding-top: 10px; }
+        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #fff; text-align: center; }
+        .status-pending { background-color: var(--warning); }
+        .status-cooking { background-color: var(--info); }
+        .status-done { background-color: var(--success); }
+        .status-rejected { background-color: var(--danger); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .coupon-container { display: flex; gap: 8px; margin-bottom: 15px; }
+        .coupon-container input { flex: 1; }
+        .btn-coupon { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .payment-options { display: flex; flex-direction: column; gap: 10px; }
+        .payment-label { display: flex; align-items: center; gap: 12px; padding: 14px; background: #fff; border: 1.5px solid #eaeaea; border-radius: 12px; cursor: pointer; }
+        .qris-box { background: #f0fdf4; border: 2px dashed var(--success); border-radius: 12px; padding: 15px; margin-top: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header"><h1><i class="fa-solid fa-shop text-primary"></i> Warung Pandawa</h1></div>
+
+    <div class="step-indicator">
+        <span id="step-1" class="step active"><i class="fa-solid fa-utensils"></i> MENU</span>
+        <span id="step-2" class="step"><i class="fa-solid fa-basket-shopping"></i> KERANJANG</span>
+        <span id="step-3" class="step"><i class="fa-solid fa-credit-card"></i> TRACKING</span>
+    </div>
+
+    <div id="page-1" class="page active">
+        <div class="form-group">
+            <label for="username"><i class="fa-solid fa-user"></i> Atas Nama (Username):</label>
+            <input type="text" id="username" placeholder="Masukkan nama kamu...">
+        </div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-menu" oninput="renderMenu()" placeholder="Cari menu favoritmu...">
+        </div>
+        <div class="filter-buttons">
+            <button class="btn-filter active" onclick="filterKategori('semua', this)">Semua</button>
+            <button class="btn-filter" onclick="filterKategori('makanan', this)">🍜 Makanan</button>
+            <button class="btn-filter" onclick="filterKategori('cemilan', this)">🍢 Cemilan</button>
+        </div>
+        
+        <div id="menu-list"></div>
+        
+        <button class="btn-block" onclick="keHalaman(2)">Lanjut ke Rincian Pesanan <i class="fa-solid fa-arrow-right"></i></button>
+        
+        <div id="floating-tracking" style="display: none; margin-top: 20px; padding: 15px; background: #fff8f5; border: 1.5px solid var(--primary); border-radius: 12px; box-shadow: 0 4px 15px rgba(255,107,53,0.15);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 12px; font-weight: bold; color: var(--secondary);"><i class="fa-solid fa-circle-dot" style="color: var(--primary); animation: blink 1s infinite;"></i> PESANAN AKTIF</span>
+                <span id="float-status" class="status-badge status-pending" style="font-size: 10px;">Menunggu Respon</span>
+            </div>
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;" id="float-info">Sedang memproses pesananmu...</div>
+            <button class="btn-block" onclick="bukaLiveTracking()" style="margin-top:0; padding: 8px; font-size: 12px;"><i class="fa-solid fa-eye"></i> Lihat Detail Invoice Live</button>
+        </div>
+    </div>
+
+    <div id="page-2" class="page">
+        <h2 style="font-size: 16px; color: var(--secondary);"><i class="fa-solid fa-cart-shopping"></i> Rincian Keranjang</h2>
+        <div class="coupon-container">
+            <input type="text" id="coupon-code" placeholder="Kode kupon 'PANDAWAHEMAT'...">
+            <button class="btn-coupon" onclick="klaimKupon()">Klaim</button>
+        </div>
+        <div class="summary-card">
+            <div id="cart-items-list" style="font-size: 14px; line-height: 1.8; color: #444;"></div>
+            <div>
+                <div class="summary-line" style="margin-top: 10px;"><span>Total Barang:</span> <span id="total-qty">0</span></div>
+                <div class="summary-line" id="discount-row" style="display: none; color: #dc3545;"><span>Diskon (10%):</span> <span>-Rp <span id="discount-price">0</span></span></div>
+                <div class="summary-line total-highlight"><span>Total Akhir:</span> <span>Rp <span id="total-price-temp">0</span></span></div>
+            </div>
+        </div>
+        <button class="btn-block" onclick="keHalaman(3)">Lanjut ke Pembayaran <i class="fa-solid fa-credit-card"></i></button>
+        <button class="btn-block btn-secondary" onclick="keHalaman(1)"><i class="fa-solid fa-arrow-left"></i> Kembali Pilih Menu</button>
+    </div>
+
+    <div id="page-3" class="page">
+        <div id="payment-selection-section">
+            <h2 style="font-size: 16px; color: var(--secondary);"><i class="fa-solid fa-wallet"></i> Pilih Metode Pembayaran</h2>
+            <div class="payment-options">
+                <label class="payment-label"><input type="radio" name="payment" value="COD" onchange="toggleQrisView(false)" checked> 💵 COD (Bayar di Tempat)</label>
+                <label class="payment-label"><input type="radio" name="payment" value="Dana" onchange="toggleQrisView(true)"> 🪙 Dana (QRIS)</label>
+                <label class="payment-label"><input type="radio" name="payment" value="Gopay" onchange="toggleQrisView(true)"> 🟢 Gopay (QRIS)</label>
+            </div>
+
+            <div id="qris-area" class="qris-box" style="display: none;">
+                <p style="font-size: 13px; font-weight: bold; color: var(--success); margin: 0 0 10px 0;">Scan QRIS Mandiri Warung Pandawa</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WarungPandawa" alt="QRIS" style="width: 150px; background:#fff; padding: 5px; border-radius: 8px;">
+                <div class="form-group" style="text-align: left; margin-top: 15px;">
+                    <label style="color: #333; font-size: 13px;"><i class="fa-solid fa-file-signature"></i> Nama Pemilik E-Wallet:</label>
+                    <input type="text" id="input-nama-pengirim" placeholder="Contoh: Budi Utomo">
+                </div>
+            </div>
+
+            <button class="btn-block" onclick="selesaikanPesanan()" style="background-color: var(--success);"><i class="fa-solid fa-circle-check"></i> Konfirmasi & Kirim Ke Dapur</button>
+            <button class="btn-block btn-secondary" onclick="keHalaman(2)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+        </div>
+
+        <div id="invoice-result" style="display: none; margin-top: 15px;">
+            <div class="summary-card" id="invoice-card" style="border-left: 5px solid var(--success); background-color: #fafdfa;">
+                <h3 style="margin-top: 0; font-size: 18px; color: var(--success);"><i class="fa-solid fa-file-invoice-dollar"></i> Live Tracking Order</h3>
+                <div class="summary-line"><strong>ID Pesanan:</strong> <span id="inv-id" style="font-weight: bold; color: #555;"></span></div>
+                <div class="summary-line"><strong>Pelanggan:</strong> <span id="inv-nama"></span></div>
+                <div id="inv-items" style="font-size: 14px; margin: 15px 0; line-height: 1.8; color: #555;"></div>
+                <div style="padding-top: 8px; border-top: 1px solid #eee;">
+                    <div class="summary-line"><strong>Total Bayar:</strong> <span style="font-weight: bold; font-size: 18px; color: var(--primary)">Rp <span id="inv-total"></span></span></div>
+                    <div class="summary-line"><strong>Status Bayar:</strong> <span id="inv-pembayaran-status" style="font-weight: bold;">-</span></div>
+                    <div class="summary-line" style="align-items: center; margin-top: 8px;">
+                        <strong>Status Dapur:</strong> <span id="inv-status-label" class="status-badge status-pending">Menunggu Respon</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-block" onclick="kembaliKeMenuTanpaReset()" style="background-color: var(--secondary);"><i class="fa-solid fa-house"></i> Kembali Ke Menu Utama</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
+        authDomain: "warung-pandawa-89cb5.firebaseapp.com",
+        projectId: "warung-pandawa-89cb5",
+        storageBucket: "warung-pandawa-89cb5.firebasestorage.app",
+        messagingSenderId: "789317550948",
+        appId: "1:789317550948:web:b1c635d5728e3ffb13f071",
+        measurementId: "G-Y455NCGBGK",
+        databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+    
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const database = firebase.database();
+
+    let audioCtx = null;
+    function playSound(type) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        let now = audioCtx.currentTime;
+        if (type === 'click') {
+            osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
+            gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'success') {
+            osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.start(now); osc.stop(now + 0.4);
+        } else if (type === 'error') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
+            gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
+        }
+    }
+
+    let menus = [];
+    let keranjang = {}, kategoriAktif = "semua", diskonPersen = 0, idPesananAktif = null;
+
+    function sinkronkanDaftarMenu() {
+        database.ref('daftar_menu').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                menus = Object.keys(data).map(key => data[key]);
+            } else {
+                menus = [];
+            }
+            renderMenu();
+        });
+    }
+
+    function renderMenu() {
+        const menuList = document.getElementById('menu-list');
+        if (!menuList) return;
+        
+        const keyword = document.getElementById('search-menu').value.toLowerCase();
+        menuList.innerHTML = "";
+        const menuDisaring = menus.filter(m => (kategoriAktif === "semua" || m.kategori === kategoriAktif) && m.nama.toLowerCase().includes(keyword));
+        
+        if(menuDisaring.length === 0) {
+            menuList.innerHTML = `<p style="text-align:center; color:#999; padding:20px;">Belum ada daftar makanan aktif. Silakan tambahkan menu lewat dasbor penjual.</p>`;
+            return;
+        }
+
+        menuDisaring.forEach(menu => {
+            let qty = keranjang[menu.id] || 0;
+            menuList.innerHTML += `
+                <div class="menu-item">
+                    <div class="menu-info"><span class="menu-nama">${menu.nama}</span><span class="menu-badge">${menu.kategori.toUpperCase()}</span><span class="menu-harga">Rp ${menu.harga.toLocaleString('id-ID')}</span></div>
+                    <div class="quantity-control">
+                        <button class="btn-qty" onclick="ubahJumlah('${menu.id}', -1)">-</button>
+                        <span id="qty-${menu.id}" class="qty-num">${qty}</span>
+                        <button class="btn-qty" onclick="ubahJumlah('${menu.id}', 1)">+</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function filterKategori(kategori, btn) { playSound('click'); kategoriAktif = kategori; document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderMenu(); }
+    
+    function ubahJumlah(id, perubahan) { 
+        playSound('click'); 
+        if (!keranjang[id]) keranjang[id] = 0; 
+        keranjang[id] += perubahan; 
+        if (keranjang[id] < 0) keranjang[id] = 0; 
+        
+        let el = document.getElementById(`qty-${id}`);
+        if(el) el.innerText = keranjang[id]; 
+        updateKeranjangData(); 
+    }
+    
+    function updateKeranjangData() {
+        let totalQty = 0, subTotal = 0, cartItemsHtml = "";
+        menus.forEach(menu => {
+            let qty = keranjang[menu.id] || 0;
+            if (qty > 0) { totalQty += qty; subTotal += (menu.harga * qty); cartItemsHtml += `<div class="summary-line"><span>${menu.nama} (x${qty})</span> <span>Rp ${(menu.harga * qty).toLocaleString('id-ID')}</span></div>`; }
+        });
+        let nominalDiskon = subTotal * diskonPersen, totalAkhir = subTotal - nominalDiskon;
+        document.getElementById('discount-row').style.display = diskonPersen > 0 && subTotal > 0 ? 'flex' : 'none';
+        document.getElementById('discount-price').innerText = nominalDiskon.toLocaleString('id-ID');
+        document.getElementById('total-qty').innerText = totalQty;
+        document.getElementById('total-price-temp').innerText = totalAkhir.toLocaleString('id-ID');
+        document.getElementById('cart-items-list').innerHTML = cartItemsHtml || "<p style='color:#999; text-align:center;'>Keranjang kosong.</p>";
+    }
+
+    function klaimKupon() {
+        if (document.getElementById('coupon-code').value.trim().toUpperCase() === "PANDAWAHEMAT") { playSound('success'); diskonPersen = 0.10; Swal.fire({ icon: 'success', title: 'Kupon Berhasil!' }); } 
+        else { playSound('error'); diskonPersen = 0; Swal.fire({ icon: 'error', title: 'Gagal' }); }
+        updateKeranjangData();
+    }
+
+    function toggleQrisView(show) { playSound('click'); document.getElementById('qris-area').style.display = show ? 'block' : 'none'; }
+    
+    function keHalaman(nomorHalaman) { 
+        playSound('click'); 
+        if (nomorHalaman > 1 && document.getElementById('username').value.trim() === "") { 
+            playSound('error'); 
+            Swal.fire({ icon: 'warning', title: 'Isi nama dulu!' }); 
+            return; 
+        } 
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+        document.getElementById(`page-${nomorHalaman}`).classList.add('active'); 
+        
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step-1').classList.add('active');
+        if(nomorHalaman >= 2) document.getElementById('step-2').classList.add('active');
+        if(nomorHalaman === 3) document.getElementById('step-3').classList.add('active');
+    }
+
+    function selesaikanPesanan() {
+        let username = document.getElementById('username').value, metode = document.querySelector('input[name="payment"]:checked').value, namaPengirim = document.getElementById('input-nama-pengirim').value.trim();
+        let subTotal = 0, totalQty = 0, rincianItem = [];
+
+        menus.forEach(menu => { let qty = keranjang[menu.id] || 0; if (qty > 0) { totalQty += qty; subTotal += (menu.harga * qty); rincianItem.push(`${menu.nama} x${qty}`); } });
+        if (totalQty === 0) { playSound('error'); Swal.fire({ icon: 'error', title: 'Keranjang kosong!' }); return; }
+
+        idPesananAktif = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        let totalAkhir = subTotal - (subTotal * diskonPersen);
+
+        let dataPesanan = {
+            id: idPesananAktif, nama: username, namaPengirim: namaPengirim || username,
+            items: rincianItem, total: totalAkhir, metode: metode,
+            status: "Menunggu Respon", pembayaran: metode === "COD" ? "Belum Bayar (COD)" : "Menunggu Verifikasi"
+        };
+
+        database.ref('pesanan/' + idPesananAktif).set(dataPesanan)
+        .then(() => {
+            playSound('success');
+            document.getElementById('floating-tracking').style.display = 'block'; 
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'Terkirim ke Dapur!', 
+                text: 'Kamu otomatis kembali ke menu utama, silakan lihat-lihat menu lain sambil menunggu.' 
+            });
+            keHalaman(1); 
+            pantauStatusPesanan(idPesananAktif);
+            
+            keranjang = {};
+            menus.forEach(menu => {
+                let el = document.getElementById(`qty-${menu.id}`);
+                if(el) el.innerText = "0";
+            });
+            updateKeranjangData();
+        }).catch(() => { playSound('error'); });
+    }
+
+    function pantauStatusPesanan(id) {
+        database.ref('pesanan/' + id).on('value', (snapshot) => {
+            let data = snapshot.val();
+            if (!data) return;
+
+            document.getElementById('inv-id').innerText = data.id;
+            document.getElementById('inv-nama').innerText = data.nama;
+            document.getElementById('inv-total').innerText = data.total.toLocaleString('id-ID');
+            document.getElementById('inv-items').innerHTML = data.items.map(i => `<div>• ${i}</div>`).join('');
+            
+            let payLabel = document.getElementById('inv-pembayaran-status');
+            payLabel.innerText = data.pembayaran;
+            
+            if(data.pembayaran.includes('Lunas')) payLabel.style.color = 'green';
+            else if(data.pembayaran.includes('Ditolak')) payLabel.style.color = 'red';
+            else payLabel.style.color = '#e67e22';
+
+            let statusLabel = document.getElementById('inv-status-label');
+            statusLabel.innerText = data.status;
+            statusLabel.className = `status-badge ${data.status === 'Sedang Dimasak' ? 'status-cooking' : data.status === 'Selesai' ? 'status-done' : data.status === 'Pesanan Dibatalkan' ? 'status-rejected' : 'status-pending'}`;
+            
+            document.getElementById('float-status').innerText = data.status;
+            document.getElementById('float-status').className = `status-badge ${data.status === 'Sedang Dimasak' ? 'status-cooking' : data.status === 'Selesai' ? 'status-done' : data.status === 'Pesanan Dibatalkan' ? 'status-rejected' : 'status-pending'}`;
+            document.getElementById('float-info').innerText = `${data.items.slice(0, 2).join(', ')}... (Rp ${data.total.toLocaleString('id-ID')})`;
+
+            if(data.status === "Pesanan Dibatalkan") {
+                let invCard = document.getElementById('invoice-card');
+                invCard.style.borderLeft = "5px solid var(--danger)";
+                invCard.style.backgroundColor = "#fff5f5";
+                
+                let nomorWA = "6281234567890"; 
+                let teksWA = encodeURIComponent(`Halo Admin Warung Pandawa, pesanan saya dengan ID ${data.id} atas nama ${data.nama} dibatalkan. Mohon konfirmasi refund QRIS sebesar Rp ${data.total.toLocaleString('id-ID')}.`);
+                
+                document.getElementById('inv-items').innerHTML = data.items.map(i => `<div>• ${i}</div>`).join('') + `
+                    <div style="margin-top: 15px; padding: 10px; background: #fee2e2; border-radius: 8px; border: 1px dashed var(--danger); text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 13px; color: var(--danger); font-weight: bold;">Dana Anda Dijamin Aman!</p>
+                        <a href="https://wa.me/${nomorWA}?text=${teksWA}" target="_blank" style="display: inline-block; background: #25d366; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 13px;">
+                            <i class="fa-brands fa-whatsapp"></i> Hubungi Admin Untuk Refund
+                        </a>
+                    </div>
+                `;
+                playSound('error');
+            } else if(data.status === "Selesai") {
+                let invCard = document.getElementById('invoice-card');
+                invCard.style.borderLeft = "5px solid var(--success)";
+                invCard.style.backgroundColor = "#fafdfa";
+                playSound('success');
+            }
+        });
+    }
+
+    function bukaLiveTracking() {
+        playSound('click');
+        document.getElementById('payment-selection-section').style.display = 'none';
+        document.getElementById('invoice-result').style.display = 'block';
+        keHalaman(3);
+    }
+
+    function kembaliKeMenuTanpaReset() {
+        playSound('click');
+        document.getElementById('payment-selection-section').style.display = 'block';
+        document.getElementById('invoice-result').style.display = 'none';
+        keHalaman(1);
+    }
+    
+    window.onload = function() {
+        sinkronkanDaftarMenu();
+    };
+</script>
+</body>
+</html>

@@ -1,143 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <!-- DASAR -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung Pandawa - Menu Pembeli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-  <!-- JUDUL WEBSITE -->
-  <title>Warung Pandawa | Pesan Makanan, Minuman & Cemilan Online</title>
-
-  <!-- SEO -->
-  <meta name="description" content="Warung Pandawa menyediakan berbagai pilihan makanan, minuman, dan cemilan dengan cita rasa khas nusantara. Pesan online dengan mudah, cepat, dan praktis.">
-
-  <meta name="keywords" content="Warung Pandawa, Warung, Makanan, Minuman, Cemilan, Kuliner, Pesan Online, Pekalongan">
-
-  <meta name="author" content="M. Fiza Pratama Kurniawan">
-
-  <meta name="robots" content="index, follow">
-
-  <!-- WARNA TEMA -->
-  <meta name="theme-color" content="#ff6b35">
-
-  <!-- FAVICON -->
-  <link rel="icon" type="image/png" href="/assets/logo.png">
-  <link rel="apple-touch-icon" href="/assets/logo.png">
-
-  <!-- CANONICAL -->
-  <link rel="canonical" href="https://rivandcronz.biz.id/">
-
-  <!-- OPEN GRAPH (WhatsApp, Telegram, Facebook, Discord) -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rivandcronz.biz.id/">
-  <meta property="og:title" content="Warung Pandawa">
-  <meta property="og:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta property="og:image" content="https://rivandcronz.biz.id/assets/logo.png">
-  <meta property="og:site_name" content="Warung Pandawa">
-
-  <!-- TWITTER/X -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Warung Pandawa">
-  <meta name="twitter:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta name="twitter:image" content="https://rivandcronz.biz.id/assets/logo.png">
-
-  <!-- PWA (Opsional nanti) -->
-  <meta name="application-name" content="Warung Pandawa">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<<head>
-  <!-- DASAR -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- JUDUL WEBSITE -->
-  <title>Warung Pandawa | Pesan Makanan, Minuman & Cemilan Online</title>
-
-  <!-- SEO -->
-  <meta name="description" content="Warung Pandawa menyediakan berbagai pilihan makanan, minuman, dan cemilan dengan cita rasa khas nusantara. Pesan online dengan mudah, cepat, dan praktis.">
-
-  <meta name="keywords" content="Warung Pandawa, Warung, Makanan, Minuman, Cemilan, Kuliner, Pesan Online, Pekalongan">
-
-  <meta name="author" content="M. Fiza Pratama Kurniawan">
-
-  <meta name="robots" content="index, follow">
-
-  <!-- WARNA TEMA -->
-  <meta name="theme-color" content="#ff6b35">
-
-  <!-- FAVICON -->
-  <link rel="icon" type="image/png" href="/assets/logo.png">
-  <link rel="apple-touch-icon" href="/assets/logo.png">
-
-  <!-- CANONICAL -->
-  <link rel="canonical" href="https://rivandcronz.biz.id/">
-
-  <!-- OPEN GRAPH (WhatsApp, Telegram, Facebook, Discord) -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rivandcronz.biz.id/">
-  <meta property="og:title" content="Warung Pandawa">
-  <meta property="og:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta property="og:image" content="https://rivandcronz.biz.id/assets/logo.png">
-  <meta property="og:site_name" content="Warung Pandawa">
-
-  <!-- TWITTER/X -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Warung Pandawa">
-  <meta name="twitter:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta name="twitter:image" content="https://rivandcronz.biz.id/assets/logo.png">
-
-  <!-- PWA (Opsional nanti) -->
-  <meta name="application-name" content="Warung Pandawa">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-</head><head>
-  <!-- DASAR -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- JUDUL WEBSITE -->
-  <title>Warung Pandawa | Pesan Makanan, Minuman & Cemilan Online</title>
-
-  <!-- SEO -->
-  <meta name="description" content="Warung Pandawa menyediakan berbagai pilihan makanan, minuman, dan cemilan dengan cita rasa khas nusantara. Pesan online dengan mudah, cepat, dan praktis.">
-
-  <meta name="keywords" content="Warung Pandawa, Warung, Makanan, Minuman, Cemilan, Kuliner, Pesan Online, Pekalongan">
-
-  <meta name="author" content="M. Fiza Pratama Kurniawan">
-
-  <meta name="robots" content="index, follow">
-
-  <!-- WARNA TEMA -->
-  <meta name="theme-color" content="#ff6b35">
-
-  <!-- FAVICON -->
-  <link rel="icon" type="image/png" href="/assets/logo.png">
-  <link rel="apple-touch-icon" href="/assets/logo.png">
-
-  <!-- CANONICAL -->
-  <link rel="canonical" href="https://rivandcronz.biz.id/">
-
-  <!-- OPEN GRAPH (WhatsApp, Telegram, Facebook, Discord) -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rivandcronz.biz.id/">
-  <meta property="og:title" content="Warung Pandawa">
-  <meta property="og:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta property="og:image" content="https://rivandcronz.biz.id/assets/logo.png">
-  <meta property="og:site_name" content="Warung Pandawa">
-
-  <!-- TWITTER/X -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Warung Pandawa">
-  <meta name="twitter:description" content="Website resmi Warung Pandawa. Pesan makanan, minuman, dan cemilan favoritmu secara online.">
-  <meta name="twitter:image" content="https://rivandcronz.biz.id/assets/logo.png">
-
-  <!-- PWA (Opsional nanti) -->
-  <meta name="application-name" content="Warung Pandawa">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
         :root { --primary: #ff6b35; --secondary: #004e64; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; --bg: #f7f9fb; --card: #ffffff; --text: #2b2d42; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background-color: var(--bg); color: var(--text); }

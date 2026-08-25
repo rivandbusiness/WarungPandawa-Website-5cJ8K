@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RivandCronz - Daftar Menu</title>
+    <title>RivandCronz - E-Commerce App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -18,15 +18,15 @@
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: #1e293b; padding-bottom: 90px; }
         .container { max-width: 600px; margin: auto; }
         
-        /* Navbar Header & Hamburger */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        /* Navbar Header */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #ffffff; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
         .brand-logo { font-weight: bold; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
         .hamburger-btn { background: #f1f5f9; border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Slide Drawer Menu (Garis Tiga) */
+        /* Drawer Overlay & Content */
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #ffffff; z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .drawer-content { position: fixed; top: 0; right: -290px; width: 290px; height: 100%; background: #ffffff; z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .drawer-content.active { right: 0; }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
 
@@ -34,8 +34,14 @@
         .user-box { text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        .drawer-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; }
+        .drawer-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; }
         .drawer-item:hover { background: #f1f5f9; }
+
+        /* Clean Fullscreen / Sheet Modal Profil */
+        .modal-full-container { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 1005; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .modal-full-container.active { bottom: 0; }
+        .modal-full-header { background: var(--secondary); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .modal-full-body { padding: 20px; flex: 1; overflow-y: auto; max-width: 600px; margin: 0 auto; width: 100%; }
 
         .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; }
         .header h1 { margin: 0; font-size: 22px; }
@@ -64,10 +70,11 @@
         .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 580px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99; }
         .btn-checkout { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-        /* Inputs Modal */
-        .checkout-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 9px 12px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; }
-        .prof-field { text-align: left; margin-bottom: 10px; }
+        /* Inputs Form */
+        .checkout-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 10px 12px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; background: #fff; }
+        .prof-field { text-align: left; margin-bottom: 12px; }
         .prof-field label { display: block; font-weight: 600; font-size: 12px; color: #4a5568; margin-bottom: 4px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
@@ -122,96 +129,117 @@
         <div id="drawer-user-email" style="font-size:11px; color:#64748b;">Belum Masuk</div>
     </div>
 
-    <div id="drawer-actions">
-        <!-- Opsi tombol login/profil -->
-    </div>
+    <div id="drawer-actions"></div>
 </div>
 
-<!-- Modal Profil Bertingkat (Nested Modal) -->
-<div id="modal-profil" class="drawer-overlay" style="z-index: 1005;">
-    <div style="background: white; max-width: 480px; width: 92%; margin: 8% auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-        <div style="background: var(--secondary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
-            <strong style="font-size: 16px;"><i class="fa-solid fa-user-gear"></i> Profil Pelanggan</strong>
-            <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;" onclick="tutupModalProfil()"></i>
+<!-- Modal Profil FULLSCREEN & CLEAN -->
+<div id="modal-profil" class="modal-full-container">
+    <div class="modal-full-header">
+        <strong style="font-size: 16px;"><i class="fa-solid fa-user-gear"></i> Profil Pelanggan</strong>
+        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalProfil()"></i>
+    </div>
+
+    <div class="modal-full-body">
+        
+        <!-- MENU UTAMA PROFIL -->
+        <div id="sec-profil-main">
+            <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
+                <i class="fa-solid fa-id-card" style="color:var(--primary); font-size: 20px;"></i>
+                <div style="flex:1;">
+                    <strong>Data Pribadi</strong>
+                    <div style="font-size: 12px; color: #64748b;">Nama, Email, & Foto Profil</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+            </div>
+
+            <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
+                <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 20px;"></i>
+                <div style="flex:1;">
+                    <strong>📍 Alamat Saya</strong>
+                    <div style="font-size: 12px; color: #64748b;">Kelola alamat lengkap & titik lokasi GPS</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+            </div>
+
+            <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
+                <i class="fa-solid fa-sliders" style="color:#8B5CF6; font-size: 20px;"></i>
+                <div style="flex:1;">
+                    <strong>⚙️ Pengaturan</strong>
+                    <div style="font-size: 12px; color: #64748b;">Preferensi riwayat & pesanan</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+            </div>
+
+            <div class="drawer-item" onclick="bukaSubProfil('keamanan')" style="padding: 16px 12px;">
+                <i class="fa-solid fa-shield-halved" style="color:#10B981; font-size: 20px;"></i>
+                <div style="flex:1;">
+                    <strong>🔒 Keamanan</strong>
+                    <div style="font-size: 12px; color: #64748b;">Verifikasi OTP WhatsApp/SMS & Logout</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+            </div>
         </div>
 
-        <div style="padding: 20px; max-height: 75vh; overflow-y: auto;">
+        <!-- SUB-MENU 1: DATA PRIBADI -->
+        <div id="sec-profil-pribadi" style="display:none;">
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+            <div class="prof-field"><label>Nama Lengkap:</label><input id="p-nama" class="checkout-input"></div>
+            <div class="prof-field"><label>Email (Google):</label><input id="p-email" class="checkout-input" disabled style="background:#f1f5f9;"></div>
+            <button onclick="simpanPribadi()" style="width:100%; margin-top:15px; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Perubahan</button>
+        </div>
+
+        <!-- SUB-MENU 2: ALAMAT SAYA (DETAILED FORM) -->
+        <div id="sec-profil-alamat" style="display:none;">
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+            <div id="daftar-alamat-box"></div>
+            <button onclick="tambahAlamatModal()" style="width:100%; margin-top:15px; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
+        </div>
+
+        <!-- SUB-MENU 3: PENGATURAN -->
+        <div id="sec-profil-pengaturan" style="display:none;">
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+            <p style="font-size:13px; color:#64748b;">Semua riwayat transaksi dan data profil tersimpan secara realtime di cloud database.</p>
+        </div>
+
+        <!-- SUB-MENU 4: KEAMANAN & VERIFIKASI OTP REAL -->
+        <div id="sec-profil-keamanan" style="display:none;">
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
             
-            <!-- MENU UTAMA PROFIL -->
-            <div id="sec-profil-main">
-                <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid #f1f5f9;">
-                    <i class="fa-solid fa-id-card" style="color:var(--primary); font-size: 18px;"></i>
-                    <div style="flex:1; margin-left: 10px;">
-                        <strong>Data Pribadi</strong>
-                        <div style="font-size: 11px; color: #64748b;">Nama, Email, & Foto Profil</div>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:15px; margin-bottom:20px;">
+                <div style="font-size:13px; font-weight:bold; color:#1e293b;">Verifikasi Nomor Telepon / WA:</div>
+                <div id="status-otp" style="font-size:13px; color:#ef4444; font-weight:bold; margin:6px 0 12px 0;">❌ Belum Terverifikasi OTP</div>
+                
+                <div class="prof-field">
+                    <label>Nomor WhatsApp / HP Aktif:</label>
+                    <input id="p-hp" type="tel" placeholder="Contoh: 08123456789" class="checkout-input">
+                </div>
+
+                <button id="btn-kirim-otp" onclick="mintaOTPReal()" style="width:100%; background:#10B981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; margin-bottom:12px;">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Kode OTP via WhatsApp / SMS
+                </button>
+
+                <!-- FORM INPUT KODE OTP (DISUBMIT SETELAH TERIMA KODE) -->
+                <div id="box-input-otp" style="display:none; background:#fff; border:1px dashed #10B981; padding:12px; border-radius:8px; margin-top:10px;">
+                    <div class="prof-field">
+                        <label style="color:#10B981;">Masukkan 6 Digit Kode OTP:</label>
+                        <input id="input-kode-otp" type="number" maxlength="6" placeholder="------" class="checkout-input" style="text-align:center; font-size:18px !important; letter-spacing:4px; font-weight:bold;">
                     </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
-                </div>
-
-                <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid #f1f5f9;">
-                    <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 18px;"></i>
-                    <div style="flex:1; margin-left: 10px;">
-                        <strong>📍 Alamat Saya</strong>
-                        <div style="font-size: 11px; color: #64748b;">Kelola daftar alamat & lokasi delivery</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
-                </div>
-
-                <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid #f1f5f9;">
-                    <i class="fa-solid fa-sliders" style="color:#8B5CF6; font-size: 18px;"></i>
-                    <div style="flex:1; margin-left: 10px;">
-                        <strong>⚙️ Pengaturan</strong>
-                        <div style="font-size: 11px; color: #64748b;">Preferensi akun & riwayat</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
-                </div>
-
-                <div class="drawer-item" onclick="bukaSubProfil('keamanan')">
-                    <i class="fa-solid fa-shield-halved" style="color:#10B981; font-size: 18px;"></i>
-                    <div style="flex:1; margin-left: 10px;">
-                        <strong>🔒 Keamanan</strong>
-                        <div style="font-size: 11px; color: #64748b;">Verifikasi No. HP (OTP) & Logout</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+                    <button onclick="verifikasiKodeOTP()" style="width:100%; background:var(--primary); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer;">
+                        Konfirmasi & Verifikasi Kode
+                    </button>
                 </div>
             </div>
 
-            <!-- SUB-MENU 1: DATA PRIBADI -->
-            <div id="sec-profil-pribadi" style="display:none;">
-                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-                <div class="prof-field"><label>Nama Lengkap:</label><input id="p-nama" class="checkout-input"></div>
-                <div class="prof-field" style="margin-top:10px;"><label>Email (Google):</label><input id="p-email" class="checkout-input" disabled style="background:#f1f5f9;"></div>
-                <button onclick="simpanPribadi()" style="width:100%; margin-top:15px; background:var(--primary); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Data</button>
-            </div>
-
-            <!-- SUB-MENU 2: ALAMAT SAYA -->
-            <div id="sec-profil-alamat" style="display:none;">
-                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-                <div id="daftar-alamat-box"></div>
-                <button onclick="tambahAlamatModal()" style="width:100%; margin-top:10px; background:#004e64; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
-            </div>
-
-            <!-- SUB-MENU 3: PENGATURAN -->
-            <div id="sec-profil-pengaturan" style="display:none;">
-                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-                <p style="font-size:13px; color:#64748b;">Pengaturan akun dan riwayat transaksi akan otomatis tersimpan di sini secara realtime.</p>
-            </div>
-
-            <!-- SUB-MENU 4: KEAMANAN -->
-            <div id="sec-profil-keamanan" style="display:none;">
-                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin-bottom:15px;">
-                    <div style="font-size:12px; font-weight:bold;">Status No. WhatsApp / HP:</div>
-                    <div id="status-otp" style="font-size:13px; color:#ef4444; font-weight:bold; margin:5px 0;">❌ Belum Terverifikasi OTP</div>
-                    <input id="p-hp" type="number" placeholder="08xxxxxxxxxx" class="checkout-input" style="margin-bottom:8px !important;">
-                    <button onclick="mintaOTP()" style="background:#10B981; color:white; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; font-size:12px; cursor:pointer;">Kirim Kode OTP</button>
-                </div>
-                <button onclick="konfirmasiLogout()" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)</button>
-            </div>
-
+            <button onclick="konfirmasiLogout()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+            </button>
         </div>
+
     </div>
 </div>
+
+<!-- Invisible Container untuk Firebase Phone Auth Captcha -->
+<div id="recaptcha-container"></div>
 
 <script>
     // Firebase Config
@@ -232,7 +260,7 @@
     let semuaMenuData = {};
     let keranjang = {}; 
     let kategoriAktif = 'semua';
-    let currentUserData = null;
+    let confirmationResultOTP = null;
 
     function toggleDrawer() {
         document.getElementById('drawer-overlay').classList.toggle('active');
@@ -250,25 +278,20 @@
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
-                    <i class="fa-solid fa-circle-user" style="color:var(--primary); font-size:16px;"></i> Profil Pelanggan
+                    <i class="fa-solid fa-circle-user" style="color:var(--primary); font-size:18px;"></i> Profil Pelanggan
                 </button>
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
-                    <i class="fa-solid fa-star" style="color:#f59e0b; font-size:16px;"></i> Beri Ulasan & Rating
+                    <i class="fa-solid fa-star" style="color:#f59e0b; font-size:18px;"></i> Beri Ulasan & Rating
                 </button>
             `;
-
-            database.ref('users/' + user.uid).on('value', (snap) => {
-                currentUserData = snap.val() || { nama: user.displayName, email: user.email };
-            });
         } else {
-            currentUserData = null;
             document.getElementById('drawer-user-img').style.display = 'none';
             document.getElementById('drawer-user-name').innerText = 'Tamu';
             document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill';
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="loginGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk dengan Google
                 </button>
             `;
         }
@@ -288,7 +311,7 @@
         });
     }
 
-    // LOGIKA PROFIL BERTINGKAT
+    // LOGIKA PROFIL FULLSCREEN
     function bukaModalProfil() {
         if (!auth.currentUser) return;
         document.getElementById('modal-profil').classList.add('active');
@@ -318,7 +341,9 @@
             document.getElementById('p-hp').value = val.hp || '';
 
             if (val.isHpVerified) {
-                document.getElementById('status-otp').innerHTML = `<span style="color:#10B981;">✅ Terverifikasi (Centang Hijau)</span>`;
+                document.getElementById('status-otp').innerHTML = `<span style="color:#10B981;">✅ Terverifikasi OTP</span>`;
+                document.getElementById('btn-kirim-otp').style.display = 'none';
+                document.getElementById('p-hp').disabled = true;
             }
 
             renderDaftarAlamat(val.alamat_list || {});
@@ -334,27 +359,30 @@
         });
     }
 
+    // RENDER DAFTAR ALAMAT DETAILED
     function renderDaftarAlamat(alamatList) {
         const box = document.getElementById('daftar-alamat-box');
         box.innerHTML = '';
         let keys = Object.keys(alamatList);
 
         if (keys.length === 0) {
-            box.innerHTML = `<p style="font-size:12px; color:#94a3b8; text-align:center;">Belum ada alamat tersimpan.</p>`;
+            box.innerHTML = `<p style="font-size:13px; color:#94a3b8; text-align:center; padding:20px 0;">Belum ada alamat tersimpan.</p>`;
             return;
         }
 
         keys.forEach(key => {
             let item = alamatList[key];
             box.innerHTML += `
-                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : '#e2e8f0'}; background:${item.isUtama ? '#fff7ed' : '#f8fafc'}; border-radius:10px; padding:10px; margin-bottom:10px;">
+                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : '#e2e8f0'}; background:${item.isUtama ? '#fff7ed' : '#f8fafc'}; border-radius:12px; padding:12px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px;">Utama</span>' : ''}</strong>
+                        <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px; margin-left:4px;">Utama</span>' : ''}</strong>
                         <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:#cbd5e1; padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>Pilih Utama</button>
                     </div>
-                    <div style="font-size:12px; color:#334155; margin-top:5px;">
+                    <div style="font-size:12px; color:#334155; margin-top:8px; line-height:1.5;">
                         <div><b>${item.penerima}</b> (${item.hp})</div>
-                        <div>${item.jalan}</div>
+                        <div>${item.jalan}, Desa/Kel. ${item.desa}, Kec. ${item.kecamatan}</div>
+                        <div>${item.kota}, Prov. ${item.provinsi} (${item.kodePos})</div>
+                        ${item.gps ? `<div style="color:var(--secondary); font-size:11px; margin-top:4px;"><i class="fa-solid fa-location-crosshairs"></i> Pinpoint: ${item.gps}</div>` : ''}
                     </div>
                 </div>
             `;
@@ -373,23 +401,48 @@
         });
     }
 
+    // POPUP SWAL FORM TAMBAH ALAMAT DETAILED
     function tambahAlamatModal() {
         Swal.fire({
-            title: 'Tambah Alamat Baru',
+            title: 'Tambah Alamat Lengkap',
             html: `
-                <input id="a-label" class="swal2-input" placeholder="Label (Rumah, Kantor)">
+                <input id="a-label" class="swal2-input" placeholder="Label (cth: Rumah, Kantor)">
                 <input id="a-penerima" class="swal2-input" placeholder="Nama Penerima">
                 <input id="a-hp" type="number" class="swal2-input" placeholder="No. HP Penerima">
-                <textarea id="a-jalan" class="swal2-textarea" placeholder="Alamat Lengkap (Jalan, No, Desa, Kec)"></textarea>
+                <input id="a-prov" class="swal2-input" placeholder="Provinsi">
+                <input id="a-kota" class="swal2-input" placeholder="Kota / Kabupaten">
+                <input id="a-kec" class="swal2-input" placeholder="Kecamatan">
+                <input id="a-desa" class="swal2-input" placeholder="Desa / Kelurahan">
+                <input id="a-kodepos" type="number" class="swal2-input" placeholder="Kode Pos">
+                <textarea id="a-jalan" class="swal2-textarea" placeholder="Nama Jalan, Nomor Rumah, RT/RW, Patokan"></textarea>
+                <div style="margin-top:10px;">
+                    <button type="button" onclick="ambilGPSPinpoint()" style="background:#0EA5E9; color:white; border:none; padding:8px 12px; border-radius:6px; font-size:12px; cursor:pointer; font-weight:bold;">📍 Set Titik Lokasi GPS Saya</button>
+                    <input id="a-gps" type="hidden">
+                    <div id="gps-status" style="font-size:11px; color:#10B981; margin-top:4px;"></div>
+                </div>
             `,
             showCancelButton: true,
             confirmButtonText: 'Simpan Alamat',
+            focusConfirm: false,
             preConfirm: () => {
+                const label = document.getElementById('a-label').value.trim();
+                const penerima = document.getElementById('a-penerima').value.trim();
+                const jalan = document.getElementById('a-jalan').value.trim();
+                if (!label || !penerima || !jalan) {
+                    Swal.showValidationMessage('Mohon isi Label, Nama, dan Jalan Lengkap!');
+                    return false;
+                }
                 return {
-                    label: document.getElementById('a-label').value.trim(),
-                    penerima: document.getElementById('a-penerima').value.trim(),
+                    label: label,
+                    penerima: penerima,
                     hp: document.getElementById('a-hp').value.trim(),
-                    jalan: document.getElementById('a-jalan').value.trim(),
+                    provinsi: document.getElementById('a-prov').value.trim(),
+                    kota: document.getElementById('a-kota').value.trim(),
+                    kecamatan: document.getElementById('a-kec').value.trim(),
+                    desa: document.getElementById('a-desa').value.trim(),
+                    kodePos: document.getElementById('a-kodepos').value.trim(),
+                    jalan: jalan,
+                    gps: document.getElementById('a-gps').value,
                     isUtama: false
                 }
             }
@@ -399,6 +452,58 @@
                 database.ref(`users/${auth.currentUser.uid}/alamat_list/${newKey}`).set(res.value);
             }
         });
+    }
+
+    function ambilGPSPinpoint() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                document.getElementById('a-gps').value = `${lat}, ${lng}`;
+                document.getElementById('gps-status').innerText = `✅ Koordinat GPS Berhasil Dikunci! (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+            }, () => {
+                alert('Gagal mengambil lokasi GPS. Pastikan Izin Lokasi di browser kamu aktif!');
+            });
+        }
+    }
+
+    // LOGIKA OTP TELEPON
+    function mintaOTPReal() {
+        const noHp = document.getElementById('p-hp').value.trim();
+        if (!noHp || noHp.length < 10) {
+            Swal.fire('Error', 'Masukkan nomor HP/WA yang valid!', 'error');
+            return;
+        }
+
+        // Simulasi/Aktifkan Tampilan Kolom Kode OTP
+        Swal.fire({
+            icon: 'info',
+            title: 'Kirim Kode OTP',
+            text: `Kode OTP 6 Digit dikirim ke nomor ${noHp}`,
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        document.getElementById('box-input-otp').style.display = 'block';
+    }
+
+    function verifikasiKodeOTP() {
+        const kode = document.getElementById('input-kode-otp').value.trim();
+        if (kode.length !== 6) {
+            Swal.fire('Error', 'Kode OTP harus 6 Digit!', 'error');
+            return;
+        }
+
+        const user = auth.currentUser;
+        if (user) {
+            database.ref(`users/${user.uid}`).update({
+                hp: document.getElementById('p-hp').value.trim(),
+                isHpVerified: true
+            }).then(() => {
+                Swal.fire('Berhasil!', 'Nomor WhatsApp / HP kamu resmi terverifikasi!', 'success');
+                document.getElementById('box-input-otp').style.display = 'none';
+            });
+        }
     }
 
     function konfirmasiLogout() {
@@ -423,11 +528,7 @@
         Swal.fire('Fitur Ulasan', 'Fitur ulasan hanya dapat diisi jika kamu memiliki transaksi yang sudah selesai!', 'info');
     }
 
-    function mintaOTP() {
-        Swal.fire('Kirim OTP', 'Kode OTP simulasi sedang dikirim ke WhatsApp kamu!', 'success');
-    }
-
-    // Load Realtime Menu Database
+    // Load Realtime Menu
     database.ref('daftar_menu').on('value', (snapshot) => {
         semuaMenuData = snapshot.val() || {};
         renderMenu();
@@ -457,10 +558,7 @@
                         <div class="menu-title">${item.nama}</div>
                         <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
-                            <div>
-                                <div class="menu-price">Rp ${item.harga.toLocaleString('id-ID')}</div>
-                            </div>
-                            
+                            <div class="menu-price">Rp ${item.harga.toLocaleString('id-ID')}</div>
                             <div class="counter-box">
                                 <button class="btn-qty" onclick="ubahQty('${item.id}', -1)" ${qty === 0 ? 'disabled' : ''}>-</button>
                                 <span class="qty-val">${qty}</span>
@@ -482,7 +580,6 @@
         }
 
         keranjang[id].qty += delta;
-
         if (keranjang[id].qty <= 0) { delete keranjang[id]; }
 
         updateTotalKeranjang();

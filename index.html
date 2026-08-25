@@ -169,10 +169,10 @@
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
-                <i class="fa-solid fa-sliders" style="color:#8B5CF6; font-size: 20px;"></i>
+                <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6; font-size: 20px;"></i>
                 <div style="flex:1;">
-                    <strong>⚙️ Pengaturan</strong>
-                    <div style="font-size: 12px; color: #64748b;">Preferensi riwayat & pesanan</div>
+                    <strong>📜 Pesanan & Riwayat Saya</strong>
+                    <div style="font-size: 12px; color: #64748b;">Lihat pesanan aktif & transaksi lama</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
             </div>
@@ -279,10 +279,17 @@
             </button>
         </div>
 
-        <!-- SUB-MENU 3: PENGATURAN -->
+        <!-- SUB-MENU 3: PESANAN & RIWAYAT SAYA -->
         <div id="sec-profil-pengaturan" style="display:none;">
-            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-            <p style="font-size:13px; color:#64748b;">Semua riwayat transaksi dan data profil tersimpan secara realtime di cloud database.</p>
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Profil
+            </button>
+
+            <h4 style="margin:0 0 12px 0; color:var(--secondary);"><i class="fa-solid fa-clock-rotate-left"></i> Pesanan & Riwayat Saya</h4>
+            
+            <div id="list-riwayat-pesanan">
+                <p style="text-align:center; color:#94a3b8; padding:20px;">Memuat riwayat transaksi...</p>
+            </div>
         </div>
 
         <!-- SUB-MENU 4: KEAMANAN & VERIFIKASI OTP -->
@@ -442,6 +449,10 @@
             let el = document.getElementById(`sec-${s.startsWith('form') ? '' : 'profil-'}${s}`);
             if (el) el.style.display = (s === sub) ? 'block' : 'none';
         });
+
+        if (sub === 'pengaturan') {
+            loadRiwayatPesananUser();
+        }
     }
 
     // SYNC DATA PROFIL DARI FIREBASE
@@ -471,6 +482,63 @@
             }
 
             renderDaftarAlamat(val.alamat_list || {});
+        });
+    }
+
+    // FUNGSI LOAD RIWAYAT PESANAN AKTIF & LAMA
+    function loadRiwayatPesananUser() {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const container = document.getElementById('list-riwayat-pesanan');
+
+        database.ref('pesanan').orderByChild('userId').equalTo(user.uid).on('value', (snap) => {
+            const data = snap.val();
+            container.innerHTML = '';
+
+            if (!data) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px 10px; color:#94a3b8;">
+                        <i class="fa-solid fa-box-open" style="font-size:36px; margin-bottom:8px;"></i>
+                        <div>Belum ada pesanan aktif atau riwayat transaksi.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const keys = Object.keys(data).reverse();
+
+            keys.forEach(key => {
+                const order = data[key];
+
+                let badgeColor = '#f59e0b';
+                if (order.status === 'Sedang Dimasak') badgeColor = '#0EA5E9';
+                if (order.status === 'Selesai' || order.status === 'Lunas') badgeColor = '#10B981';
+
+                container.innerHTML += `
+                    <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size:11px; font-weight:bold; color:#64748b;">${order.id}</span>
+                            <span style="background:${badgeColor}; color:white; font-size:11px; font-weight:bold; padding:3px 8px; border-radius:12px;">${order.status}</span>
+                        </div>
+
+                        <div style="font-size:13px; color:#334155; margin-bottom:8px;">
+                            <strong>Menu:</strong> ${order.items ? order.items.join(', ') : '-'}
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #cbd5e1; padding-top:8px; font-size:12px;">
+                            <div>
+                                <span style="color:#64748b;">Total:</span>
+                                <strong style="color:var(--primary); font-size:14px;">Rp ${(order.total || 0).toLocaleString('id-ID')}</strong>
+                            </div>
+                            
+                            <button onclick="tutupModalProfil(); bukaModalDetailPesanan('${order.id}')" style="background:var(--secondary); color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">
+                                <i class="fa-solid fa-eye"></i> Detail / Bayar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
         });
     }
 
@@ -857,7 +925,7 @@
 
                     Swal.fire({ title: 'Mengirim Pesanan ke Dapur...', didOpen: () => Swal.showLoading() });
 
-                    // EMBED REALTIME KE DATABASE FIREBASE (NODE 'pesanan')
+                    // EMBED REALTIME KE DATABASE FIREBASE
                     database.ref('pesanan/' + orderId).set({
                         id: orderId,
                         nama: val.nama || user.displayName || 'Pelanggan',
@@ -937,12 +1005,12 @@
                 <div style="background:white; border:1px solid #e2e8f0; padding:12px; border-radius:12px; margin-bottom:15px;">
                     <strong style="font-size:13px; color:#334155; display:block; margin-bottom:8px;">Rincian Pesanan:</strong>
                     <ul style="margin:0; padding-left:18px; font-size:13px; color:#475569;">
-                        ${order.items.map(item => `<li>${item}</li>`).join('')}
+                        ${order.items ? order.items.map(item => `<li>${item}</li>`).join('') : ''}
                     </ul>
                     <hr style="border:none; border-top:1px dashed #cbd5e1; margin:10px 0;">
                     <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px; color:var(--primary);">
                         <span>Total Tagihan:</span>
-                        <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+                        <span>Rp ${(order.total || 0).toLocaleString('id-ID')}</span>
                     </div>
                 </div>
 

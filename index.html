@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warung Pandawa | Makanan, Cemilan & Minuman Lezat</title>
-    <meta name="description" content="Warung Pandawa menyediakan berbagai makanan, cemilan, dan minuman dengan cita rasa khas nusantara.">
-    <!-- Logo Favicon Google -->
-    <link rel="icon" href="https://i.ibb.co.com/cctXZ50b/20260630-152435.png" type="image/png">
-    <link rel="shortcut icon" href="https://i.ibb.co.com/cctXZ50b/20260630-152435.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://i.ibb.co.com/cctXZ50b/20260630-152435.png">
-    <meta name="theme-color" content="#ff8c00">
+    <title>RivandCronz - Daftar Menu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -19,126 +13,93 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
     <style>
-        :root { 
-            --primary: #ff6b35; 
-            --secondary: #004e64; 
-            --bg: #f8fafc; 
-            --telur-asin: #00a896;
-            --telur-asin-hover: #028090;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --subtext-color: #64748b;
-            --border-color: #e2e8f0;
-            --btn-qty-bg: #f1f5f9;
-        }
-
-        /* Mode Gelap */
-        body.dark-theme {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --subtext-color: #94a3b8;
-            --border-color: #334155;
-            --btn-qty-bg: #334155;
-        }
-
-        /* Palette Aksen Kustom */
-        body[data-color="orange"] { --primary: #ff6b35; }
-        body[data-color="blue"] { --primary: #2563eb; }
-        body[data-color="green"] { --primary: #10b981; }
-        body[data-color="purple"] { --primary: #8b5cf6; }
-
+        :root { --primary: #ff6b35; --secondary: #004e64; --bg: #f8fafc; }
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: var(--text-color); padding-bottom: 90px; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: #1e293b; padding-bottom: 90px; }
         .container { max-width: 600px; margin: auto; }
         
-        /* Top Navigation Header & Hamburger */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--card-bg); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border-color); }
+        /* Navbar Header & Hamburger */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
         .brand-logo { font-weight: bold; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
-        .hamburger-btn { background: var(--btn-qty-bg); border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .hamburger-btn { background: #f1f5f9; border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         /* Slide Drawer Menu (Garis Tiga) */
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card-bg); color: var(--text-color); z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow-y: auto; }
+        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #ffffff; z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .drawer-content.active { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
 
-        /* User Card Inside Drawer */
-        .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        /* User Card */
+        .user-box { text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        .drawer-item { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-color); cursor: pointer; text-align: left; margin-bottom: 5px; }
-        .drawer-item:hover { background: var(--btn-qty-bg); }
-        .drawer-item-left { display: flex; align-items: center; gap: 10px; }
+        .drawer-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; }
+        .drawer-item:hover { background: #f1f5f9; }
 
-        /* Accordion / Pembungkus Pengaturan Tema */
-        .theme-accordion { display: none; background: var(--bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 5px; margin-bottom: 10px; }
-        .theme-accordion.open { display: block; }
-        .theme-section-title { font-size: 11px; font-weight: bold; color: var(--subtext-color); margin-bottom: 8px; text-transform: uppercase; }
-        .theme-select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 12px; margin-bottom: 10px; outline: none; }
-        .color-palette { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 10px; }
-        .color-dot { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .color-dot.active { border-color: var(--text-color); transform: scale(1.1); }
-        .btn-reset-theme { width: 100%; padding: 7px; border: 1px dashed var(--border-color); background: transparent; color: var(--subtext-color); border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
-        .btn-reset-theme:hover { background: var(--btn-qty-bg); color: var(--text-color); }
-
-        /* Header Gradient Asli */
         .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; }
         .header h1 { margin: 0; font-size: 22px; }
 
-        /* Filter Kategori */
+        /* Kategori Filter */
         .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
-        .cat-btn { background: var(--card-bg); color: var(--text-color); border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Grid Cards Menu */
+        /* Menu Grid */
         .menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .menu-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: var(--btn-qty-bg); flex-shrink: 0; }
+        .menu-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px; display: flex; gap: 12px; align-items: center; }
+        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: #f1f5f9; flex-shrink: 0; }
         .menu-info { flex: 1; }
-        .menu-title { font-weight: bold; font-size: 15px; margin-bottom: 3px; color: var(--secondary); }
-        .menu-desc { font-size: 11px; color: var(--subtext-color); margin-bottom: 6px; line-height: 1.3; }
+        .menu-title { font-weight: bold; font-size: 15px; color: var(--secondary); }
+        .menu-desc { font-size: 11px; color: #64748b; margin-bottom: 6px; }
         .menu-price { font-size: 14px; font-weight: bold; color: var(--primary); }
-        .menu-stock { font-size: 11px; color: var(--subtext-color); }
 
         /* Counter Input */
         .counter-box { display: flex; align-items: center; gap: 8px; }
-        .btn-qty { background: var(--btn-qty-bg); border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--secondary); }
+        .btn-qty { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--secondary); }
         .btn-qty:disabled { opacity: 0.4; cursor: not-allowed; }
-        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; color: var(--text-color); }
+        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; }
 
         /* Floating Cart Bar */
         .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 580px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99; }
         .btn-checkout { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        /* Inputs Modal */
+        .checkout-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 9px 12px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; }
+        .prof-field { text-align: left; margin-bottom: 10px; }
+        .prof-field label { display: block; font-weight: 600; font-size: 12px; color: #4a5568; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Navbar Header -->
     <div class="top-navbar">
         <div class="brand-logo"><i class="fa-solid fa-utensils" style="color:var(--primary);"></i> RivandCronz</div>
         <button class="hamburger-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
+    <!-- Header Banner -->
     <div class="header">
         <h1>Daftar Menu</h1>
         <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">Pilih menu favoritmu & pesan langsung!</p>
     </div>
 
+    <!-- Filter Kategori -->
     <div class="category-container">
         <button class="cat-btn active" onclick="filterKategori('semua', this)">✨ Semua</button>
         <button class="cat-btn" onclick="filterKategori('makanan', this)">🍲 Makanan</button>
         <button class="cat-btn" onclick="filterKategori('minuman', this)">🥤 Minuman</button>
         <button class="cat-btn" onclick="filterKategori('cemilan', this)">🍿 Cemilan</button>
-        <button class="cat-btn" onclick="filterKategori('promo', this)">🔥 Promo</button>
     </div>
 
+    <!-- Daftar Menu -->
     <div id="user-menu-list" class="menu-grid">
-        <p style="text-align: center; color: var(--subtext-color); padding: 30px;">Memuat menu...</p>
+        <p style="text-align: center; color: #94a3b8; padding: 30px;">Memuat menu...</p>
     </div>
 </div>
 
+<!-- Floating Cart Bar -->
 <div class="cart-bar">
     <div>
         <span style="font-size: 11px; opacity: 0.8; display: block;">Total Pesanan:</span>
@@ -147,52 +108,113 @@
     <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
 
-<!-- Slide Drawer Menu -->
+<!-- Drawer Menu (Garis Tiga) -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
     <div class="drawer-header">
-        <strong style="color:var(--text-color); font-size:15px;"><i class="fa-solid fa-user-circle"></i> Akun Saya</strong>
+        <strong style="color:var(--secondary); font-size:15px;"><i class="fa-solid fa-bars"></i> Menu Utama</strong>
         <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:18px;" onclick="toggleDrawer()"></i>
     </div>
 
     <div class="user-box">
         <img id="drawer-user-img" class="user-avatar" src="">
-        <div id="drawer-user-name" style="font-weight:bold; font-size:14px; color:var(--text-color);">Tamu</div>
-        <div id="drawer-user-email" style="font-size:11px; color:var(--subtext-color);">Belum Masuk</div>
+        <div id="drawer-user-name" style="font-weight:bold; font-size:14px; color:#1e293b;">Tamu</div>
+        <div id="drawer-user-email" style="font-size:11px; color:#64748b;">Belum Masuk</div>
     </div>
 
-    <div id="drawer-actions"></div>
+    <div id="drawer-actions">
+        <!-- Opsi tombol login/profil -->
+    </div>
+</div>
 
-    <!-- Menu Tombol Pengaturan (Accordion) -->
-    <button class="drawer-item" onclick="toggleAccordionTema()">
-        <div class="drawer-item-left">
-            <i class="fa-solid fa-gear" style="color:var(--primary);"></i> Pengaturan Tampilan
-        </div>
-        <i id="accordion-arrow" class="fa-solid fa-chevron-down" style="font-size: 11px;"></i>
-    </button>
-
-    <!-- Content Pengaturan (Terbungkus Dibatasi Login) -->
-    <div id="theme-accordion-box" class="theme-accordion">
-        <div class="theme-section-title">Mode Tampilan:</div>
-        <select class="theme-select" id="theme-mode-select" onchange="gantiModeTema(this.value)">
-            <option value="light">☀️ Terang (Original)</option>
-            <option value="dark">🌙 Gelap (Dark Mode)</option>
-            <option value="system">💻 Ikuti Sistem HP</option>
-        </select>
-
-        <div class="theme-section-title">Warna Aksen:</div>
-        <div class="color-palette">
-            <div class="color-dot active" style="background:#ff6b35;" title="Original Orange" onclick="gantiWarnaAksen('orange', this)"></div>
-            <div class="color-dot" style="background:#2563eb;" title="Biru" onclick="gantiWarnaAksen('blue', this)"></div>
-            <div class="color-dot" style="background:#10b981;" title="Hijau" onclick="gantiWarnaAksen('green', this)"></div>
-            <div class="color-dot" style="background:#8b5cf6;" title="Ungu" onclick="gantiWarnaAksen('purple', this)"></div>
+<!-- Modal Profil Bertingkat (Nested Modal) -->
+<div id="modal-profil" class="drawer-overlay" style="z-index: 1005;">
+    <div style="background: white; max-width: 480px; width: 92%; margin: 8% auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <div style="background: var(--secondary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 16px;"><i class="fa-solid fa-user-gear"></i> Profil Pelanggan</strong>
+            <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;" onclick="tutupModalProfil()"></i>
         </div>
 
-        <button class="btn-reset-theme" onclick="resetKeOriginal()"><i class="fa-solid fa-rotate-left"></i> Reset Tema</button>
+        <div style="padding: 20px; max-height: 75vh; overflow-y: auto;">
+            
+            <!-- MENU UTAMA PROFIL -->
+            <div id="sec-profil-main">
+                <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid #f1f5f9;">
+                    <i class="fa-solid fa-id-card" style="color:var(--primary); font-size: 18px;"></i>
+                    <div style="flex:1; margin-left: 10px;">
+                        <strong>Data Pribadi</strong>
+                        <div style="font-size: 11px; color: #64748b;">Nama, Email, & Foto Profil</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+                </div>
+
+                <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid #f1f5f9;">
+                    <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 18px;"></i>
+                    <div style="flex:1; margin-left: 10px;">
+                        <strong>📍 Alamat Saya</strong>
+                        <div style="font-size: 11px; color: #64748b;">Kelola daftar alamat & lokasi delivery</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+                </div>
+
+                <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid #f1f5f9;">
+                    <i class="fa-solid fa-sliders" style="color:#8B5CF6; font-size: 18px;"></i>
+                    <div style="flex:1; margin-left: 10px;">
+                        <strong>⚙️ Pengaturan</strong>
+                        <div style="font-size: 11px; color: #64748b;">Preferensi akun & riwayat</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+                </div>
+
+                <div class="drawer-item" onclick="bukaSubProfil('keamanan')">
+                    <i class="fa-solid fa-shield-halved" style="color:#10B981; font-size: 18px;"></i>
+                    <div style="flex:1; margin-left: 10px;">
+                        <strong>🔒 Keamanan</strong>
+                        <div style="font-size: 11px; color: #64748b;">Verifikasi No. HP (OTP) & Logout</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
+                </div>
+            </div>
+
+            <!-- SUB-MENU 1: DATA PRIBADI -->
+            <div id="sec-profil-pribadi" style="display:none;">
+                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                <div class="prof-field"><label>Nama Lengkap:</label><input id="p-nama" class="checkout-input"></div>
+                <div class="prof-field" style="margin-top:10px;"><label>Email (Google):</label><input id="p-email" class="checkout-input" disabled style="background:#f1f5f9;"></div>
+                <button onclick="simpanPribadi()" style="width:100%; margin-top:15px; background:var(--primary); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Data</button>
+            </div>
+
+            <!-- SUB-MENU 2: ALAMAT SAYA -->
+            <div id="sec-profil-alamat" style="display:none;">
+                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                <div id="daftar-alamat-box"></div>
+                <button onclick="tambahAlamatModal()" style="width:100%; margin-top:10px; background:#004e64; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
+            </div>
+
+            <!-- SUB-MENU 3: PENGATURAN -->
+            <div id="sec-profil-pengaturan" style="display:none;">
+                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                <p style="font-size:13px; color:#64748b;">Pengaturan akun dan riwayat transaksi akan otomatis tersimpan di sini secara realtime.</p>
+            </div>
+
+            <!-- SUB-MENU 4: KEAMANAN -->
+            <div id="sec-profil-keamanan" style="display:none;">
+                <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin-bottom:15px;">
+                    <div style="font-size:12px; font-weight:bold;">Status No. WhatsApp / HP:</div>
+                    <div id="status-otp" style="font-size:13px; color:#ef4444; font-weight:bold; margin:5px 0;">❌ Belum Terverifikasi OTP</div>
+                    <input id="p-hp" type="number" placeholder="08xxxxxxxxxx" class="checkout-input" style="margin-bottom:8px !important;">
+                    <button onclick="mintaOTP()" style="background:#10B981; color:white; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; font-size:12px; cursor:pointer;">Kirim Kode OTP</button>
+                </div>
+                <button onclick="konfirmasiLogout()" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <script>
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
         authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -212,103 +234,14 @@
     let kategoriAktif = 'semua';
     let currentUserData = null;
 
-    // --- ACCORDION PENGATURAN ---
-    function toggleAccordionTema() {
-        // Cek login saat tombol Pengaturan diklik
-        if (!auth.currentUser) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Akses Terbatas',
-                text: 'Silakan login dengan Google terlebih dahulu untuk mengakses Pengaturan Tampilan!',
-                confirmButtonColor: '#ff6b35'
-            });
-            return;
-        }
-
-        const box = document.getElementById('theme-accordion-box');
-        const arrow = document.getElementById('accordion-arrow');
-        box.classList.toggle('open');
-        
-        if (box.classList.contains('open')) {
-            arrow.className = "fa-solid fa-chevron-up";
-        } else {
-            arrow.className = "fa-solid fa-chevron-down";
-        }
-    }
-
-    // --- MANAJEMEN TEMA ---
-    function initTema() {
-        if (!auth.currentUser) {
-            localStorage.removeItem('theme_mode');
-            localStorage.removeItem('theme_color');
-        }
-
-        const savedMode = localStorage.getItem('theme_mode') || 'light';
-        const savedColor = localStorage.getItem('theme_color') || 'orange';
-
-        document.getElementById('theme-mode-select').value = savedMode;
-        gantiModeTema(savedMode, false, true);
-        
-        const dots = document.querySelectorAll('.color-dot');
-        dots.forEach(dot => {
-            if(dot.getAttribute('onclick').includes(`'${savedColor}'`)) {
-                gantiWarnaAksen(savedColor, dot, false, true);
-            }
-        });
-    }
-
-    function gantiModeTema(mode, save = true, force = false) {
-        if (!force && !auth.currentUser) return;
-
-        if(save) localStorage.setItem('theme_mode', mode);
-        
-        if (mode === 'dark') {
-            document.body.classList.add('dark-theme');
-        } else if (mode === 'light') {
-            document.body.classList.remove('dark-theme');
-        } else if (mode === 'system') {
-            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if(isDark) document.body.classList.add('dark-theme');
-            else document.body.classList.remove('dark-theme');
-        }
-    }
-
-    function gantiWarnaAksen(warna, el, save = true, force = false) {
-        if (!force && !auth.currentUser) return;
-
-        if(save) localStorage.setItem('theme_color', warna);
-        document.body.setAttribute('data-color', warna);
-
-        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-        if(el) el.classList.add('active');
-    }
-
-    function resetKeOriginal() {
-        if (!auth.currentUser) return;
-        localStorage.removeItem('theme_mode');
-        localStorage.removeItem('theme_color');
-        initTema();
-        Swal.fire({ icon: 'success', title: 'Tema Kembali ke Original!', timer: 1000, showConfirmButton: false });
-    }
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (localStorage.getItem('theme_mode') === 'system') {
-            gantiModeTema('system', false, true);
-        }
-    });
-
-    // Toggle Open/Close Drawer Garis Tiga
     function toggleDrawer() {
         document.getElementById('drawer-overlay').classList.toggle('active');
         document.getElementById('drawer-content').classList.toggle('active');
     }
 
-    // Monitor Status Auth Google
+    // Monitor Auth State
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
-        const box = document.getElementById('theme-accordion-box');
-        const arrow = document.getElementById('accordion-arrow');
-
         if (user) {
             document.getElementById('drawer-user-img').src = user.photoURL || 'https://via.placeholder.com/60';
             document.getElementById('drawer-user-img').style.display = 'block';
@@ -317,41 +250,27 @@
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
-                    <div class="drawer-item-left">
-                        <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Edit Biodata Pelanggan
-                    </div>
+                    <i class="fa-solid fa-circle-user" style="color:var(--primary); font-size:16px;"></i> Profil Pelanggan
                 </button>
-                <button class="drawer-item" style="color:#ef4444;" onclick="logoutGoogle()">
-                    <div class="drawer-item-left">
-                        <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
-                    </div>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
+                    <i class="fa-solid fa-star" style="color:#f59e0b; font-size:16px;"></i> Beri Ulasan & Rating
                 </button>
             `;
 
             database.ref('users/' + user.uid).on('value', (snap) => {
-                currentUserData = snap.val() || { nama: user.displayName, email: user.email, hp: '', alamat: '' };
+                currentUserData = snap.val() || { nama: user.displayName, email: user.email };
             });
-
-            initTema();
         } else {
             currentUserData = null;
             document.getElementById('drawer-user-img').style.display = 'none';
             document.getElementById('drawer-user-name').innerText = 'Tamu';
-            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill data';
-
-            // Tutup accordion jika logout
-            box.classList.remove('open');
-            arrow.className = "fa-solid fa-chevron-down";
+            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill';
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="loginGoogle()">
-                    <div class="drawer-item-left">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
-                    </div>
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
                 </button>
             `;
-
-            initTema();
         }
     });
 
@@ -366,62 +285,146 @@
             });
             toggleDrawer();
             Swal.fire({ icon: 'success', title: 'Berhasil Masuk!', timer: 1200, showConfirmButton: false });
-        }).catch((err) => { Swal.fire('Gagal Login', err.message, 'error'); });
-    }
-
-    function logoutGoogle() {
-        auth.signOut().then(() => {
-            toggleDrawer();
-            Swal.fire({ icon: 'info', title: 'Berhasil Keluar', timer: 1200, showConfirmButton: false });
         });
     }
 
+    // LOGIKA PROFIL BERTINGKAT
     function bukaModalProfil() {
+        if (!auth.currentUser) return;
+        document.getElementById('modal-profil').classList.add('active');
+        bukaSubProfil('main');
+        loadDataProfilUser();
+    }
+
+    function tutupModalProfil() {
+        document.getElementById('modal-profil').classList.remove('active');
+    }
+
+    function bukaSubProfil(sub) {
+        const sections = ['main', 'pribadi', 'alamat', 'pengaturan', 'keamanan'];
+        sections.forEach(s => {
+            document.getElementById(`sec-profil-${s}`).style.display = (s === sub) ? 'block' : 'none';
+        });
+    }
+
+    function loadDataProfilUser() {
         const user = auth.currentUser;
         if (!user) return;
 
-        Swal.fire({
-            title: 'Biodata Pelanggan',
-            html: `
-                <style>
-                    .prof-box { text-align: left; font-size: 13px; }
-                    .prof-field { margin-bottom: 10px; }
-                    .prof-field label { display: block; font-weight: 600; font-size: 12px; color: #4a5568; margin-bottom: 4px; }
-                    .prof-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 8px 10px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; }
-                </style>
-                <div class="prof-box">
-                    <div class="prof-field">
-                        <label>Nama Lengkap:</label>
-                        <input id="prof-nama" class="prof-input" value="${currentUserData?.nama || user.displayName}">
+        database.ref('users/' + user.uid).on('value', (snap) => {
+            const val = snap.val() || {};
+            document.getElementById('p-nama').value = val.nama || user.displayName;
+            document.getElementById('p-email').value = user.email;
+            document.getElementById('p-hp').value = val.hp || '';
+
+            if (val.isHpVerified) {
+                document.getElementById('status-otp').innerHTML = `<span style="color:#10B981;">✅ Terverifikasi (Centang Hijau)</span>`;
+            }
+
+            renderDaftarAlamat(val.alamat_list || {});
+        });
+    }
+
+    function simpanPribadi() {
+        const user = auth.currentUser;
+        if (!user) return;
+        const nama = document.getElementById('p-nama').value.trim();
+        database.ref(`users/${user.uid}`).update({ nama: nama }).then(() => {
+            Swal.fire({ icon: 'success', title: 'Data Disimpan!', timer: 1200, showConfirmButton: false });
+        });
+    }
+
+    function renderDaftarAlamat(alamatList) {
+        const box = document.getElementById('daftar-alamat-box');
+        box.innerHTML = '';
+        let keys = Object.keys(alamatList);
+
+        if (keys.length === 0) {
+            box.innerHTML = `<p style="font-size:12px; color:#94a3b8; text-align:center;">Belum ada alamat tersimpan.</p>`;
+            return;
+        }
+
+        keys.forEach(key => {
+            let item = alamatList[key];
+            box.innerHTML += `
+                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : '#e2e8f0'}; background:${item.isUtama ? '#fff7ed' : '#f8fafc'}; border-radius:10px; padding:10px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px;">Utama</span>' : ''}</strong>
+                        <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:#cbd5e1; padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>Pilih Utama</button>
                     </div>
-                    <div class="prof-field">
-                        <label>No. WhatsApp / HP (Penting):</label>
-                        <input id="prof-hp" type="number" class="prof-input" value="${currentUserData?.hp || ''}" placeholder="08xxxxxxxxxx">
-                    </div>
-                    <div class="prof-field">
-                        <label>Alamat Utama (Auto-fill saat delivery):</label>
-                        <textarea id="prof-alamat" class="prof-input" rows="2" placeholder="Nama Jalan, Blok, No. Rumah...">${currentUserData?.alamat || ''}</textarea>
+                    <div style="font-size:12px; color:#334155; margin-top:5px;">
+                        <div><b>${item.penerima}</b> (${item.hp})</div>
+                        <div>${item.jalan}</div>
                     </div>
                 </div>
+            `;
+        });
+    }
+
+    function setAlamatUtama(selectedKey) {
+        const user = auth.currentUser;
+        if (!user) return;
+        
+        database.ref(`users/${user.uid}/alamat_list`).once('value', (snap) => {
+            let list = snap.val() || {};
+            Object.keys(list).forEach(k => {
+                database.ref(`users/${user.uid}/alamat_list/${k}`).update({ isUtama: (k === selectedKey) });
+            });
+        });
+    }
+
+    function tambahAlamatModal() {
+        Swal.fire({
+            title: 'Tambah Alamat Baru',
+            html: `
+                <input id="a-label" class="swal2-input" placeholder="Label (Rumah, Kantor)">
+                <input id="a-penerima" class="swal2-input" placeholder="Nama Penerima">
+                <input id="a-hp" type="number" class="swal2-input" placeholder="No. HP Penerima">
+                <textarea id="a-jalan" class="swal2-textarea" placeholder="Alamat Lengkap (Jalan, No, Desa, Kec)"></textarea>
             `,
             showCancelButton: true,
-            confirmButtonText: 'Simpan Biodata',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#ff6b35',
+            confirmButtonText: 'Simpan Alamat',
             preConfirm: () => {
                 return {
-                    nama: document.getElementById('prof-nama').value.trim(),
-                    hp: document.getElementById('prof-hp').value.trim(),
-                    alamat: document.getElementById('prof-alamat').value.trim()
-                };
+                    label: document.getElementById('a-label').value.trim(),
+                    penerima: document.getElementById('a-penerima').value.trim(),
+                    hp: document.getElementById('a-hp').value.trim(),
+                    jalan: document.getElementById('a-jalan').value.trim(),
+                    isUtama: false
+                }
             }
         }).then((res) => {
+            if (res.isConfirmed && auth.currentUser) {
+                let newKey = Date.now();
+                database.ref(`users/${auth.currentUser.uid}/alamat_list/${newKey}`).set(res.value);
+            }
+        });
+    }
+
+    function konfirmasiLogout() {
+        Swal.fire({
+            title: 'Yakin mau keluar?',
+            text: 'Kamu harus login lagi untuk auto-fill data pesanan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Ya, Keluar'
+        }).then((res) => {
             if (res.isConfirmed) {
-                database.ref('users/' + user.uid).update(res.value).then(() => {
-                    Swal.fire({ icon: 'success', title: 'Biodata Disimpan!', timer: 1300, showConfirmButton: false });
+                tutupModalProfil();
+                auth.signOut().then(() => {
+                    Swal.fire({ icon: 'info', title: 'Berhasil Keluar', timer: 1200, showConfirmButton: false });
                 });
             }
         });
+    }
+
+    function bukaModalUlasan() {
+        Swal.fire('Fitur Ulasan', 'Fitur ulasan hanya dapat diisi jika kamu memiliki transaksi yang sudah selesai!', 'info');
+    }
+
+    function mintaOTP() {
+        Swal.fire('Kirim OTP', 'Kode OTP simulasi sedang dikirim ke WhatsApp kamu!', 'success');
     }
 
     // Load Realtime Menu Database
@@ -436,7 +439,7 @@
 
         let keys = Object.keys(semuaMenuData);
         if (keys.length === 0) {
-            menuBox.innerHTML = `<p style="text-align:center; color:var(--subtext-color); padding:30px;">Belum ada menu tersedia.</p>`;
+            menuBox.innerHTML = `<p style="text-align:center; color:#94a3b8; padding:30px;">Belum ada menu tersedia.</p>`;
             return;
         }
 
@@ -456,7 +459,6 @@
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                             <div>
                                 <div class="menu-price">Rp ${item.harga.toLocaleString('id-ID')}</div>
-                                <div class="menu-stock">${stokHabis ? '<span style="color:red; font-weight:bold;">Stok Habis</span>' : 'Stok: ' + item.stok}</div>
                             </div>
                             
                             <div class="counter-box">
@@ -481,9 +483,7 @@
 
         keranjang[id].qty += delta;
 
-        if (keranjang[id].qty <= 0) {
-            delete keranjang[id];
-        }
+        if (keranjang[id].qty <= 0) { delete keranjang[id]; }
 
         updateTotalKeranjang();
         renderMenu();
@@ -505,25 +505,11 @@
     }
 
     function prosesPesanan() {
-        let rincianItemHtml = "";
-        let itemsArray = [];
         let totalHarga = 0;
-
+        let itemsArray = [];
         Object.keys(keranjang).forEach(id => {
-            let item = keranjang[id];
-            let subtotal = item.harga * item.qty;
-            totalHarga += subtotal;
-            itemsArray.push(`${item.nama} (${item.qty}x)`);
-
-            rincianItemHtml += `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed var(--border-color); padding: 6px 0; font-size:13px;">
-                    <div>
-                        <span style="font-weight:600;">${item.nama}</span>
-                        <div style="font-size:11px; opacity:0.8;">${item.qty} x Rp ${item.harga.toLocaleString('id-ID')}</div>
-                    </div>
-                    <span style="font-weight:bold; color:var(--primary);">Rp ${subtotal.toLocaleString('id-ID')}</span>
-                </div>
-            `;
+            totalHarga += keranjang[id].harga * keranjang[id].qty;
+            itemsArray.push(`${keranjang[id].nama} (${keranjang[id].qty}x)`);
         });
 
         if (itemsArray.length === 0) {
@@ -532,135 +518,11 @@
         }
 
         Swal.fire({
-            title: '<span style="font-size:18px;"><i class="fa-solid fa-receipt"></i> Rincian & Checkout</span>',
-            html: `
-                <style>
-                    .checkout-box { text-align: left; font-size: 13px; }
-                    .checkout-section { border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 12px; }
-                    .checkout-field { margin-bottom: 10px; }
-                    .checkout-field label { display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
-                    .checkout-input { 
-                        width: 100% !important; margin: 0 !important; box-sizing: border-box !important;
-                        padding: 9px 12px !important; border: 1.5px solid #cbd5e1 !important; 
-                        border-radius: 8px !important; font-size: 13px !important; height: auto !important;
-                    }
-                </style>
-                
-                <div class="checkout-box">
-                    <div class="checkout-section">
-                        <div style="font-size:12px; font-weight:bold; opacity:0.8; margin-bottom:5px; text-transform:uppercase;">Ringkasan Pesanan:</div>
-                        <div style="max-height: 120px; overflow-y: auto;">${rincianItemHtml}</div>
-                        <div style="display:flex; justify-content:space-between; margin-top:8px; font-weight:bold; font-size:14px;">
-                            <span>Total Bayar:</span>
-                            <span style="color:var(--primary);">Rp ${totalHarga.toLocaleString('id-ID')}</span>
-                        </div>
-                    </div>
-
-                    <div class="checkout-field">
-                        <label><i class="fa-solid fa-user"></i> Nama Lengkap / Meja:</label>
-                        <input id="order-nama" class="checkout-input" value="${currentUserData?.nama || ''}" placeholder="Masukkan nama kamu...">
-                    </div>
-
-                    <div class="checkout-field">
-                        <label><i class="fa-brands fa-whatsapp"></i> No. WhatsApp / HP:</label>
-                        <input id="order-hp" type="number" class="checkout-input" value="${currentUserData?.hp || ''}" placeholder="08xxxxxxxxxx">
-                    </div>
-
-                    <div class="checkout-field">
-                        <label><i class="fa-solid fa-location-dot"></i> Opsi / Alamat Pengiriman:</label>
-                        <select id="order-tipe" class="checkout-input" onchange="toggleAlamatField(this.value)">
-                            <option value="Dine In (Makan di Tempat)">🍽️ Makan di Tempat (Dine In)</option>
-                            <option value="Takeaway (Bungkus)">🛍️ Bungkus (Takeaway)</option>
-                            <option value="Delivery (Kirim Alamat)">🛵 Antar Alamat (Delivery)</option>
-                        </select>
-                    </div>
-
-                    <div class="checkout-field" id="box-alamat" style="display:none;">
-                        <label>Alamat Lengkap Pengiriman:</label>
-                        <textarea id="order-alamat" class="checkout-input" rows="2" placeholder="Jalan, No. Rumah, Patokan...">${currentUserData?.alamat || ''}</textarea>
-                    </div>
-
-                    <div class="checkout-field">
-                        <label><i class="fa-solid fa-wallet"></i> Metode Pembayaran:</label>
-                        <select id="order-metode" class="checkout-input">
-                            <option value="Cash / Tunai">💵 Cash / Tunai</option>
-                            <option value="QRIS / All Payment">📱 QRIS (Gopay/OVO/Dana/LinkAja)</option>
-                            <option value="Transfer Bank BCA">🏦 Transfer Bank BCA</option>
-                            <option value="Transfer Bank Mandiri">🏦 Transfer Bank Mandiri</option>
-                        </select>
-                    </div>
-
-                    <div class="checkout-field">
-                        <label><i class="fa-solid fa-note-sticky"></i> Catatan Khusus (Opsional):</label>
-                        <input id="order-catatan" class="checkout-input" placeholder="Contoh: Jangan pedas, es dipisah...">
-                    </div>
-                </div>
-            `,
-            focusConfirm: false,
-            showCancelButton: true,
-            confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Buat Pesanan',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#ff6b35',
-            didOpen: () => {
-                window.toggleAlamatField = function(val) {
-                    const boxAlamat = document.getElementById('box-alamat');
-                    if(val.includes('Delivery')) {
-                        boxAlamat.style.display = 'block';
-                    } else {
-                        boxAlamat.style.display = 'none';
-                    }
-                };
-            },
-            preConfirm: () => {
-                const nama = document.getElementById('order-nama').value.trim();
-                const hp = document.getElementById('order-hp').value.trim();
-                const tipe = document.getElementById('order-tipe').value;
-                const alamat = document.getElementById('order-alamat').value.trim();
-                const metode = document.getElementById('order-metode').value;
-                const catatan = document.getElementById('order-catatan').value.trim();
-
-                if (!nama) {
-                    Swal.showValidationMessage('Nama / Nomor Meja wajib diisi!');
-                    return false;
-                }
-                if (tipe.includes('Delivery') && !alamat) {
-                    Swal.showValidationMessage('Alamat pengiriman wajib diisi untuk layanan Delivery!');
-                    return false;
-                }
-
-                return { nama, hp, tipe, alamat, metode, catatan };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let dataForm = result.value;
-                let orderId = "ORD-" + Date.now();
-                
-                database.ref('pesanan/' + orderId).set({
-                    id: orderId,
-                    userId: auth.currentUser ? auth.currentUser.uid : 'tamu',
-                    nama: dataForm.nama,
-                    hp: dataForm.hp || '-',
-                    tipe: dataForm.tipe,
-                    alamat: dataForm.alamat || '-',
-                    items: itemsArray,
-                    total: totalHarga,
-                    metode: dataForm.metode,
-                    catatan: dataForm.catatan || '-',
-                    pembayaran: 'Belum Bayar',
-                    status: 'Menunggu Respon',
-                    timestamp: Date.now()
-                }).then(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Pesanan Diterima!',
-                        text: 'Terima kasih, pesananmu sedang diteruskan ke dapur RivandCronz.',
-                        confirmButtonColor: '#ff6b35'
-                    });
-                    keranjang = {};
-                    updateTotalKeranjang();
-                    renderMenu();
-                });
-            }
+            title: 'Checkout Pesanan',
+            text: `Total pesanan kamu: Rp ${totalHarga.toLocaleString('id-ID')}`,
+            icon: 'info',
+            confirmButtonText: 'Lanjut Pembayaran',
+            confirmButtonColor: '#ff6b35'
         });
     }
 </script>

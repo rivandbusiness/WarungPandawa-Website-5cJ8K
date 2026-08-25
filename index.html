@@ -23,55 +23,90 @@
             --primary: #ff6b35; 
             --secondary: #004e64; 
             --bg: #f8fafc; 
-            --telur-asin: #00a896; /* Warna Duck Egg Blue */
+            --telur-asin: #00a896;
             --telur-asin-hover: #028090;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --subtext-color: #64748b;
+            --border-color: #e2e8f0;
+            --btn-qty-bg: #f1f5f9;
         }
+
+        /* Mode Gelap */
+        body.dark-theme {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --subtext-color: #94a3b8;
+            --border-color: #334155;
+            --btn-qty-bg: #334155;
+        }
+
+        /* Palette Aksen Kustom */
+        body[data-color="orange"] { --primary: #ff6b35; }
+        body[data-color="blue"] { --primary: #2563eb; }
+        body[data-color="green"] { --primary: #10b981; }
+        body[data-color="purple"] { --primary: #8b5cf6; }
+
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: #1e293b; padding-bottom: 90px; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: var(--text-color); padding-bottom: 90px; transition: background 0.3s, color 0.3s; }
         .container { max-width: 600px; margin: auto; }
         
         /* Top Navigation Header & Hamburger */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--card-bg); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border-color); }
         .brand-logo { font-weight: bold; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
-        .hamburger-btn { background: #f1f5f9; border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .hamburger-btn { background: var(--btn-qty-bg); border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         /* Slide Drawer Menu (Garis Tiga) */
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #ffffff; z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card-bg); color: var(--text-color); z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow-y: auto; }
         .drawer-content.active { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; }
 
         /* User Card Inside Drawer */
-        .user-box { text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        .drawer-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; margin-bottom: 5px; }
-        .drawer-item:hover { background: #f1f5f9; }
+        .drawer-item { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-color); cursor: pointer; text-align: left; margin-bottom: 5px; }
+        .drawer-item:hover { background: var(--btn-qty-bg); }
+        .drawer-item-left { display: flex; align-items: center; gap: 10px; }
 
+        /* Accordion / Pembungkus Pengaturan Tema */
+        .theme-accordion { display: none; background: var(--bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 5px; margin-bottom: 10px; }
+        .theme-accordion.open { display: block; }
+        .theme-section-title { font-size: 11px; font-weight: bold; color: var(--subtext-color); margin-bottom: 8px; text-transform: uppercase; }
+        .theme-select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 12px; margin-bottom: 10px; outline: none; }
+        .color-palette { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 10px; }
+        .color-dot { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .color-dot.active { border-color: var(--text-color); transform: scale(1.1); }
+        .btn-reset-theme { width: 100%; padding: 7px; border: 1px dashed var(--border-color); background: transparent; color: var(--subtext-color); border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .btn-reset-theme:hover { background: var(--btn-qty-bg); color: var(--text-color); }
+
+        /* Header Gradient Asli */
         .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; }
         .header h1 { margin: 0; font-size: 22px; }
 
         /* Filter Kategori */
         .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
-        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn { background: var(--card-bg); color: var(--text-color); border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* Grid Cards Menu */
         .menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .menu-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: #f1f5f9; flex-shrink: 0; }
+        .menu-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: var(--btn-qty-bg); flex-shrink: 0; }
         .menu-info { flex: 1; }
         .menu-title { font-weight: bold; font-size: 15px; margin-bottom: 3px; color: var(--secondary); }
-        .menu-desc { font-size: 11px; color: #64748b; margin-bottom: 6px; line-height: 1.3; }
+        .menu-desc { font-size: 11px; color: var(--subtext-color); margin-bottom: 6px; line-height: 1.3; }
         .menu-price { font-size: 14px; font-weight: bold; color: var(--primary); }
-        .menu-stock { font-size: 11px; color: #64748b; }
+        .menu-stock { font-size: 11px; color: var(--subtext-color); }
 
         /* Counter Input */
         .counter-box { display: flex; align-items: center; gap: 8px; }
-        .btn-qty { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--secondary); }
+        .btn-qty { background: var(--btn-qty-bg); border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--secondary); }
         .btn-qty:disabled { opacity: 0.4; cursor: not-allowed; }
-        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; }
+        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; color: var(--text-color); }
 
         /* Floating Cart Bar */
         .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 580px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99; }
@@ -81,19 +116,16 @@
 <body>
 
 <div class="container">
-    <!-- Top Navbar Ringkas dengan Garis Tiga -->
     <div class="top-navbar">
         <div class="brand-logo"><i class="fa-solid fa-utensils" style="color:var(--primary);"></i> RivandCronz</div>
         <button class="hamburger-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
-    <!-- Header Banner Store -->
     <div class="header">
         <h1>Daftar Menu</h1>
         <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">Pilih menu favoritmu & pesan langsung!</p>
     </div>
 
-    <!-- Filter Kategori -->
     <div class="category-container">
         <button class="cat-btn active" onclick="filterKategori('semua', this)">✨ Semua</button>
         <button class="cat-btn" onclick="filterKategori('makanan', this)">🍲 Makanan</button>
@@ -102,13 +134,11 @@
         <button class="cat-btn" onclick="filterKategori('promo', this)">🔥 Promo</button>
     </div>
 
-    <!-- Daftar Menu -->
     <div id="user-menu-list" class="menu-grid">
-        <p style="text-align: center; color: #94a3b8; padding: 30px;">Memuat menu...</p>
+        <p style="text-align: center; color: var(--subtext-color); padding: 30px;">Memuat menu...</p>
     </div>
 </div>
 
-<!-- Floating Cart Bar -->
 <div class="cart-bar">
     <div>
         <span style="font-size: 11px; opacity: 0.8; display: block;">Total Pesanan:</span>
@@ -117,27 +147,52 @@
     <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
 
-<!-- Slide Drawer Menu (Garis Tiga) -->
+<!-- Slide Drawer Menu -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
     <div class="drawer-header">
-        <strong style="color:var(--secondary); font-size:15px;"><i class="fa-solid fa-user-circle"></i> Akun Saya</strong>
+        <strong style="color:var(--text-color); font-size:15px;"><i class="fa-solid fa-user-circle"></i> Akun Saya</strong>
         <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:18px;" onclick="toggleDrawer()"></i>
     </div>
 
     <div class="user-box">
         <img id="drawer-user-img" class="user-avatar" src="">
-        <div id="drawer-user-name" style="font-weight:bold; font-size:14px; color:#1e293b;">Tamu</div>
-        <div id="drawer-user-email" style="font-size:11px; color:#64748b;">Belum Masuk</div>
+        <div id="drawer-user-name" style="font-weight:bold; font-size:14px; color:var(--text-color);">Tamu</div>
+        <div id="drawer-user-email" style="font-size:11px; color:var(--subtext-color);">Belum Masuk</div>
     </div>
 
-    <div id="drawer-actions">
-        <!-- Opsi Tombol berubah sesuai status Auth -->
+    <div id="drawer-actions"></div>
+
+    <!-- Menu Tombol Pengaturan (Accordion) -->
+    <button class="drawer-item" onclick="toggleAccordionTema()">
+        <div class="drawer-item-left">
+            <i class="fa-solid fa-gear" style="color:var(--primary);"></i> Pengaturan Tampilan
+        </div>
+        <i id="accordion-arrow" class="fa-solid fa-chevron-down" style="font-size: 11px;"></i>
+    </button>
+
+    <!-- Content Pengaturan (Terbungkus Dibatasi Login) -->
+    <div id="theme-accordion-box" class="theme-accordion">
+        <div class="theme-section-title">Mode Tampilan:</div>
+        <select class="theme-select" id="theme-mode-select" onchange="gantiModeTema(this.value)">
+            <option value="light">☀️ Terang (Original)</option>
+            <option value="dark">🌙 Gelap (Dark Mode)</option>
+            <option value="system">💻 Ikuti Sistem HP</option>
+        </select>
+
+        <div class="theme-section-title">Warna Aksen:</div>
+        <div class="color-palette">
+            <div class="color-dot active" style="background:#ff6b35;" title="Original Orange" onclick="gantiWarnaAksen('orange', this)"></div>
+            <div class="color-dot" style="background:#2563eb;" title="Biru" onclick="gantiWarnaAksen('blue', this)"></div>
+            <div class="color-dot" style="background:#10b981;" title="Hijau" onclick="gantiWarnaAksen('green', this)"></div>
+            <div class="color-dot" style="background:#8b5cf6;" title="Ungu" onclick="gantiWarnaAksen('purple', this)"></div>
+        </div>
+
+        <button class="btn-reset-theme" onclick="resetKeOriginal()"><i class="fa-solid fa-rotate-left"></i> Reset Tema</button>
     </div>
 </div>
 
 <script>
-    // Config Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
         authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -157,6 +212,91 @@
     let kategoriAktif = 'semua';
     let currentUserData = null;
 
+    // --- ACCORDION PENGATURAN ---
+    function toggleAccordionTema() {
+        // Cek login saat tombol Pengaturan diklik
+        if (!auth.currentUser) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Akses Terbatas',
+                text: 'Silakan login dengan Google terlebih dahulu untuk mengakses Pengaturan Tampilan!',
+                confirmButtonColor: '#ff6b35'
+            });
+            return;
+        }
+
+        const box = document.getElementById('theme-accordion-box');
+        const arrow = document.getElementById('accordion-arrow');
+        box.classList.toggle('open');
+        
+        if (box.classList.contains('open')) {
+            arrow.className = "fa-solid fa-chevron-up";
+        } else {
+            arrow.className = "fa-solid fa-chevron-down";
+        }
+    }
+
+    // --- MANAJEMEN TEMA ---
+    function initTema() {
+        if (!auth.currentUser) {
+            localStorage.removeItem('theme_mode');
+            localStorage.removeItem('theme_color');
+        }
+
+        const savedMode = localStorage.getItem('theme_mode') || 'light';
+        const savedColor = localStorage.getItem('theme_color') || 'orange';
+
+        document.getElementById('theme-mode-select').value = savedMode;
+        gantiModeTema(savedMode, false, true);
+        
+        const dots = document.querySelectorAll('.color-dot');
+        dots.forEach(dot => {
+            if(dot.getAttribute('onclick').includes(`'${savedColor}'`)) {
+                gantiWarnaAksen(savedColor, dot, false, true);
+            }
+        });
+    }
+
+    function gantiModeTema(mode, save = true, force = false) {
+        if (!force && !auth.currentUser) return;
+
+        if(save) localStorage.setItem('theme_mode', mode);
+        
+        if (mode === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else if (mode === 'light') {
+            document.body.classList.remove('dark-theme');
+        } else if (mode === 'system') {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if(isDark) document.body.classList.add('dark-theme');
+            else document.body.classList.remove('dark-theme');
+        }
+    }
+
+    function gantiWarnaAksen(warna, el, save = true, force = false) {
+        if (!force && !auth.currentUser) return;
+
+        if(save) localStorage.setItem('theme_color', warna);
+        document.body.setAttribute('data-color', warna);
+
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        if(el) el.classList.add('active');
+    }
+
+    function resetKeOriginal() {
+        if (!auth.currentUser) return;
+        localStorage.removeItem('theme_mode');
+        localStorage.removeItem('theme_color');
+        initTema();
+        Swal.fire({ icon: 'success', title: 'Tema Kembali ke Original!', timer: 1000, showConfirmButton: false });
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (localStorage.getItem('theme_mode') === 'system') {
+            gantiModeTema('system', false, true);
+        }
+    });
+
     // Toggle Open/Close Drawer Garis Tiga
     function toggleDrawer() {
         document.getElementById('drawer-overlay').classList.toggle('active');
@@ -166,6 +306,9 @@
     // Monitor Status Auth Google
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
+        const box = document.getElementById('theme-accordion-box');
+        const arrow = document.getElementById('accordion-arrow');
+
         if (user) {
             document.getElementById('drawer-user-img').src = user.photoURL || 'https://via.placeholder.com/60';
             document.getElementById('drawer-user-img').style.display = 'block';
@@ -174,33 +317,41 @@
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
-                    <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Edit Biodata Pelanggan
-                </button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalFormRating();" style="color:var(--telur-asin);">
-                    <i class="fa-solid fa-star"></i> Beri Ulasan & Rating
+                    <div class="drawer-item-left">
+                        <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Edit Biodata Pelanggan
+                    </div>
                 </button>
                 <button class="drawer-item" style="color:#ef4444;" onclick="logoutGoogle()">
-                    <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+                    <div class="drawer-item-left">
+                        <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+                    </div>
                 </button>
             `;
 
             database.ref('users/' + user.uid).on('value', (snap) => {
                 currentUserData = snap.val() || { nama: user.displayName, email: user.email, hp: '', alamat: '' };
             });
+
+            initTema();
         } else {
             currentUserData = null;
             document.getElementById('drawer-user-img').style.display = 'none';
             document.getElementById('drawer-user-name').innerText = 'Tamu';
             document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill data';
 
+            // Tutup accordion jika logout
+            box.classList.remove('open');
+            arrow.className = "fa-solid fa-chevron-down";
+
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="loginGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
-                </button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalFormRating();" style="color:var(--telur-asin);">
-                    <i class="fa-solid fa-star"></i> Beri Ulasan & Rating
+                    <div class="drawer-item-left">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
+                    </div>
                 </button>
             `;
+
+            initTema();
         }
     });
 
@@ -273,203 +424,6 @@
         });
     }
 
-    // Validasi Login + Pernah Pesan + Upload File Foto/Video
-async function bukaModalFormRating() {
-    const user = auth.currentUser;
-
-    // 1. Cek Login
-    if (!user) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Wajib Login',
-            text: 'Silakan masuk dengan akun Google terlebih dahulu untuk memberikan ulasan.',
-            confirmButtonColor: '#ff6b35'
-        });
-        return;
-    }
-
-    // 2. Cek Riwayat Pesanan di Firebase Database
-    const orderSnap = await database.ref('pesanan').orderByChild('userId').equalTo(user.uid).once('value');
-    const orderData = orderSnap.val();
-
-    if (!orderData) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Belum Ada Pesanan',
-            text: 'Anda harus pernah memesan di Warung Pandawa sebelum dapat memberikan ulasan.',
-            confirmButtonColor: '#ff6b35'
-        });
-        return;
-    }
-
-    // Ambil daftar ID Pesanan milik pengguna untuk opsi dropdown
-    let orderOptionsHtml = '';
-    Object.keys(orderData).forEach(key => {
-        let ord = orderData[key];
-        orderOptionsHtml += `<option value="${ord.id}">ID: ${ord.id} (${ord.tipe} - Rp ${ord.total.toLocaleString('id-ID')})</option>`;
-    });
-
-    // 3. Tampilkan Form Ulasan & Upload File
-    Swal.fire({
-        title: '<span style="color:var(--telur-asin); font-size:18px;"><i class="fa-solid fa-star"></i> Ulasan Pelanggan Terverifikasi</span>',
-        html: `
-            <style>
-                .rate-box { text-align: left; font-size: 13px; color: #334155; }
-                .rate-field { margin-bottom: 10px; }
-                .rate-field label { font-weight: 600; font-size: 12px; display: block; margin-bottom: 4px; color: #475568; }
-                .rate-select, .rate-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 8px 10px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; }
-                .rate-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-                .file-hint { font-size: 10.5px; color: #64748b; margin-top: 3px; }
-            </style>
-            <div class="rate-box">
-                <div class="rate-field">
-                    <label>Pilih ID Pesanan Anda:</label>
-                    <select id="rate-order-id" class="rate-select">
-                        ${orderOptionsHtml}
-                    </select>
-                </div>
-                
-                <div class="rate-grid-2">
-                    <div class="rate-field">
-                        <label>🍲 Rasa Makanan:</label>
-                        <select id="rate-makanan" class="rate-select">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                            <option value="2">⭐⭐ (2/5)</option>
-                            <option value="1">⭐ (1/5)</option>
-                        </select>
-                    </div>
-                    <div class="rate-field">
-                        <label>💁 Pelayanan Dapur:</label>
-                        <select id="rate-pelayanan" class="rate-select">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                            <option value="2">⭐⭐ (2/5)</option>
-                            <option value="1">⭐ (1/5)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="rate-grid-2">
-                    <div class="rate-field">
-                        <label>😊 Kesopanan Kurir:</label>
-                        <select id="rate-kesopanan" class="rate-select">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                            <option value="2">⭐⭐ (2/5)</option>
-                            <option value="1">⭐ (1/5)</option>
-                        </select>
-                    </div>
-                    <div class="rate-field">
-                        <label>🛵 Kecepatan Kirim:</label>
-                        <select id="rate-pengiriman" class="rate-select">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                            <option value="2">⭐⭐ (2/5)</option>
-                            <option value="1">⭐ (1/5)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="rate-field">
-                    <label>Unggah Foto / Video Bukti:</label>
-                    <input type="file" id="rate-file-input" class="rate-input" accept="image/*,video/*" multiple onchange="validasiBerkasMedia(this)">
-                    <div class="file-hint">⚠️ Batasan: Maksimal <strong>3 Foto</strong> ATAU <strong>1 Video</strong>.</div>
-                </div>
-
-                <div class="rate-field">
-                    <label>Catatan Ulasan Masukan:</label>
-                    <textarea id="rate-catatan" class="rate-input" rows="2" placeholder="Tuliskan pengalaman kuliner Anda..."></textarea>
-                </div>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Kirim Ulasan',
-        confirmButtonColor: '#00a896',
-        preConfirm: async () => {
-            const orderId = document.getElementById('rate-order-id').value;
-            const makanan = parseInt(document.getElementById('rate-makanan').value);
-            const pelayanan = parseInt(document.getElementById('rate-pelayanan').value);
-            const kesopanan = parseInt(document.getElementById('rate-kesopanan').value);
-            const pengiriman = parseInt(document.getElementById('rate-pengiriman').value);
-            const catatan = document.getElementById('rate-catatan').value.trim();
-            const fileInput = document.getElementById('rate-file-input');
-            
-            let fileList = Array.from(fileInput.files);
-            let mediaUrls = [];
-
-            // Konversi file lokal ke DataURL Base64 untuk disimpan di Firebase Realtime Database
-            for (let file of fileList) {
-                let base64 = await toBase64(file);
-                mediaUrls.push({ name: file.name, type: file.type, data: base64 });
-            }
-
-            return {
-                uid: user.uid,
-                nama: user.displayName || 'Pelanggan',
-                email: user.email || '-',
-                photoUser: user.photoURL || '',
-                orderId: orderId,
-                makanan, pelayanan, kesopanan, pengiriman,
-                catatan,
-                lampiran: mediaUrls,
-                timestamp: Date.now()
-            };
-        }
-    }).then((res) => {
-        if (res.isConfirmed && res.value) {
-            let ulasanId = "REV-" + Date.now();
-            database.ref('ulasan/' + ulasanId).set(res.value).then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Ulasan Terkirim!',
-                    text: 'Ulasan Anda berhasil masuk ke Dasbor Admin Dapur.',
-                    confirmButtonColor: '#00a896'
-                });
-            });
-        }
-    });
-}
-
-// Fungsi Validasi Pilihan File Media (Maks 3 Foto OR 1 Video)
-function validasiBerkasMedia(input) {
-    const files = Array.from(input.files);
-    if (files.length === 0) return;
-
-    let totalGambar = files.filter(f => f.type.startsWith('image/')).length;
-    let totalVideo = files.filter(f => f.type.startsWith('video/')).length;
-
-    if (totalVideo > 0 && totalGambar > 0) {
-        Swal.fire('Format Campuran', 'Harap pilih salah satu: Hanya Foto atau Hanya Video saja.', 'warning');
-        input.value = '';
-        return;
-    }
-
-    if (totalVideo > 1) {
-        Swal.fire('Batas Video', 'Maksimal unggah video adalah 1 file.', 'warning');
-        input.value = '';
-        return;
-    }
-
-    if (totalGambar > 3) {
-        Swal.fire('Batas Foto', 'Maksimal unggah foto adalah 3 gambar.', 'warning');
-        input.value = '';
-        return;
-    }
-}
-
-// Helper Converter File ke Base64 Data String
-const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-});
-
     // Load Realtime Menu Database
     database.ref('daftar_menu').on('value', (snapshot) => {
         semuaMenuData = snapshot.val() || {};
@@ -482,7 +436,7 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
         let keys = Object.keys(semuaMenuData);
         if (keys.length === 0) {
-            menuBox.innerHTML = `<p style="text-align:center; color:#94a3b8; padding:30px;">Belum ada menu tersedia.</p>`;
+            menuBox.innerHTML = `<p style="text-align:center; color:var(--subtext-color); padding:30px;">Belum ada menu tersedia.</p>`;
             return;
         }
 
@@ -550,7 +504,6 @@ const toBase64 = file => new Promise((resolve, reject) => {
         renderMenu();
     }
 
-    // Checkout Modal dengan Auto-fill dari Biodata Pelanggan
     function prosesPesanan() {
         let rincianItemHtml = "";
         let itemsArray = [];
@@ -563,10 +516,10 @@ const toBase64 = file => new Promise((resolve, reject) => {
             itemsArray.push(`${item.nama} (${item.qty}x)`);
 
             rincianItemHtml += `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #e2e8f0; padding: 6px 0; font-size:13px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed var(--border-color); padding: 6px 0; font-size:13px;">
                     <div>
-                        <span style="font-weight:600; color:#1e293b;">${item.nama}</span>
-                        <div style="font-size:11px; color:#64748b;">${item.qty} x Rp ${item.harga.toLocaleString('id-ID')}</div>
+                        <span style="font-weight:600;">${item.nama}</span>
+                        <div style="font-size:11px; opacity:0.8;">${item.qty} x Rp ${item.harga.toLocaleString('id-ID')}</div>
                     </div>
                     <span style="font-weight:bold; color:var(--primary);">Rp ${subtotal.toLocaleString('id-ID')}</span>
                 </div>
@@ -579,13 +532,13 @@ const toBase64 = file => new Promise((resolve, reject) => {
         }
 
         Swal.fire({
-            title: '<span style="font-size:18px; color:var(--secondary);"><i class="fa-solid fa-receipt"></i> Rincian & Checkout</span>',
+            title: '<span style="font-size:18px;"><i class="fa-solid fa-receipt"></i> Rincian & Checkout</span>',
             html: `
                 <style>
-                    .checkout-box { text-align: left; font-size: 13px; color: #334155; }
-                    .checkout-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; margin-bottom: 12px; }
+                    .checkout-box { text-align: left; font-size: 13px; }
+                    .checkout-section { border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 12px; }
                     .checkout-field { margin-bottom: 10px; }
-                    .checkout-field label { display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #4a5568; }
+                    .checkout-field label { display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
                     .checkout-input { 
                         width: 100% !important; margin: 0 !important; box-sizing: border-box !important;
                         padding: 9px 12px !important; border: 1.5px solid #cbd5e1 !important; 
@@ -595,7 +548,7 @@ const toBase64 = file => new Promise((resolve, reject) => {
                 
                 <div class="checkout-box">
                     <div class="checkout-section">
-                        <div style="font-size:12px; font-weight:bold; color:#64748b; margin-bottom:5px; text-transform:uppercase;">Ringkasan Pesanan:</div>
+                        <div style="font-size:12px; font-weight:bold; opacity:0.8; margin-bottom:5px; text-transform:uppercase;">Ringkasan Pesanan:</div>
                         <div style="max-height: 120px; overflow-y: auto;">${rincianItemHtml}</div>
                         <div style="display:flex; justify-content:space-between; margin-top:8px; font-weight:bold; font-size:14px;">
                             <span>Total Bayar:</span>
@@ -700,7 +653,7 @@ const toBase64 = file => new Promise((resolve, reject) => {
                     Swal.fire({
                         icon: 'success',
                         title: 'Pesanan Diterima!',
-                        html: `Terima kasih, pesananmu sedang diteruskan ke dapur RivandCronz.<br><strong>ID Pesanan: ${orderId}</strong>`,
+                        text: 'Terima kasih, pesananmu sedang diteruskan ke dapur RivandCronz.',
                         confirmButtonColor: '#ff6b35'
                     });
                     keranjang = {};

@@ -187,7 +187,7 @@
             </div>
         </div>
 
-        <!-- SUB-MENU 1: DATA PRIBADI (ESTETIK & FULL FEATURED) -->
+        <!-- SUB-MENU 1: DATA PRIBADI -->
         <div id="sec-profil-pribadi" style="display:none;">
             <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px; display:flex; align-items:center; gap:6px;">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Profil
@@ -195,8 +195,6 @@
 
             <!-- Kartu Preview Nametag & Foto Profil -->
             <div style="background: linear-gradient(135deg, #004e64, #0e7490); border-radius: 16px; padding: 20px; color: white; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;">
-                
-                <!-- Frame Foto Profil & Upload Button -->
                 <div style="position: relative; width: 85px; height: 85px; margin: 0 auto 10px auto;">
                     <img id="p-avatar-preview" src="https://via.placeholder.com/85" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                     
@@ -206,15 +204,12 @@
                     <input type="file" id="upload-avatar-input" accept="image/*" style="display: none;" onchange="previewFotoProfil(event)">
                 </div>
 
-                <!-- Dynamic Nametag -->
                 <div id="p-nametag-display" style="font-weight: bold; font-size: 18px; margin-bottom: 4px;">Nama Pelanggan</div>
                 
-                <!-- Status Member Badge -->
                 <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 11px; backdrop-filter: blur(4px); margin-bottom: 8px;">
                     💎 Sultan Member
                 </div>
 
-                <!-- Deskripsi / Bio Pelanggan -->
                 <div id="p-bio-display" style="font-size: 12px; opacity: 0.85; font-style: italic;">"Belum ada bio/deskripsi"</div>
             </div>
 
@@ -323,6 +318,18 @@
             </button>
         </div>
 
+    </div>
+</div>
+
+<!-- MODAL FULLSCREEN DETAIL PESANAN & INSTRUCTION BAYAR -->
+<div id="modal-detail-pesanan" class="modal-full-container">
+    <div class="modal-full-header">
+        <strong style="font-size: 16px;"><i class="fa-solid fa-receipt"></i> Detail & Pembayaran</strong>
+        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalDetailPesanan()"></i>
+    </div>
+
+    <div class="modal-full-body" id="detail-pesanan-body">
+        <!-- Content diisi dinamis via JS -->
     </div>
 </div>
 
@@ -445,7 +452,6 @@
         database.ref('users/' + user.uid).on('value', (snap) => {
             const val = snap.val() || {};
             
-            // Set Input Field & Preview
             document.getElementById('p-nama').value = val.nama || user.displayName || '';
             document.getElementById('p-bio').value = val.bio || '';
             document.getElementById('p-email').value = user.email || '';
@@ -468,7 +474,6 @@
         });
     }
 
-    // LIVE PREVIEW TYPING
     function liveUpdateNametag(val) {
         document.getElementById('p-nametag-display').innerText = val.trim() !== "" ? val : "Nama Pelanggan";
     }
@@ -477,7 +482,6 @@
         document.getElementById('p-bio-display').innerText = val.trim() !== "" ? `"${val}"` : '"Belum ada bio/deskripsi"';
     }
 
-    // PREVIEW FOTO PROFIL
     function previewFotoProfil(event) {
         const file = event.target.files[0];
         if (file) {
@@ -495,7 +499,6 @@
         }
     }
 
-    // SIMPAN DATA PRIBADI LENGKAP
     function simpanDataPribadiLengkap() {
         const user = auth.currentUser;
         if (!user) return;
@@ -515,12 +518,7 @@
             bio: bioBaru,
             photo: tempAvatarUrl
         }).then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Profil Berhasil Diperbarui!',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            Swal.fire({ icon: 'success', title: 'Profil Berhasil Diperbarui!', timer: 1500, showConfirmButton: false });
         }).catch((err) => {
             Swal.fire('Gagal', err.message, 'error');
         });
@@ -567,9 +565,7 @@
         });
     }
 
-    function bukaFormAlamatBaru() {
-        bukaSubProfil('form-alamat-baru');
-    }
+    function bukaFormAlamatBaru() { bukaSubProfil('form-alamat-baru'); }
 
     function simpanAlamatBaru() {
         const user = auth.currentUser;
@@ -613,7 +609,6 @@
             if (!mapObject) {
                 mapObject = L.map('map-container').setView([selectedLat, selectedLng], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapObject);
-
                 mapMarker = L.marker([selectedLat, selectedLng], { draggable: true }).addTo(mapObject);
 
                 mapMarker.on('dragend', function () {
@@ -652,9 +647,7 @@
         tutupPetaPicker();
     }
 
-    function tutupPetaPicker() {
-        document.getElementById('map-modal').style.display = 'none';
-    }
+    function tutupPetaPicker() { document.getElementById('map-modal').style.display = 'none'; }
 
     // OTP TELEPON
     function mintaOTPReal() {
@@ -782,12 +775,28 @@
         renderMenu();
     }
 
+    // FUNGSI CHECKOUT REALTIME
     function prosesPesanan() {
+        const user = auth.currentUser;
+
+        if (!user) {
+            Swal.fire({
+                title: 'Belum Login',
+                text: 'Silakan masuk dengan Akun Google terlebih dahulu!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Login Sekarang',
+                confirmButtonColor: '#ff6b35'
+            }).then((res) => { if (res.isConfirmed) loginGoogle(); });
+            return;
+        }
+
         let totalHarga = 0;
         let itemsArray = [];
         Object.keys(keranjang).forEach(id => {
-            totalHarga += keranjang[id].harga * keranjang[id].qty;
-            itemsArray.push(`${keranjang[id].nama} (${keranjang[id].qty}x)`);
+            let item = keranjang[id];
+            totalHarga += item.harga * item.qty;
+            itemsArray.push(`${item.nama} (${item.qty}x)`);
         });
 
         if (itemsArray.length === 0) {
@@ -795,13 +804,157 @@
             return;
         }
 
-        Swal.fire({
-            title: 'Checkout Pesanan',
-            text: `Total pesanan kamu: Rp ${totalHarga.toLocaleString('id-ID')}`,
-            icon: 'info',
-            confirmButtonText: 'Lanjut Pembayaran',
-            confirmButtonColor: '#ff6b35'
+        database.ref(`users/${user.uid}`).once('value', (snap) => {
+            const val = snap.val() || {};
+            let alamatUtamaObj = null;
+
+            if (val.alamat_list) {
+                Object.keys(val.alamat_list).forEach(k => {
+                    if (val.alamat_list[k].isUtama) alamatUtamaObj = val.alamat_list[k];
+                });
+                if (!alamatUtamaObj && Object.keys(val.alamat_list).length > 0) {
+                    alamatUtamaObj = val.alamat_list[Object.keys(val.alamat_list)[0]];
+                }
+            }
+
+            let alamatRingkas = alamatUtamaObj 
+                ? `${alamatUtamaObj.jalan}, ${alamatUtamaObj.desa}, ${alamatUtamaObj.kecamatan} (${alamatUtamaObj.penerima} - ${alamatUtamaObj.hp})`
+                : "Alamat belum diatur (Ambil di Toko / COD Direct)";
+
+            Swal.fire({
+                title: 'Lanjut Pembayaran',
+                html: `
+                    <div style="text-align:left; font-size:13px; line-height:1.6;">
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:12px;">
+                            <strong style="color:var(--secondary); font-size:12px;"><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman:</strong>
+                            <div style="color:#475569; font-size:11px; margin-top:2px;">${alamatRingkas}</div>
+                        </div>
+
+                        <div style="margin-bottom:10px;">
+                            <label style="font-weight:bold; display:block; margin-bottom:4px;">Pilih Metode Pembayaran:</label>
+                            <select id="swal-metode-bayar" style="width:100%; padding:10px; border-radius:8px; border:1.5px solid #cbd5e1; font-size:13px;">
+                                <option value="QRIS / E-Wallet (Gopay/OVO/Dana)">📱 QRIS / E-Wallet (Gopay/OVO/Dana)</option>
+                                <option value="Transfer Bank BCA/Mandiri">🏦 Transfer Bank (BCA/Mandiri)</option>
+                                <option value="Bayar Tunai (COD / Bayar di Kasir)">💵 Bayar Tunai (COD / Di Kasir)</option>
+                            </select>
+                        </div>
+
+                        <div style="background:#fff7ed; border:1px solid #ff6b35; padding:10px; border-radius:8px; text-align:center;">
+                            <span style="font-size:12px; color:#c2410c;">Total Tagihan:</span>
+                            <h2 style="margin:2px 0 0 0; color:#ff6b35;">Rp ${totalHarga.toLocaleString('id-ID')}</h2>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '🚀 Kirim Pesanan Sekarang',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#ff6b35',
+                preConfirm: () => document.getElementById('swal-metode-bayar').value
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const metodePilihan = result.value;
+                    const orderId = "ORD-" + Date.now(); 
+
+                    Swal.fire({ title: 'Mengirim Pesanan ke Dapur...', didOpen: () => Swal.showLoading() });
+
+                    // EMBED REALTIME KE DATABASE FIREBASE (NODE 'pesanan')
+                    database.ref('pesanan/' + orderId).set({
+                        id: orderId,
+                        nama: val.nama || user.displayName || 'Pelanggan',
+                        items: itemsArray,
+                        total: totalHarga,
+                        metode: metodePilihan,
+                        pembayaran: 'Belum Bayar (Pending)',
+                        status: 'Menunggu Respon',
+                        alamat: alamatRingkas,
+                        userId: user.uid,
+                        waktu: Date.now()
+                    }).then(() => {
+                        keranjang = {};
+                        updateTotalKeranjang();
+                        renderMenu();
+
+                        Swal.close();
+                        bukaModalDetailPesanan(orderId);
+                    }).catch((err) => {
+                        Swal.fire('Gagal Memesan', err.message, 'error');
+                    });
+                }
+            });
         });
+    }
+
+    // FUNGSI TAMPIL DETAIL PESANAN & STATUS DAPUR LIVE SYNC
+    function bukaModalDetailPesanan(orderId) {
+        document.getElementById('modal-detail-pesanan').classList.add('active');
+
+        database.ref('pesanan/' + orderId).on('value', (snap) => {
+            const order = snap.val();
+            if (!order) return;
+
+            const body = document.getElementById('detail-pesanan-body');
+            
+            let instruksiBayarHTML = '';
+            if (order.metode.includes('QRIS')) {
+                instruksiBayarHTML = `
+                    <div style="text-align:center; background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:12px; margin-bottom:15px;">
+                        <span style="font-size:12px; color:#475569; font-weight:bold;">Scan QRIS Di Bawah Ini:</span>
+                        <div style="margin:10px 0;">
+                            <img src="https://via.placeholder.com/180x180?text=QRIS+CODE" style="border-radius:8px; border:2px solid #004e64;">
+                        </div>
+                        <div style="font-size:11px; color:#64748b;">Mendukung Gopay, OVO, Dana, ShopeePay, & Mobile Banking</div>
+                    </div>
+                `;
+            } else if (order.metode.includes('Transfer Bank')) {
+                instruksiBayarHTML = `
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:12px; margin-bottom:15px; font-size:13px;">
+                        <div style="margin-bottom:8px;"><b>Bank BCA:</b> 123-456-7890 a/n RivandCronz</div>
+                        <div><b>Bank Mandiri:</b> 987-654-3210 a/n RivandCronz</div>
+                    </div>
+                `;
+            } else {
+                instruksiBayarHTML = `
+                    <div style="background:#eff6ff; border:1px solid #3b82f6; padding:12px; border-radius:12px; margin-bottom:15px; font-size:12px; color:#1e40af; text-align:center;">
+                        💵 Silakan siapkan uang pas saat pesanan diantar / bayar langsung di kasir dapur.
+                    </div>
+                `;
+            }
+
+            let badgeColor = '#f59e0b';
+            if (order.status === 'Sedang Dimasak') badgeColor = '#0EA5E9';
+            if (order.status === 'Selesai' || order.status === 'Lunas') badgeColor = '#10B981';
+
+            body.innerHTML = `
+                <div style="background: linear-gradient(135deg, #004e64, #0e7490); color:white; padding:16px; border-radius:12px; text-align:center; margin-bottom:15px;">
+                    <span style="font-size:11px; opacity:0.8;">ID PESANAN: ${order.id}</span>
+                    <h3 style="margin:4px 0 10px 0;">Status: <span style="background:${badgeColor}; color:white; padding:3px 10px; border-radius:20px; font-size:13px;">${order.status}</span></h3>
+                    <div style="font-size:11px; opacity:0.9;"><i class="fa-solid fa-arrows-rotate fa-spin"></i> Status diperbarui secara realtime dari Dapur</div>
+                </div>
+
+                <h4 style="margin:0 0 8px 0; color:var(--secondary);">Instruksi Pembayaran</h4>
+                ${instruksiBayarHTML}
+
+                <div style="background:white; border:1px solid #e2e8f0; padding:12px; border-radius:12px; margin-bottom:15px;">
+                    <strong style="font-size:13px; color:#334155; display:block; margin-bottom:8px;">Rincian Pesanan:</strong>
+                    <ul style="margin:0; padding-left:18px; font-size:13px; color:#475569;">
+                        ${order.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <hr style="border:none; border-top:1px dashed #cbd5e1; margin:10px 0;">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px; color:var(--primary);">
+                        <span>Total Tagihan:</span>
+                        <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+                    </div>
+                </div>
+
+                <button onclick="tutupModalDetailPesanan()" style="width:100%; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
+                    Kembali ke Menu Utama
+                </button>
+            `;
+        });
+    }
+
+    function tutupModalDetailPesanan() {
+        document.getElementById('modal-detail-pesanan').classList.remove('active');
     }
 </script>
 </body>

@@ -7,259 +7,128 @@
     <meta name="description" content="Warung Pandawa menyediakan berbagai makanan, cemilan, dan minuman dengan cita rasa khas nusantara.">
     <link rel="icon" type="image/png" href="logo.png">
     <meta name="theme-color" content="#ff8c00">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- SDK Firebase App, Database & Auth -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
     <style>
-        :root { --primary: #ff6b35; --secondary: #004e64; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; --bg: #f7f9fb; --card: #ffffff; --text: #2b2d42; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background-color: var(--bg); color: var(--text); }
-        .container { max-width: 500px; margin: auto; background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; }
+        :root { --primary: #ff6b35; --secondary: #004e64; --bg: #f8fafc; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: #1e293b; padding-bottom: 90px; }
+        .container { max-width: 600px; margin: auto; }
         
-        /* Layout Header Top Bar */
-        .top-bar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .btn-hamburger { background: none; border: none; font-size: 22px; color: var(--secondary); cursor: pointer; padding: 5px; }
-        .header-title { font-size: 22px; margin: 0; color: var(--secondary); }
-        
-        /* Drawer Sidebar */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 99; }
-        .overlay.active { display: block; }
-        .sidebar { position: fixed; top: 0; left: -290px; width: 270px; height: 100%; background-color: #0b3c5d; padding: 30px 20px; transition: left 0.3s ease; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.3); box-sizing: border-box; }
-        .sidebar.active { left: 0; }
-        .sidebar-header { text-align: center; color: white; margin-bottom: 25px; }
-        .sidebar-header .logo-icon { font-size: 45px; margin-bottom: 5px; color: #ff6b35; }
-        .sidebar-header h2 { font-size: 20px; margin: 0; }
-        .sidebar-menu { display: flex; flex-direction: column; gap: 12px; }
-        
-        .nav-item { width: 100%; display: flex; align-items: center; gap: 12px; background-color: #ff6f3c; color: #0b3c5d; font-weight: bold; border: none; padding: 12px 18px; border-radius: 25px; font-size: 14px; cursor: pointer; text-align: left; }
-        .nav-item:active { transform: scale(0.98); }
-        .btn-google-login { background-color: #4285F4; color: white; }
+        /* Top Navigation Header & Hamburger */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .brand-logo { font-weight: bold; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
+        .hamburger-btn { background: #f1f5f9; border: none; font-size: 18px; color: var(--secondary); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Component UI */
-        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 12px 0; border-bottom: 2px solid #f0f0f0; font-size: 11px; font-weight: bold; }
-        .step { color: #ccc; transition: all 0.3s; display: flex; align-items: center; gap: 5px; }
-        .step.active { color: var(--primary); }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Slide Drawer Menu (Garis Tiga) */
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .drawer-overlay.active { opacity: 1; visibility: visible; }
+        .drawer-content { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #ffffff; z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .drawer-content.active { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
+
+        /* User Card Inside Drawer */
+        .user-box { text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
-        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 12px; box-sizing: border-box; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 15px; }
-        
-        .search-container { position: relative; margin-bottom: 15px; }
-        .search-container i { position: absolute; left: 12px; top: 15px; color: #aaa; }
-        .search-container input { padding-left: 35px; width: 100%; }
-        
-        .filter-buttons { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; }
-        .btn-filter { background: #eee; border: none; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .btn-filter.active { background: var(--secondary); color: white; }
-        
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #fff; border: 1px solid #eaeaea; border-radius: 14px; margin-bottom: 12px; }
-        .menu-info { display: flex; flex-direction: column; gap: 4px; }
-        .menu-nama { font-weight: 600; font-size: 16px; }
-        .menu-harga { font-size: 13px; color: #666; }
-        .menu-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; width: max-content; font-weight: 600; }
-        
-        .quantity-control { display: flex; align-items: center; gap: 14px; }
-        .btn-qty { background-color: var(--primary); color: white; border: none; width: 32px; height: 32px; cursor: pointer; border-radius: 50%; font-size: 16px; font-weight: bold; }
-        .qty-num { font-weight: 700; font-size: 16px; width: 20px; text-align: center; }
-        
-        .btn-block { background-color: var(--secondary); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-        .btn-secondary { background-color: #6c757d; margin-top: 10px; }
-        
-        .summary-card { background: #f8f9fa; padding: 18px; border-radius: 14px; margin-bottom: 15px; border: 1px solid #eee; }
-        .summary-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; }
-        .total-highlight { font-size: 18px; font-weight: bold; color: var(--primary); border-top: 1px dashed #ddd; padding-top: 10px; }
-        
-        /* Profile Box Styling */
-        .profile-avatar-box { text-align: center; margin-bottom: 20px; }
-        .profile-avatar-box img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
-        
-        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #fff; text-align: center; }
-        .status-pending { background-color: var(--warning); }
-        .status-cooking { background-color: var(--info); }
-        .status-done { background-color: var(--success); }
-        .status-rejected { background-color: var(--danger); }
-        
-        .payment-options { display: flex; flex-direction: column; gap: 10px; }
-        .payment-label { display: flex; align-items: center; gap: 12px; padding: 14px; background: #fff; border: 1.5px solid #eaeaea; border-radius: 12px; cursor: pointer; }
-        .qris-box { background: #f0fdf4; border: 2px dashed var(--success); border-radius: 12px; padding: 15px; margin-top: 15px; text-align: center; }
+        .drawer-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; margin-bottom: 5px; }
+        .drawer-item:hover { background: #f1f5f9; }
+
+        .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 22px; }
+
+        /* Filter Kategori */
+        .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Grid Cards Menu */
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .menu-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: #f1f5f9; flex-shrink: 0; }
+        .menu-info { flex: 1; }
+        .menu-title { font-weight: bold; font-size: 15px; margin-bottom: 3px; color: var(--secondary); }
+        .menu-desc { font-size: 11px; color: #64748b; margin-bottom: 6px; line-height: 1.3; }
+        .menu-price { font-size: 14px; font-weight: bold; color: var(--primary); }
+        .menu-stock { font-size: 11px; color: #64748b; }
+
+        /* Counter Input */
+        .counter-box { display: flex; align-items: center; gap: 8px; }
+        .btn-qty { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--secondary); }
+        .btn-qty:disabled { opacity: 0.4; cursor: not-allowed; }
+        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; }
+
+        /* Floating Cart Bar */
+        .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 580px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99; }
+        .btn-checkout { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
-
-<!-- Drawer Sidebar Navigasi -->
-<aside id="sidebar" class="sidebar">
-  <div class="sidebar-header">
-    <div class="logo-icon"><i class="fa-regular fa-lightbulb"></i></div>
-    <h2>Warung Pandawa</h2>
-  </div>
-
-  <nav class="sidebar-menu">
-    <!-- Tombol untuk Guest -->
-    <div id="menu-guest-group">
-      <button class="nav-item btn-google-login" onclick="loginDenganGoogle()">
-        <i class="fa-brands fa-google"></i> Login Google
-      </button>
-    </div>
-
-    <!-- Tombol untuk User Login -->
-    <div id="menu-user-group" style="display: none;">
-      <button class="nav-item" onclick="pindahSidebarMenu('profil')">
-        <i class="fa-solid fa-user"></i> <span id="label-sidebar-nama">Profil</span>
-      </button>
-    </div>
-
-    <button class="nav-item" onclick="pindahSidebarMenu('menu')">
-      <i class="fa-solid fa-square-check"></i> Daftar Menu
-    </button>
-
-    <button class="nav-item" onclick="pindahSidebarMenu('riwayat')">
-      <i class="fa-solid fa-file-lines"></i> Live Tracking
-    </button>
-
-    <div id="menu-logout-group" style="display: none;">
-      <button class="nav-item" onclick="prosesLogout()" style="background-color: var(--danger); color: white;">
-        <i class="fa-solid fa-right-from-bracket"></i> Logout
-      </button>
-    </div>
-  </nav>
-</aside>
-
 <div class="container">
-    <div class="top-bar-header">
-        <button class="btn-hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <h1 class="header-title"><i class="fa-solid fa-shop text-primary"></i> Warung Pandawa</h1>
-        <div style="width:24px;"></div>
+    <!-- Top Navbar Ringkas dengan Garis Tiga -->
+    <div class="top-navbar">
+        <div class="brand-logo"><i class="fa-solid fa-utensils" style="color:var(--primary);"></i> RivandCronz</div>
+        <button class="hamburger-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
-    <div class="step-indicator">
-        <span id="step-1" class="step active"><i class="fa-solid fa-utensils"></i> MENU</span>
-        <span id="step-2" class="step"><i class="fa-solid fa-basket-shopping"></i> KERANJANG</span>
-        <span id="step-3" class="step"><i class="fa-solid fa-credit-card"></i> TRACKING</span>
+    <!-- Header Banner Store -->
+    <div class="header">
+        <h1>Daftar Menu</h1>
+        <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">Pilih menu favoritmu & pesan langsung!</p>
     </div>
 
-    <!-- Halaman 1: Daftar Menu -->
-    <div id="page-1" class="page active">
-        <div id="guest-alert-banner" style="background:#fff3cd; color:#856404; padding:10px; border-radius:10px; margin-bottom:15px; font-size:12px; text-align:center;">
-            💡 Kamu sedang memesan sebagai <b>Guest</b>. <a href="#" onclick="loginDenganGoogle()" style="color:#856404;">Login Google</a> agar checkout lebih cepat!
-        </div>
-
-        <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="search-menu" oninput="renderMenu()" placeholder="Cari menu favoritmu...">
-        </div>
-
-        <div class="filter-buttons">
-            <button class="btn-filter active" onclick="filterKategori('semua', this)">Semua</button>
-            <button class="btn-filter" onclick="filterKategori('makanan', this)">Makanan</button>
-            <button class="btn-filter" onclick="filterKategori('cemilan', this)">Cemilan</button>
-        </div>
-        
-        <div id="menu-list"></div>
-        
-        <button class="btn-block" onclick="keHalaman(2)">Lanjut ke Rincian Pesanan <i class="fa-solid fa-arrow-right"></i></button>
+    <!-- Filter Kategori -->
+    <div class="category-container">
+        <button class="cat-btn active" onclick="filterKategori('semua', this)">✨ Semua</button>
+        <button class="cat-btn" onclick="filterKategori('makanan', this)">🍲 Makanan</button>
+        <button class="cat-btn" onclick="filterKategori('minuman', this)">🥤 Minuman</button>
+        <button class="cat-btn" onclick="filterKategori('cemilan', this)">🍿 Cemilan</button>
+        <button class="cat-btn" onclick="filterKategori('promo', this)">🔥 Promo</button>
     </div>
 
-    <!-- Halaman 2: Rincian Keranjang & Form Biodata Pemesan -->
-    <div id="page-2" class="page">
-        <h2 style="font-size: 16px; color: var(--secondary);"><i class="fa-solid fa-cart-shopping"></i> Form Pesanan</h2>
-        
-        <div class="summary-card" style="background:#fff;">
-            <div class="form-group">
-                <label for="username"><i class="fa-solid fa-user"></i> Nama Pemesan:*</label>
-                <input type="text" id="username" placeholder="Nama kamu...">
-            </div>
-            <div class="form-group">
-                <label for="user-phone"><i class="fa-solid fa-phone"></i> No. WhatsApp:*</label>
-                <input type="number" id="user-phone" placeholder="Contoh: 08123456789">
-            </div>
-            <div class="form-group">
-                <label for="user-address"><i class="fa-solid fa-location-dot"></i> Alamat / No. Meja:*</label>
-                <textarea id="user-address" rows="2" placeholder="Contoh: Meja No. 4 / Jl. Mawar No. 12"></textarea>
-            </div>
-        </div>
+    <!-- Daftar Menu -->
+    <div id="user-menu-list" class="menu-grid">
+        <p style="text-align: center; color: #94a3b8; padding: 30px;">Memuat menu...</p>
+    </div>
+</div>
 
-        <div class="summary-card">
-            <div id="cart-items-list" style="font-size: 14px; line-height: 1.8; color: #444;"></div>
-            <div>
-                <div class="summary-line" style="margin-top: 10px;"><span>Total Barang:</span> <span id="total-qty">0</span></div>
-                <div class="summary-line total-highlight"><span>Total Akhir:</span> <span>Rp <span id="total-price-temp">0</span></span></div>
-            </div>
-        </div>
+<!-- Floating Cart Bar -->
+<div class="cart-bar">
+    <div>
+        <span style="font-size: 11px; opacity: 0.8; display: block;">Total Pesanan:</span>
+        <strong id="cart-total" style="font-size: 16px; color: #ffc107;">Rp 0</strong>
+    </div>
+    <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
+</div>
 
-        <button class="btn-block" onclick="keHalaman(3)">Lanjut ke Pembayaran <i class="fa-solid fa-credit-card"></i></button>
-        <button class="btn-block btn-secondary" onclick="keHalaman(1)"><i class="fa-solid fa-arrow-left"></i> Kembali Pilih Menu</button>
+<!-- Slide Drawer Menu (Garis Tiga) -->
+<div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
+<div id="drawer-content" class="drawer-content">
+    <div class="drawer-header">
+        <strong style="color:var(--secondary); font-size:15px;"><i class="fa-solid fa-user-circle"></i> Akun Saya</strong>
+        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:18px;" onclick="toggleDrawer()"></i>
     </div>
 
-    <!-- Halaman 3: Pembayaran & Live Invoice -->
-    <div id="page-3" class="page">
-        <div id="payment-selection-section">
-            <h2 style="font-size: 16px; color: var(--secondary);"><i class="fa-solid fa-wallet"></i> Pilih Metode Pembayaran</h2>
-            <div class="payment-options">
-                <label class="payment-label"><input type="radio" name="payment" value="COD" onchange="toggleQrisView(false)" checked> COD (Bayar di Tempat)</label>
-                <label class="payment-label"><input type="radio" name="payment" value="Dana" onchange="toggleQrisView(true)"> Dana (QRIS)</label>
-            </div>
-
-            <div id="qris-area" class="qris-box" style="display: none;">
-                <p style="font-size: 13px; font-weight: bold; color: var(--success);">Scan QRIS Mandiri Warung Pandawa</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WarungPandawa" alt="QRIS" style="width: 150px;">
-            </div>
-
-            <button class="btn-block" onclick="selesaikanPesanan()" style="background-color: var(--success);"><i class="fa-solid fa-circle-check"></i> Konfirmasi & Kirim Ke Dapur</button>
-            <button class="btn-block btn-secondary" onclick="keHalaman(2)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-        </div>
-
-        <div id="invoice-result" style="display: none; margin-top: 15px;">
-            <div class="summary-card" id="invoice-card" style="border-left: 5px solid var(--success);">
-                <h3 style="margin-top: 0; font-size: 18px; color: var(--success);"><i class="fa-solid fa-file-invoice-dollar"></i> Live Tracking Order</h3>
-                <div class="summary-line"><strong>ID Pesanan:</strong> <span id="inv-id"></span></div>
-                <div class="summary-line"><strong>Pelanggan:</strong> <span id="inv-nama"></span></div>
-                <div id="inv-items" style="font-size: 14px; margin: 15px 0; line-height: 1.8;"></div>
-                <div class="summary-line"><strong>Total Bayar:</strong> <span style="font-weight: bold; font-size: 18px; color: var(--primary)">Rp <span id="inv-total"></span></span></div>
-                <div class="summary-line"><strong>Status Dapur:</strong> <span id="inv-status-label" class="status-badge status-pending">Menunggu Respon</span></div>
-            </div>
-            <button class="btn-block" onclick="kembaliKeMenuTanpaReset()" style="background-color: var(--secondary);"><i class="fa-solid fa-house"></i> Kembali Ke Menu Utama</button>
-        </div>
+    <div class="user-box">
+        <img id="drawer-user-img" class="user-avatar" src="">
+        <div id="drawer-user-name" style="font-weight:bold; font-size:14px; color:#1e293b;">Tamu</div>
+        <div id="drawer-user-email" style="font-size:11px; color:#64748b;">Belum Masuk</div>
     </div>
 
-    <!-- Halaman Halaman Profil Biodata Pelanggan -->
-    <div id="page-profil" class="page">
-        <h2 style="font-size: 16px; color: var(--secondary);"><i class="fa-solid fa-user-gear"></i> Biodata Pelanggan</h2>
-        
-        <div class="summary-card" style="background: white;">
-            <div class="profile-avatar-box">
-                <img id="profile-img" src="https://via.placeholder.com/80" alt="Avatar">
-                <h4 id="profile-display-name" style="margin: 10px 0 0 0;">Nama User</h4>
-                <small id="profile-display-email" style="color: #777;">user@gmail.com</small>
-            </div>
-
-            <div class="form-group">
-                <label>No. WhatsApp Aktif:</label>
-                <input type="number" id="profil-input-phone" placeholder="Contoh: 08123456789">
-            </div>
-
-            <div class="form-group">
-                <label>Alamat Utama / Langganan Meja:</label>
-                <textarea id="profil-input-address" rows="3" placeholder="Masukkan alamat pengiriman rumah atau lokasi tempat duduk favoritmu..."></textarea>
-            </div>
-
-            <button class="btn-block" onclick="simpanBiodataProfil()" style="background-color: var(--success);"><i class="fa-solid fa-floppy-disk"></i> Simpan Biodata</button>
-        </div>
-
-        <button class="btn-block btn-secondary" onclick="keHalaman(1)"><i class="fa-solid fa-arrow-left"></i> Kembali ke Menu</button>
+    <div id="drawer-actions">
+        <!-- Opsi Tombol berubah sesuai status Auth -->
     </div>
 </div>
 
 <script>
+    // Config Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
         authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -270,230 +139,365 @@
         measurementId: "G-Y455NCGBGK",
         databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
-    
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const database = firebase.database();
     const auth = firebase.auth();
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    let currentUser = null;
+    let semuaMenuData = {};
+    let keranjang = {}; 
+    let kategoriAktif = 'semua';
+    let currentUserData = null;
 
-    // Monitor Status Login Firebase
+    // Toggle Open/Close Drawer Garis Tiga
+    function toggleDrawer() {
+        document.getElementById('drawer-overlay').classList.toggle('active');
+        document.getElementById('drawer-content').classList.toggle('active');
+    }
+
+    // Monitor Status Auth Google
     auth.onAuthStateChanged((user) => {
-        const guestBanner = document.getElementById('guest-alert-banner');
-        const guestGroup = document.getElementById('menu-guest-group');
-        const userGroup = document.getElementById('menu-user-group');
-        const logoutGroup = document.getElementById('menu-logout-group');
-
+        const actionBox = document.getElementById('drawer-actions');
         if (user) {
-            currentUser = user;
-            guestBanner.style.display = 'none';
-            guestGroup.style.display = 'none';
-            userGroup.style.display = 'block';
-            logoutGroup.style.display = 'block';
+            document.getElementById('drawer-user-img').src = user.photoURL || 'https://via.placeholder.com/60';
+            document.getElementById('drawer-user-img').style.display = 'block';
+            document.getElementById('drawer-user-name').innerText = user.displayName;
+            document.getElementById('drawer-user-email').innerText = user.email;
 
-            document.getElementById('label-sidebar-nama').innerText = user.displayName.split(' ')[0];
-            document.getElementById('profile-img').src = user.photoURL || 'https://via.placeholder.com/80';
-            document.getElementById('profile-display-name').innerText = user.displayName;
-            document.getElementById('profile-display-email').innerText = user.email;
+            actionBox.innerHTML = `
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
+                    <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Edit Biodata Pelanggan
+                </button>
+                <button class="drawer-item" style="color:#ef4444;" onclick="logoutGoogle()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+                </button>
+            `;
 
-            // Muat biodata dari Firebase Realtime DB
-            database.ref('users/' + user.uid).once('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('profil-input-phone').value = data.phone || '';
-                    document.getElementById('profil-input-address').value = data.address || '';
-                    
-                    // Auto fill form checkout
-                    document.getElementById('username').value = user.displayName;
-                    document.getElementById('user-phone').value = data.phone || '';
-                    document.getElementById('user-address').value = data.address || '';
-                } else {
-                    document.getElementById('username').value = user.displayName;
-                }
+            database.ref('users/' + user.uid).on('value', (snap) => {
+                currentUserData = snap.val() || { nama: user.displayName, email: user.email, hp: '', alamat: '' };
             });
-
         } else {
-            currentUser = null;
-            guestBanner.style.display = 'block';
-            guestGroup.style.display = 'block';
-            userGroup.style.display = 'none';
-            logoutGroup.style.display = 'none';
+            currentUserData = null;
+            document.getElementById('drawer-user-img').style.display = 'none';
+            document.getElementById('drawer-user-name').innerText = 'Tamu';
+            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill data';
+
+            actionBox.innerHTML = `
+                <button class="drawer-item" onclick="loginGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16"> Masuk dengan Google
+                </button>
+            `;
         }
     });
 
-    function loginDenganGoogle() {
-        auth.signInWithPopup(googleProvider)
-            .then(() => {
-                Swal.fire({ icon: 'success', title: 'Berhasil Login!', text: 'Biodata kamu dimuat otomatis.' });
-                toggleSidebar();
-            })
-            .catch((err) => Swal.fire({ icon: 'error', title: 'Gagal Login', text: err.message }));
+    function loginGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then((res) => {
+            database.ref('users/' + res.user.uid).update({
+                nama: res.user.displayName,
+                email: res.user.email,
+                photo: res.user.photoURL,
+                lastLogin: Date.now()
+            });
+            toggleDrawer();
+            Swal.fire({ icon: 'success', title: 'Berhasil Masuk!', timer: 1200, showConfirmButton: false });
+        }).catch((err) => { Swal.fire('Gagal Login', err.message, 'error'); });
     }
 
-    function prosesLogout() {
+    function logoutGoogle() {
         auth.signOut().then(() => {
-            Swal.fire({ icon: 'info', title: 'Kamu telah logout' });
-            toggleSidebar();
+            toggleDrawer();
+            Swal.fire({ icon: 'info', title: 'Berhasil Keluar', timer: 1200, showConfirmButton: false });
         });
     }
 
-    function simpanBiodataProfil() {
-        if (!currentUser) return;
-        
-        const phone = document.getElementById('profil-input-phone').value;
-        const address = document.getElementById('profil-input-address').value;
+    function bukaModalProfil() {
+        const user = auth.currentUser;
+        if (!user) return;
 
-        database.ref('users/' + currentUser.uid).set({
-            nama: currentUser.displayName,
-            email: currentUser.email,
-            phone: phone,
-            address: address
-        }).then(() => {
-            Swal.fire({ icon: 'success', title: 'Biodata Tersimpan!' });
-            // Sinkronkan langsung ke checkout form
-            document.getElementById('user-phone').value = phone;
-            document.getElementById('user-address').value = address;
+        Swal.fire({
+            title: 'Biodata Pelanggan',
+            html: `
+                <style>
+                    .prof-box { text-align: left; font-size: 13px; }
+                    .prof-field { margin-bottom: 10px; }
+                    .prof-field label { display: block; font-weight: 600; font-size: 12px; color: #4a5568; margin-bottom: 4px; }
+                    .prof-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 8px 10px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; }
+                </style>
+                <div class="prof-box">
+                    <div class="prof-field">
+                        <label>Nama Lengkap:</label>
+                        <input id="prof-nama" class="prof-input" value="${currentUserData?.nama || user.displayName}">
+                    </div>
+                    <div class="prof-field">
+                        <label>No. WhatsApp / HP (Penting):</label>
+                        <input id="prof-hp" type="number" class="prof-input" value="${currentUserData?.hp || ''}" placeholder="08xxxxxxxxxx">
+                    </div>
+                    <div class="prof-field">
+                        <label>Alamat Utama (Auto-fill saat delivery):</label>
+                        <textarea id="prof-alamat" class="prof-input" rows="2" placeholder="Nama Jalan, Blok, No. Rumah...">${currentUserData?.alamat || ''}</textarea>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Simpan Biodata',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#ff6b35',
+            preConfirm: () => {
+                return {
+                    nama: document.getElementById('prof-nama').value.trim(),
+                    hp: document.getElementById('prof-hp').value.trim(),
+                    alamat: document.getElementById('prof-alamat').value.trim()
+                };
+            }
+        }).then((res) => {
+            if (res.isConfirmed) {
+                database.ref('users/' + user.uid).update(res.value).then(() => {
+                    Swal.fire({ icon: 'success', title: 'Biodata Disimpan!', timer: 1300, showConfirmButton: false });
+                });
+            }
         });
     }
 
-    // Navigasi UI & Mobile Sidebar Drawer
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
-        document.getElementById('overlay').classList.toggle('active');
-    }
-
-    function pindahSidebarMenu(target) {
-        toggleSidebar();
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-        if(target === 'guest' || target === 'menu') keHalaman(1);
-        else if(target === 'riwayat') bukaLiveTracking();
-        else if(target === 'profil') document.getElementById('page-profil').classList.add('active');
-    }
-
-    // Logic Keranjang & Firebase Checkout
-    let menus = [];
-    let keranjang = {}, kategoriAktif = "semua";
-
-    function sinkronkanDaftarMenu() {
-        database.ref('daftar_menu').on('value', (snapshot) => {
-            const data = snapshot.val();
-            menus = data ? Object.keys(data).map(key => data[key]) : [];
-            renderMenu();
-        });
-    }
+    // Load Realtime Menu Database
+    database.ref('daftar_menu').on('value', (snapshot) => {
+        semuaMenuData = snapshot.val() || {};
+        renderMenu();
+    });
 
     function renderMenu() {
-        const menuList = document.getElementById('menu-list');
-        if (!menuList) return;
-        
-        const keyword = document.getElementById('search-menu').value.toLowerCase();
-        menuList.innerHTML = "";
-        const menuDisaring = menus.filter(m => (kategoriAktif === "semua" || m.kategori === kategoriAktif) && m.nama.toLowerCase().includes(keyword));
+        const menuBox = document.getElementById('user-menu-list');
+        menuBox.innerHTML = "";
 
-        menuDisaring.forEach(menu => {
-            let qty = keranjang[menu.id] || 0;
-            menuList.innerHTML += `
-                <div class="menu-item">
-                    <div class="menu-info"><span class="menu-nama">${menu.nama}</span><span class="menu-badge">${menu.kategori.toUpperCase()}</span><span class="menu-harga">Rp ${menu.harga.toLocaleString('id-ID')}</span></div>
-                    <div class="quantity-control">
-                        <button class="btn-qty" onclick="ubahJumlah('${menu.id}', -1)">-</button>
-                        <span id="qty-${menu.id}" class="qty-num">${qty}</span>
-                        <button class="btn-qty" onclick="ubahJumlah('${menu.id}', 1)">+</button>
+        let keys = Object.keys(semuaMenuData);
+        if (keys.length === 0) {
+            menuBox.innerHTML = `<p style="text-align:center; color:#94a3b8; padding:30px;">Belum ada menu tersedia.</p>`;
+            return;
+        }
+
+        keys.forEach(key => {
+            let item = semuaMenuData[key];
+            if (kategoriAktif !== 'semua' && item.kategori !== kategoriAktif) return;
+
+            let qty = keranjang[item.id] ? keranjang[item.id].qty : 0;
+            let stokHabis = (item.stok || 0) <= 0;
+
+            menuBox.innerHTML += `
+                <div class="menu-card" style="${stokHabis ? 'opacity: 0.6;' : ''}">
+                    <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="menu-img" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+                    <div class="menu-info">
+                        <div class="menu-title">${item.nama}</div>
+                        <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                            <div>
+                                <div class="menu-price">Rp ${item.harga.toLocaleString('id-ID')}</div>
+                                <div class="menu-stock">${stokHabis ? '<span style="color:red; font-weight:bold;">Stok Habis</span>' : 'Stok: ' + item.stok}</div>
+                            </div>
+                            
+                            <div class="counter-box">
+                                <button class="btn-qty" onclick="ubahQty('${item.id}', -1)" ${qty === 0 ? 'disabled' : ''}>-</button>
+                                <span class="qty-val">${qty}</span>
+                                <button class="btn-qty" onclick="ubahQty('${item.id}', 1)" ${stokHabis || qty >= item.stok ? 'disabled' : ''}>+</button>
+                            </div>
+                        </div>
                     </div>
-                </div>`;
+                </div>
+            `;
         });
     }
 
-    function filterKategori(kategori, btn) { kategoriAktif = kategori; document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderMenu(); }
-    
-    function ubahJumlah(id, perubahan) { 
-        if (!keranjang[id]) keranjang[id] = 0; 
-        keranjang[id] += perubahan; 
-        if (keranjang[id] < 0) keranjang[id] = 0; 
-        let el = document.getElementById(`qty-${id}`);
-        if(el) el.innerText = keranjang[id]; 
-        updateKeranjangData(); 
+    function ubahQty(id, delta) {
+        let item = semuaMenuData[id];
+        if (!item) return;
+
+        if (!keranjang[id]) {
+            keranjang[id] = { nama: item.nama, harga: item.harga, qty: 0 };
+        }
+
+        keranjang[id].qty += delta;
+
+        if (keranjang[id].qty <= 0) {
+            delete keranjang[id];
+        }
+
+        updateTotalKeranjang();
+        renderMenu();
     }
-    
-    function updateKeranjangData() {
-        let totalQty = 0, subTotal = 0, cartItemsHtml = "";
-        menus.forEach(menu => {
-            let qty = keranjang[menu.id] || 0;
-            if (qty > 0) { totalQty += qty; subTotal += (menu.harga * qty); cartItemsHtml += `<div class="summary-line"><span>${menu.nama} (x${qty})</span> <span>Rp ${(menu.harga * qty).toLocaleString('id-ID')}</span></div>`; }
+
+    function updateTotalKeranjang() {
+        let total = 0;
+        Object.keys(keranjang).forEach(id => {
+            total += keranjang[id].harga * keranjang[id].qty;
         });
-        document.getElementById('total-qty').innerText = totalQty;
-        document.getElementById('total-price-temp').innerText = subTotal.toLocaleString('id-ID');
-        document.getElementById('cart-items-list').innerHTML = cartItemsHtml || "<p style='color:#999; text-align:center;'>Keranjang kosong.</p>";
+        document.getElementById('cart-total').innerText = "Rp " + total.toLocaleString('id-ID');
     }
 
-    function keHalaman(nomorHalaman) { 
-        if (nomorHalaman > 1 && document.getElementById('username').value.trim() === "") { 
-            Swal.fire({ icon: 'warning', title: 'Isi Nama Pemesan Dulu!' }); 
-            return; 
-        } 
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
-        document.getElementById(`page-${nomorHalaman}`).classList.add('active'); 
-        
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step-1').classList.add('active');
-        if(nomorHalaman >= 2) document.getElementById('step-2').classList.add('active');
-        if(nomorHalaman === 3) document.getElementById('step-3').classList.add('active');
+    function filterKategori(kat, btn) {
+        kategoriAktif = kat;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMenu();
     }
 
-    function toggleQrisView(show) { document.getElementById('qris-area').style.display = show ? 'block' : 'none'; }
+    // Checkout Modal dengan Auto-fill dari Biodata Pelanggan
+    function prosesPesanan() {
+        let rincianItemHtml = "";
+        let itemsArray = [];
+        let totalHarga = 0;
 
-    function selesaikanPesanan() {
-        let username = document.getElementById('username').value;
-        let phone = document.getElementById('user-phone').value;
-        let address = document.getElementById('user-address').value;
-        let metode = document.querySelector('input[name="payment"]:checked').value;
-        let subTotal = 0, totalQty = 0, rincianItem = [];
+        Object.keys(keranjang).forEach(id => {
+            let item = keranjang[id];
+            let subtotal = item.harga * item.qty;
+            totalHarga += subtotal;
+            itemsArray.push(`${item.nama} (${item.qty}x)`);
 
-        menus.forEach(menu => { let qty = keranjang[menu.id] || 0; if (qty > 0) { totalQty += qty; subTotal += (menu.harga * qty); rincianItem.push(`${menu.nama} x${qty}`); } });
-        if (totalQty === 0) { Swal.fire({ icon: 'error', title: 'Keranjang Kosong!' }); return; }
+            rincianItemHtml += `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #e2e8f0; padding: 6px 0; font-size:13px;">
+                    <div>
+                        <span style="font-weight:600; color:#1e293b;">${item.nama}</span>
+                        <div style="font-size:11px; color:#64748b;">${item.qty} x Rp ${item.harga.toLocaleString('id-ID')}</div>
+                    </div>
+                    <span style="font-weight:bold; color:var(--primary);">Rp ${subtotal.toLocaleString('id-ID')}</span>
+                </div>
+            `;
+        });
 
-        let idPesananAktif = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        if (itemsArray.length === 0) {
+            Swal.fire('Keranjang Kosong', 'Pilih minimal 1 menu sebelum memesan!', 'warning');
+            return;
+        }
 
-        let dataPesanan = {
-            id: idPesananAktif, nama: username, phone: phone, address: address,
-            items: rincianItem, total: subTotal, metode: metode,
-            status: "Menunggu Respon", pembayaran: metode === "COD" ? "Belum Bayar (COD)" : "Menunggu Verifikasi"
-        };
+        Swal.fire({
+            title: '<span style="font-size:18px; color:var(--secondary);"><i class="fa-solid fa-receipt"></i> Rincian & Checkout</span>',
+            html: `
+                <style>
+                    .checkout-box { text-align: left; font-size: 13px; color: #334155; }
+                    .checkout-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; margin-bottom: 12px; }
+                    .checkout-field { margin-bottom: 10px; }
+                    .checkout-field label { display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #4a5568; }
+                    .checkout-input { 
+                        width: 100% !important; margin: 0 !important; box-sizing: border-box !important;
+                        padding: 9px 12px !important; border: 1.5px solid #cbd5e1 !important; 
+                        border-radius: 8px !important; font-size: 13px !important; height: auto !important;
+                    }
+                </style>
+                
+                <div class="checkout-box">
+                    <div class="checkout-section">
+                        <div style="font-size:12px; font-weight:bold; color:#64748b; margin-bottom:5px; text-transform:uppercase;">Ringkasan Pesanan:</div>
+                        <div style="max-height: 120px; overflow-y: auto;">${rincianItemHtml}</div>
+                        <div style="display:flex; justify-content:space-between; margin-top:8px; font-weight:bold; font-size:14px;">
+                            <span>Total Bayar:</span>
+                            <span style="color:var(--primary);">Rp ${totalHarga.toLocaleString('id-ID')}</span>
+                        </div>
+                    </div>
 
-        database.ref('pesanan/' + idPesananAktif).set(dataPesanan).then(() => {
-            Swal.fire({ icon: 'success', title: 'Terkirim ke Dapur!' });
-            keHalaman(1); 
-            pantauStatusPesanan(idPesananAktif);
+                    <div class="checkout-field">
+                        <label><i class="fa-solid fa-user"></i> Nama Lengkap / Meja:</label>
+                        <input id="order-nama" class="checkout-input" value="${currentUserData?.nama || ''}" placeholder="Masukkan nama kamu...">
+                    </div>
+
+                    <div class="checkout-field">
+                        <label><i class="fa-brands fa-whatsapp"></i> No. WhatsApp / HP:</label>
+                        <input id="order-hp" type="number" class="checkout-input" value="${currentUserData?.hp || ''}" placeholder="08xxxxxxxxxx">
+                    </div>
+
+                    <div class="checkout-field">
+                        <label><i class="fa-solid fa-location-dot"></i> Opsi / Alamat Pengiriman:</label>
+                        <select id="order-tipe" class="checkout-input" onchange="toggleAlamatField(this.value)">
+                            <option value="Dine In (Makan di Tempat)">🍽️ Makan di Tempat (Dine In)</option>
+                            <option value="Takeaway (Bungkus)">🛍️ Bungkus (Takeaway)</option>
+                            <option value="Delivery (Kirim Alamat)">🛵 Antar Alamat (Delivery)</option>
+                        </select>
+                    </div>
+
+                    <div class="checkout-field" id="box-alamat" style="display:none;">
+                        <label>Alamat Lengkap Pengiriman:</label>
+                        <textarea id="order-alamat" class="checkout-input" rows="2" placeholder="Jalan, No. Rumah, Patokan...">${currentUserData?.alamat || ''}</textarea>
+                    </div>
+
+                    <div class="checkout-field">
+                        <label><i class="fa-solid fa-wallet"></i> Metode Pembayaran:</label>
+                        <select id="order-metode" class="checkout-input">
+                            <option value="Cash / Tunai">💵 Cash / Tunai</option>
+                            <option value="QRIS / All Payment">📱 QRIS (Gopay/OVO/Dana/LinkAja)</option>
+                            <option value="Transfer Bank BCA">🏦 Transfer Bank BCA</option>
+                            <option value="Transfer Bank Mandiri">🏦 Transfer Bank Mandiri</option>
+                        </select>
+                    </div>
+
+                    <div class="checkout-field">
+                        <label><i class="fa-solid fa-note-sticky"></i> Catatan Khusus (Opsional):</label>
+                        <input id="order-catatan" class="checkout-input" placeholder="Contoh: Jangan pedas, es dipisah...">
+                    </div>
+                </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Buat Pesanan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#ff6b35',
+            didOpen: () => {
+                window.toggleAlamatField = function(val) {
+                    const boxAlamat = document.getElementById('box-alamat');
+                    if(val.includes('Delivery')) {
+                        boxAlamat.style.display = 'block';
+                    } else {
+                        boxAlamat.style.display = 'none';
+                    }
+                };
+            },
+            preConfirm: () => {
+                const nama = document.getElementById('order-nama').value.trim();
+                const hp = document.getElementById('order-hp').value.trim();
+                const tipe = document.getElementById('order-tipe').value;
+                const alamat = document.getElementById('order-alamat').value.trim();
+                const metode = document.getElementById('order-metode').value;
+                const catatan = document.getElementById('order-catatan').value.trim();
+
+                if (!nama) {
+                    Swal.showValidationMessage('Nama / Nomor Meja wajib diisi!');
+                    return false;
+                }
+                if (tipe.includes('Delivery') && !alamat) {
+                    Swal.showValidationMessage('Alamat pengiriman wajib diisi untuk layanan Delivery!');
+                    return false;
+                }
+
+                return { nama, hp, tipe, alamat, metode, catatan };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let dataForm = result.value;
+                let orderId = "ORD-" + Date.now();
+                
+                database.ref('pesanan/' + orderId).set({
+                    id: orderId,
+                    userId: auth.currentUser ? auth.currentUser.uid : 'tamu',
+                    nama: dataForm.nama,
+                    hp: dataForm.hp || '-',
+                    tipe: dataForm.tipe,
+                    alamat: dataForm.alamat || '-',
+                    items: itemsArray,
+                    total: totalHarga,
+                    metode: dataForm.metode,
+                    catatan: dataForm.catatan || '-',
+                    pembayaran: 'Belum Bayar',
+                    status: 'Menunggu Respon',
+                    timestamp: Date.now()
+                }).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pesanan Diterima!',
+                        text: 'Terima kasih, pesananmu sedang diteruskan ke dapur RivandCronz.',
+                        confirmButtonColor: '#ff6b35'
+                    });
+                    keranjang = {};
+                    updateTotalKeranjang();
+                    renderMenu();
+                });
+            }
         });
     }
-
-    function pantauStatusPesanan(id) {
-        database.ref('pesanan/' + id).on('value', (snapshot) => {
-            let data = snapshot.val();
-            if (!data) return;
-            document.getElementById('inv-id').innerText = data.id;
-            document.getElementById('inv-nama').innerText = `${data.nama} (${data.phone})`;
-            document.getElementById('inv-total').innerText = data.total.toLocaleString('id-ID');
-            document.getElementById('inv-items').innerHTML = data.items.map(i => `<div>• ${i}</div>`).join('');
-            document.getElementById('inv-status-label').innerText = data.status;
-        });
-    }
-
-    function bukaLiveTracking() {
-        document.getElementById('payment-selection-section').style.display = 'none';
-        document.getElementById('invoice-result').style.display = 'block';
-        keHalaman(3);
-    }
-
-    function kembaliKeMenuTanpaReset() {
-        document.getElementById('payment-selection-section').style.display = 'block';
-        document.getElementById('invoice-result').style.display = 'none';
-        keHalaman(1);
-    }
-    
-    window.onload = function() { sinkronkanDaftarMenu(); };
 </script>
 </body>
 </html>

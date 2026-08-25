@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+    <!-- Leaflet OpenStreetMap (Peta Interaktif Gratis & Responsif ala Google Maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -37,7 +41,7 @@
         .drawer-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: #334155; cursor: pointer; text-align: left; }
         .drawer-item:hover { background: #f1f5f9; }
 
-        /* Clean Fullscreen / Sheet Modal Profil */
+        /* Clean Fullscreen Sheet Modal */
         .modal-full-container { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 1005; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         .modal-full-container.active { bottom: 0; }
         .modal-full-header { background: var(--secondary); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -71,10 +75,13 @@
         .btn-checkout { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
         /* Inputs Form */
-        .checkout-input { width: 100% !important; margin: 0 !important; box-sizing: border-box !important; padding: 10px 12px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; background: #fff; }
+        .checkout-input { width: 100% !important; margin: 0 0 10px 0 !important; box-sizing: border-box !important; padding: 10px 12px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; font-size: 13px !important; background: #fff; }
         .prof-field { text-align: left; margin-bottom: 12px; }
         .prof-field label { display: block; font-weight: 600; font-size: 12px; color: #4a5568; margin-bottom: 4px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Map Popup Fullscreen */
+        #map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; flex-direction: column; }
+        #map-container { width: 100%; flex: 1; }
     </style>
 </head>
 <body>
@@ -156,7 +163,7 @@
                 <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 20px;"></i>
                 <div style="flex:1;">
                     <strong>📍 Alamat Saya</strong>
-                    <div style="font-size: 12px; color: #64748b;">Kelola alamat lengkap & titik lokasi GPS</div>
+                    <div style="font-size: 12px; color: #64748b;">Kelola alamat lengkap & titik lokasi Peta</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
             </div>
@@ -188,11 +195,47 @@
             <button onclick="simpanPribadi()" style="width:100%; margin-top:15px; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Perubahan</button>
         </div>
 
-        <!-- SUB-MENU 2: ALAMAT SAYA (DETAILED FORM) -->
+        <!-- SUB-MENU 2: ALAMAT SAYA (FULLSCREEN FORM & MAP PICKER) -->
         <div id="sec-profil-alamat" style="display:none;">
             <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
             <div id="daftar-alamat-box"></div>
-            <button onclick="tambahAlamatModal()" style="width:100%; margin-top:15px; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
+            <button onclick="bukaFormAlamatBaru()" style="width:100%; margin-top:15px; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
+        </div>
+
+        <!-- SUB-MENU FORM TAMBAH ALAMAT DETAILED -->
+        <div id="sec-form-alamat-baru" style="display:none;">
+            <button onclick="bukaSubProfil('alamat')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Batal / Kembali</button>
+            <h3 style="margin-top:0; color:var(--secondary);">Tambah Alamat Pengiriman</h3>
+
+            <div class="prof-field"><label>Label Alamat:</label><input id="fa-label" placeholder="Contoh: Rumah, Kantor, Kos" class="checkout-input"></div>
+            <div class="prof-field"><label>Nama Penerima:</label><input id="fa-penerima" placeholder="Nama Lengkap Penerima" class="checkout-input"></div>
+            <div class="prof-field"><label>No. HP Penerima:</label><input id="fa-hp" type="tel" placeholder="08xxxxxxxxxx" class="checkout-input"></div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div class="prof-field"><label>Provinsi:</label><input id="fa-prov" placeholder="Jawa Barat" class="checkout-input"></div>
+                <div class="prof-field"><label>Kota / Kab:</label><input id="fa-kota" placeholder="Bandung" class="checkout-input"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div class="prof-field"><label>Kecamatan:</label><input id="fa-kec" placeholder="Coblong" class="checkout-input"></div>
+                <div class="prof-field"><label>Desa / Kelurahan:</label><input id="fa-desa" placeholder="Dago" class="checkout-input"></div>
+            </div>
+
+            <div class="prof-field"><label>Kode Pos:</label><input id="fa-kodepos" type="number" placeholder="40135" class="checkout-input"></div>
+            <div class="prof-field"><label>Nama Jalan / No. Rumah / RT RW:</label><textarea id="fa-jalan" rows="3" placeholder="Jl. Ir. H. Juanda No. 123, Blok A" class="checkout-input"></textarea></div>
+
+            <div style="background:#f1f5f9; padding:12px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px;">
+                <label style="font-size:12px; font-weight:bold; color:#334155; display:block; margin-bottom:6px;">📍 Titik Lokasi Peta (Pinpoint GPS):</label>
+                <button type="button" onclick="bukaPetaPicker()" style="width:100%; background:#0EA5E9; color:white; border:none; padding:10px; border-radius:6px; font-size:12px; cursor:pointer; font-weight:bold;">
+                    <i class="fa-solid fa-map-location-dot"></i> Tandai Titik di Peta (Google Maps style)
+                </button>
+                <input id="fa-gps" type="hidden">
+                <div id="fa-gps-status" style="font-size:11px; color:#10B981; font-weight:bold; margin-top:6px;"></div>
+            </div>
+
+            <button onclick="simpanAlamatBaru()" style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Alamat Ini
+            </button>
         </div>
 
         <!-- SUB-MENU 3: PENGATURAN -->
@@ -201,7 +244,7 @@
             <p style="font-size:13px; color:#64748b;">Semua riwayat transaksi dan data profil tersimpan secara realtime di cloud database.</p>
         </div>
 
-        <!-- SUB-MENU 4: KEAMANAN & VERIFIKASI OTP REAL -->
+        <!-- SUB-MENU 4: KEAMANAN & VERIFIKASI OTP -->
         <div id="sec-profil-keamanan" style="display:none;">
             <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
             
@@ -218,7 +261,6 @@
                     <i class="fa-solid fa-paper-plane"></i> Kirim Kode OTP via WhatsApp / SMS
                 </button>
 
-                <!-- FORM INPUT KODE OTP (DISUBMIT SETELAH TERIMA KODE) -->
                 <div id="box-input-otp" style="display:none; background:#fff; border:1px dashed #10B981; padding:12px; border-radius:8px; margin-top:10px;">
                     <div class="prof-field">
                         <label style="color:#10B981;">Masukkan 6 Digit Kode OTP:</label>
@@ -238,8 +280,20 @@
     </div>
 </div>
 
-<!-- Invisible Container untuk Firebase Phone Auth Captcha -->
-<div id="recaptcha-container"></div>
+<!-- MODAL MAP PICKER FULLSCREEN INTERAKTIF -->
+<div id="map-modal">
+    <div style="background:var(--secondary); color:white; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:14px;"><i class="fa-solid fa-location-dot"></i> Geser Pin Untuk Menentukan Titik</strong>
+        <button onclick="tutupPetaPicker()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="map-container"></div>
+    <div style="padding:15px; background:white; border-top:1px solid #cbd5e1; text-align:center;">
+        <div id="map-selected-coords" style="font-size:12px; font-weight:bold; color:#475569; margin-bottom:10px;">Mencari lokasi GPS...</div>
+        <button onclick="konfirmasiTitikPeta()" style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:14px; cursor:pointer;">
+            <i class="fa-solid fa-check"></i> Gunakan Titik Lokasi Ini
+        </button>
+    </div>
+</div>
 
 <script>
     // Firebase Config
@@ -260,7 +314,12 @@
     let semuaMenuData = {};
     let keranjang = {}; 
     let kategoriAktif = 'semua';
-    let confirmationResultOTP = null;
+    
+    // Leaflet Map Variable
+    let mapObject = null;
+    let mapMarker = null;
+    let selectedLat = -6.200000;
+    let selectedLng = 106.816666;
 
     function toggleDrawer() {
         document.getElementById('drawer-overlay').classList.toggle('active');
@@ -311,7 +370,7 @@
         });
     }
 
-    // LOGIKA PROFIL FULLSCREEN
+    // PROFIL & MODAL
     function bukaModalProfil() {
         if (!auth.currentUser) return;
         document.getElementById('modal-profil').classList.add('active');
@@ -324,9 +383,10 @@
     }
 
     function bukaSubProfil(sub) {
-        const sections = ['main', 'pribadi', 'alamat', 'pengaturan', 'keamanan'];
+        const sections = ['main', 'pribadi', 'alamat', 'form-alamat-baru', 'pengaturan', 'keamanan'];
         sections.forEach(s => {
-            document.getElementById(`sec-profil-${s}`).style.display = (s === sub) ? 'block' : 'none';
+            let el = document.getElementById(`sec-${s.startsWith('form') ? '' : 'profil-'}${s}`);
+            if (el) el.style.display = (s === sub) ? 'block' : 'none';
         });
     }
 
@@ -359,7 +419,7 @@
         });
     }
 
-    // RENDER DAFTAR ALAMAT DETAILED
+    // ALAMAT MANAGEMENT
     function renderDaftarAlamat(alamatList) {
         const box = document.getElementById('daftar-alamat-box');
         box.innerHTML = '';
@@ -382,7 +442,7 @@
                         <div><b>${item.penerima}</b> (${item.hp})</div>
                         <div>${item.jalan}, Desa/Kel. ${item.desa}, Kec. ${item.kecamatan}</div>
                         <div>${item.kota}, Prov. ${item.provinsi} (${item.kodePos})</div>
-                        ${item.gps ? `<div style="color:var(--secondary); font-size:11px; margin-top:4px;"><i class="fa-solid fa-location-crosshairs"></i> Pinpoint: ${item.gps}</div>` : ''}
+                        ${item.gps ? `<div style="color:var(--secondary); font-size:11px; margin-top:4px;"><i class="fa-solid fa-map-pin"></i> GPS Pinpoint: ${item.gps}</div>` : ''}
                     </div>
                 </div>
             `;
@@ -392,7 +452,6 @@
     function setAlamatUtama(selectedKey) {
         const user = auth.currentUser;
         if (!user) return;
-        
         database.ref(`users/${user.uid}/alamat_list`).once('value', (snap) => {
             let list = snap.val() || {};
             Object.keys(list).forEach(k => {
@@ -401,73 +460,99 @@
         });
     }
 
-    // POPUP SWAL FORM TAMBAH ALAMAT DETAILED
-    function tambahAlamatModal() {
-        Swal.fire({
-            title: 'Tambah Alamat Lengkap',
-            html: `
-                <input id="a-label" class="swal2-input" placeholder="Label (cth: Rumah, Kantor)">
-                <input id="a-penerima" class="swal2-input" placeholder="Nama Penerima">
-                <input id="a-hp" type="number" class="swal2-input" placeholder="No. HP Penerima">
-                <input id="a-prov" class="swal2-input" placeholder="Provinsi">
-                <input id="a-kota" class="swal2-input" placeholder="Kota / Kabupaten">
-                <input id="a-kec" class="swal2-input" placeholder="Kecamatan">
-                <input id="a-desa" class="swal2-input" placeholder="Desa / Kelurahan">
-                <input id="a-kodepos" type="number" class="swal2-input" placeholder="Kode Pos">
-                <textarea id="a-jalan" class="swal2-textarea" placeholder="Nama Jalan, Nomor Rumah, RT/RW, Patokan"></textarea>
-                <div style="margin-top:10px;">
-                    <button type="button" onclick="ambilGPSPinpoint()" style="background:#0EA5E9; color:white; border:none; padding:8px 12px; border-radius:6px; font-size:12px; cursor:pointer; font-weight:bold;">📍 Set Titik Lokasi GPS Saya</button>
-                    <input id="a-gps" type="hidden">
-                    <div id="gps-status" style="font-size:11px; color:#10B981; margin-top:4px;"></div>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Simpan Alamat',
-            focusConfirm: false,
-            preConfirm: () => {
-                const label = document.getElementById('a-label').value.trim();
-                const penerima = document.getElementById('a-penerima').value.trim();
-                const jalan = document.getElementById('a-jalan').value.trim();
-                if (!label || !penerima || !jalan) {
-                    Swal.showValidationMessage('Mohon isi Label, Nama, dan Jalan Lengkap!');
-                    return false;
-                }
-                return {
-                    label: label,
-                    penerima: penerima,
-                    hp: document.getElementById('a-hp').value.trim(),
-                    provinsi: document.getElementById('a-prov').value.trim(),
-                    kota: document.getElementById('a-kota').value.trim(),
-                    kecamatan: document.getElementById('a-kec').value.trim(),
-                    desa: document.getElementById('a-desa').value.trim(),
-                    kodePos: document.getElementById('a-kodepos').value.trim(),
-                    jalan: jalan,
-                    gps: document.getElementById('a-gps').value,
-                    isUtama: false
-                }
-            }
-        }).then((res) => {
-            if (res.isConfirmed && auth.currentUser) {
-                let newKey = Date.now();
-                database.ref(`users/${auth.currentUser.uid}/alamat_list/${newKey}`).set(res.value);
-            }
+    function bukaFormAlamatBaru() {
+        bukaSubProfil('form-alamat-baru');
+    }
+
+    function simpanAlamatBaru() {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const label = document.getElementById('fa-label').value.trim();
+        const penerima = document.getElementById('fa-penerima').value.trim();
+        const jalan = document.getElementById('fa-jalan').value.trim();
+
+        if (!label || !penerima || !jalan) {
+            Swal.fire('Error', 'Label, Nama Penerima, dan Jalan Lengkap Wajib diisi!', 'error');
+            return;
+        }
+
+        let newKey = Date.now();
+        let payload = {
+            label: label,
+            penerima: penerima,
+            hp: document.getElementById('fa-hp').value.trim(),
+            provinsi: document.getElementById('fa-prov').value.trim(),
+            kota: document.getElementById('fa-kota').value.trim(),
+            kecamatan: document.getElementById('fa-kec').value.trim(),
+            desa: document.getElementById('fa-desa').value.trim(),
+            kodePos: document.getElementById('fa-kodepos').value.trim(),
+            jalan: jalan,
+            gps: document.getElementById('fa-gps').value,
+            isUtama: false
+        };
+
+        database.ref(`users/${user.uid}/alamat_list/${newKey}`).set(payload).then(() => {
+            Swal.fire({ icon: 'success', title: 'Alamat Berhasil Disimpan!', timer: 1200, showConfirmButton: false });
+            bukaSubProfil('alamat');
         });
     }
 
-    function ambilGPSPinpoint() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                document.getElementById('a-gps').value = `${lat}, ${lng}`;
-                document.getElementById('gps-status').innerText = `✅ Koordinat GPS Berhasil Dikunci! (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-            }, () => {
-                alert('Gagal mengambil lokasi GPS. Pastikan Izin Lokasi di browser kamu aktif!');
-            });
-        }
+    // INTERAKTIF MAP PICKER (GOOGLE MAPS STYLE LEAFLET)
+    function bukaPetaPicker() {
+        document.getElementById('map-modal').style.display = 'flex';
+        
+        setTimeout(() => {
+            if (!mapObject) {
+                mapObject = L.map('map-container').setView([selectedLat, selectedLng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(mapObject);
+
+                mapMarker = L.marker([selectedLat, selectedLng], { draggable: true }).addTo(mapObject);
+
+                mapMarker.on('dragend', function (e) {
+                    let position = mapMarker.getLatLng();
+                    updateMarkerPos(position.lat, position.lng);
+                });
+
+                mapObject.on('click', function(e) {
+                    mapMarker.setLatLng(e.latlng);
+                    updateMarkerPos(e.latlng.lat, e.latlng.lng);
+                });
+            }
+
+            // Ambil GPS Asli Pengguna jika diizinkan
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    let lat = pos.coords.latitude;
+                    let lng = pos.coords.longitude;
+                    mapObject.setView([lat, lng], 17);
+                    mapMarker.setLatLng([lat, lng]);
+                    updateMarkerPos(lat, lng);
+                });
+            }
+        }, 200);
     }
 
-    // LOGIKA OTP TELEPON
+    function updateMarkerPos(lat, lng) {
+        selectedLat = lat;
+        selectedLng = lng;
+        document.getElementById('map-selected-coords').innerText = `Koordinat: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+    }
+
+    function konfirmasiTitikPeta() {
+        let gpsString = `${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`;
+        document.getElementById('fa-gps').value = gpsString;
+        document.getElementById('fa-gps-status').innerText = `✅ Titik Terkunci: ${gpsString}`;
+        tutupPetaPicker();
+    }
+
+    function tutupPetaPicker() {
+        document.getElementById('map-modal').style.display = 'none';
+    }
+
+    // OTP TELEPON
     function mintaOTPReal() {
         const noHp = document.getElementById('p-hp').value.trim();
         if (!noHp || noHp.length < 10) {
@@ -475,7 +560,6 @@
             return;
         }
 
-        // Simulasi/Aktifkan Tampilan Kolom Kode OTP
         Swal.fire({
             icon: 'info',
             title: 'Kirim Kode OTP',

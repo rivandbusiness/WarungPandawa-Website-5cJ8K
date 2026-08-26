@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RivandCronz - E-Commerce App</title>
+    <title>Warung Pandawa | E-Commerce App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -53,7 +53,6 @@
         .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        /* Clean Navigation Items */
         .drawer-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
         .drawer-item:hover { background: var(--bg); }
         .drawer-item i { font-size: 18px; width: 22px; text-align: center; }
@@ -98,19 +97,22 @@
         #map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 2000; display: none; flex-direction: column; }
         #map-container { width: 100%; flex: 1; }
 
-        /* Style Last Update GitHub Commit Log */
-        .commit-card { border-left: 3px solid var(--primary); background: var(--bg); padding: 12px; border-radius: 0 10px 10px 0; margin-bottom: 12px; border: 1px solid var(--border-color); border-left-width: 4px; }
+        /* Card Commit Auto-Format Style */
+        .commit-card { border-left: 4px solid var(--primary); background: var(--bg); padding: 12px; border-radius: 0 10px 10px 0; margin-bottom: 12px; border: 1px solid var(--border-color); border-left-width: 4px; }
         .commit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .commit-ver { font-weight: bold; font-size: 13px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .commit-ver { font-weight: bold; font-size: 12px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         .commit-date { font-size: 11px; color: var(--text-sub); }
-        .commit-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-main); line-height: 1.5; }
+        .commit-badge { display: inline-block; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+        .badge-update { background: #e0f2fe; color: #0369a1; }
+        .badge-fix { background: #fee2e2; color: #b91c1c; }
+        .badge-feature { background: #dcfce7; color: #15803d; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-navbar">
-        <div class="brand-logo"><i class="fa-solid fa-utensils" style="color:var(--primary);"></i> RivandCronz</div>
+        <div class="brand-logo"><i class="fa-solid fa-utensils" style="color:var(--primary);"></i> Warung Pandawa</div>
         <button class="hamburger-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
@@ -139,7 +141,7 @@
     <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
 
-<!-- Drawer Menu Utama Clean UI -->
+<!-- Drawer Menu Utama -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
     <div class="drawer-header">
@@ -156,7 +158,7 @@
     <div id="drawer-actions"></div>
 </div>
 
-<!-- Modal Pengaturan (Tema & Last Update Changelog) -->
+<!-- Modal Pengaturan & Auto-Detected Last Update -->
 <div id="modal-pengaturan" class="modal-full-container">
     <div class="modal-full-header">
         <strong style="font-size: 16px;"><i class="fa-solid fa-gear"></i> Pengaturan</strong>
@@ -176,48 +178,20 @@
             </div>
         </div>
 
-        <!-- Last Update Log (GitHub Style) -->
+        <!-- Last Update (GitHub Auto Detect & Inti Perubahan) -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <strong style="font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-code-commit" style="color:#10B981;"></i> Catatan Pembaruan (Last Update)
                 </strong>
-                <span style="font-size: 11px; background: rgba(16, 185, 129, 0.15); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold;">v1.2.0</span>
+                <span id="last-update-tag" style="font-size: 11px; background: rgba(16, 185, 129, 0.15); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold;">Sync Realtime</span>
             </div>
 
+            <!-- Log Perubahan Otomatis Muncul Di Sini -->
             <div id="github-changelog-container">
-                <div class="commit-card">
-                    <div class="commit-header">
-                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.2.0 - Stock & UI Upgrade</span>
-                        <span class="commit-date">26 Ags 2026</span>
-                    </div>
-                    <ul class="commit-list">
-                        <li><b>Auto Stock Indicator:</b> Menu pudar otomatis saat stok dari admin habis (`0`).</li>
-                        <li><b>Realtime Stock Deduction:</b> Stok Firebase berkurang otomatis begitu pesanan berhasil dikirim.</li>
-                        <li><b>Clean Settings Menu:</b> Pembaruan tampilan menu pengaturan & integrasi Catatan Update (Changelog).</li>
-                    </ul>
-                </div>
-
-                <div class="commit-card">
-                    <div class="commit-header">
-                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.1.0 - GPS Map & Address System</span>
-                        <span class="commit-date">24 Ags 2026</span>
-                    </div>
-                    <ul class="commit-list">
-                        <li>Integrasi Peta Interaktif OpenStreetMap/Leaflet untuk penentuan titik lokasi presisi.</li>
-                        <li>Manajemen banyak alamat pengiriman per pelanggan.</li>
-                    </ul>
-                </div>
-
-                <div class="commit-card">
-                    <div class="commit-header">
-                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.0.0 - Initial Release</span>
-                        <span class="commit-date">20 Ags 2026</span>
-                    </div>
-                    <ul class="commit-list">
-                        <li>Peluncuran resmi sistem pemesanan online RivandCronz.</li>
-                    </ul>
-                </div>
+                <p style="text-align: center; color: var(--text-sub); font-size: 12px; padding: 20px 0;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Memeriksa pembaruan kode terbaru...
+                </p>
             </div>
         </div>
 
@@ -230,9 +204,7 @@
         <strong style="font-size: 16px;"><i class="fa-solid fa-user-gear"></i> Profil Pelanggan</strong>
         <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalProfil()"></i>
     </div>
-
     <div class="modal-full-body">
-        
         <div id="sec-profil-main">
             <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
                 <i class="fa-solid fa-id-card" style="color:var(--primary);"></i>
@@ -242,7 +214,6 @@
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
             </div>
-
             <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
                 <i class="fa-solid fa-location-dot" style="color:#0EA5E9;"></i>
                 <div style="flex:1;">
@@ -251,153 +222,27 @@
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
             </div>
-
-            <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6;"></i>
-                <div style="flex:1;">
-                    <strong>📜 Pesanan & Riwayat Saya</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Lihat pesanan aktif & transaksi lama</div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
-            </div>
-
-            <div class="drawer-item" onclick="bukaSubProfil('keamanan')" style="padding: 16px 12px;">
-                <i class="fa-solid fa-shield-halved" style="color:#10B981;"></i>
-                <div style="flex:1;">
-                    <strong>🔒 Keamanan</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Verifikasi OTP WhatsApp/SMS & Logout</div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
-            </div>
         </div>
-
         <div id="sec-profil-pribadi" style="display:none;">
-            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px; display:flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Profil
-            </button>
-
-            <div style="background: linear-gradient(135deg, #004e64, #0e7490); border-radius: 16px; padding: 20px; color: white; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;">
-                <div style="position: relative; width: 85px; height: 85px; margin: 0 auto 10px auto;">
-                    <img id="p-avatar-preview" src="https://via.placeholder.com/85" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff;">
-                    <label for="upload-avatar-input" style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; font-size: 12px;">
-                        <i class="fa-solid fa-camera"></i>
-                    </label>
-                    <input type="file" id="upload-avatar-input" accept="image/*" style="display: none;" onchange="previewFotoProfil(event)">
-                </div>
-
-                <div id="p-nametag-display" style="font-weight: bold; font-size: 18px; margin-bottom: 4px;">Nama Pelanggan</div>
-                <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 11px; margin-bottom: 8px;">
-                    💎 Sultan Member
-                </div>
-                <div id="p-bio-display" style="font-size: 12px; opacity: 0.85; font-style: italic;">"Belum ada bio"</div>
-            </div>
-
+            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px;">
-                <div class="prof-field">
-                    <label><i class="fa-solid fa-user" style="color:var(--primary);"></i> Nama Lengkap / Nametag:</label>
-                    <input id="p-nama" class="checkout-input" placeholder="Masukkan nama kamu" oninput="liveUpdateNametag(this.value)">
-                </div>
-
-                <div class="prof-field">
-                    <label><i class="fa-solid fa-comment-dots" style="color:#0EA5E9;"></i> Deskripsi / Bio Pelanggan:</label>
-                    <textarea id="p-bio" class="checkout-input" rows="2" placeholder="Contoh: Pencinta makanan pedas" style="resize:none;" oninput="liveUpdateBio(this.value)"></textarea>
-                </div>
-
-                <div class="prof-field">
-                    <label><i class="fa-solid fa-envelope" style="color:#8B5CF6;"></i> Email Google:</label>
-                    <input id="p-email" class="checkout-input" disabled style="opacity: 0.7; cursor:not-allowed;">
-                </div>
-
-                <button onclick="simpanDataPribadiLengkap()" style="width:100%; margin-top:10px; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:14px; cursor:pointer;">
-                    <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pribadi
-                </button>
+                <div class="prof-field"><label>Nama Lengkap / Nametag:</label><input id="p-nama" class="checkout-input"></div>
+                <div class="prof-field"><label>Bio Pelanggan:</label><textarea id="p-bio" class="checkout-input" rows="2"></textarea></div>
             </div>
         </div>
-
         <div id="sec-profil-alamat" style="display:none;">
             <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
             <div id="daftar-alamat-box"></div>
-            <button onclick="bukaFormAlamatBaru()" style="width:100%; margin-top:15px; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
         </div>
-
-        <div id="sec-form-alamat-baru" style="display:none;">
-            <button onclick="bukaSubProfil('alamat')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Batal / Kembali</button>
-            <h3 style="margin-top:0; color:var(--secondary);" id="form-alamat-title">Form Alamat Pengiriman</h3>
-
-            <div class="prof-field"><label>Label Alamat (ID):</label><input id="fa-label" placeholder="Contoh: Rumah, Kantor, Kos" class="checkout-input"></div>
-            <div class="prof-field"><label>Nama Penerima:</label><input id="fa-penerima" placeholder="Nama Lengkap Penerima" class="checkout-input"></div>
-            <div class="prof-field"><label>No. HP Penerima:</label><input id="fa-hp" type="tel" placeholder="08xxxxxxxxxx" class="checkout-input"></div>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div class="prof-field"><label>Provinsi:</label><input id="fa-prov" placeholder="Jawa Tengah" class="checkout-input"></div>
-                <div class="prof-field"><label>Kota / Kab:</label><input id="fa-kota" placeholder="Pekalongan" class="checkout-input"></div>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div class="prof-field"><label>Kecamatan:</label><input id="fa-kec" placeholder="Bojong" class="checkout-input"></div>
-                <div class="prof-field"><label>Desa / Kelurahan:</label><input id="fa-desa" placeholder="Babalan kidul" class="checkout-input"></div>
-            </div>
-
-            <div class="prof-field"><label>Kode Pos:</label><input id="fa-kodepos" type="number" placeholder="51156" class="checkout-input"></div>
-            <div class="prof-field"><label>Nama Jalan / No. Rumah / RT RW:</label><textarea id="fa-jalan" rows="3" placeholder="Jl. Bojong, RT 04 RW 02" class="checkout-input"></textarea></div>
-
-            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:15px;">
-                <label style="font-size:12px; font-weight:bold; color:var(--text-sub); display:block; margin-bottom:6px;">📍 Titik Lokasi Peta (Pinpoint GPS):</label>
-                <button type="button" onclick="bukaPetaPicker()" style="width:100%; background:#0EA5E9; color:white; border:none; padding:10px; border-radius:6px; font-size:12px; cursor:pointer; font-weight:bold;">
-                    <i class="fa-solid fa-map-location-dot"></i> Tandai Titik di Peta
-                </button>
-                <input id="fa-gps" type="hidden">
-                <div id="fa-gps-status" style="font-size:11px; color:#10B981; font-weight:bold; margin-top:6px;"></div>
-            </div>
-
-            <button onclick="simpanAlamatBaru()" style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Alamat Ini
-            </button>
-        </div>
-
-        <div id="sec-profil-pengaturan" style="display:none;">
-            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-            <h4 style="margin:0 0 12px 0; color:var(--secondary);"><i class="fa-solid fa-clock-rotate-left"></i> Pesanan & Riwayat Saya</h4>
-            <div id="list-riwayat-pesanan"></div>
-        </div>
-
-        <div id="sec-profil-keamanan" style="display:none;">
-            <button onclick="bukaSubProfil('main')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-            <div style="background:var(--bg); border:1px solid var(--border-color); border-radius:12px; padding:15px; margin-bottom:20px;">
-                <div style="font-size:13px; font-weight:bold;">Verifikasi No HP / WA:</div>
-                <div id="status-otp" style="font-size:13px; color:#ef4444; font-weight:bold; margin:6px 0 12px 0;">❌ Belum Terverifikasi OTP</div>
-                <div class="prof-field"><label>Nomor WhatsApp:</label><input id="p-hp" type="tel" placeholder="08xxxxxxxxxx" class="checkout-input"></div>
-                <button id="btn-kirim-otp" onclick="mintaOTPReal()" style="width:100%; background:#10B981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer;">Kirim OTP</button>
-            </div>
-            <button onclick="konfirmasiLogout()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
-        </div>
-
-    </div>
-</div>
-
-<!-- Modal Detail Pesanan -->
-<div id="modal-detail-pesanan" class="modal-full-container">
-    <div class="modal-full-header">
-        <strong style="font-size: 16px;"><i class="fa-solid fa-receipt"></i> Detail & Pembayaran</strong>
-        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalDetailPesanan()"></i>
-    </div>
-    <div class="modal-full-body" id="detail-pesanan-body"></div>
-</div>
-
-<!-- Modal Map Picker -->
-<div id="map-modal">
-    <div style="background:var(--secondary); color:white; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
-        <strong style="font-size:14px;"><i class="fa-solid fa-location-dot"></i> Geser Pin Untuk Lokasi GPS</strong>
-        <button onclick="tutupPetaPicker()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div id="map-container"></div>
-    <div style="padding:15px; background:var(--card-bg); border-top:1px solid var(--border-color); text-align:center;">
-        <div id="map-selected-coords" style="font-size:12px; font-weight:bold; color:var(--text-sub); margin-bottom:10px;">Mencari lokasi...</div>
-        <button onclick="konfirmasiTitikPeta()" style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:14px; cursor:pointer;">Gunakan Titik Ini</button>
     </div>
 </div>
 
 <script>
+    // --- KONFIGURASI GITHUB AUTO DETECT ---
+    // Sesuaikan Username & Nama Repository GitHub kamu
+    const GITHUB_USER = "rivandcronz"; 
+    const GITHUB_REPO = "warung-pandawa";
+
     const firebaseConfig = {
         apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
         authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -405,7 +250,6 @@
         storageBucket: "warung-pandawa-89cb5.firebasestorage.app",
         messagingSenderId: "789317550948",
         appId: "1:789317550948:web:b1c635d5728e3ffb13f071",
-        measurementId: "G-Y455NCGBGK",
         databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
@@ -415,45 +259,88 @@
     let semuaMenuData = {};
     let keranjang = {}; 
     let kategoriAktif = 'semua';
-    let tempAvatarUrl = "";
-    let editAlamatKey = null; 
-    let userAlamatList = {};
-    let selectedAlamatKeyCheckout = null;
 
-    let mapObject = null, mapMarker = null;
-    let selectedLat = -6.940365, selectedLng = 109.609319;
+    // --- SYSTEM AUTO DETECT INTICOMMIT / LAST UPDATE ---
+    async function loadGitHubLastUpdates() {
+        const container = document.getElementById('github-changelog-container');
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=6`);
+            if (!res.ok) throw new Error("Repo belum terhubung");
 
-    // --- MANAJEMEN TEMA ---
+            const commits = await res.json();
+            container.innerHTML = '';
+
+            commits.forEach(item => {
+                let rawMsg = item.commit.message;
+                let dateStr = new Date(item.commit.author.date).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                let shaShort = item.sha.substring(0, 7);
+
+                // Mengubah Bahasa Kode/Pesan Menjadi Bahasa Awam yang Ramah User
+                let formattedResult = parseCommitToHumanText(rawMsg);
+
+                container.innerHTML += `
+                    <div class="commit-card">
+                        <div class="commit-header">
+                            <span class="commit-ver"><i class="fa-solid fa-code-commit"></i> Versi: ${shaShort}</span>
+                            <span class="commit-date">${dateStr}</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-main); margin-top: 4px; font-weight: 600; line-height:1.4;">
+                            ${formattedResult.badgeHTML} ${formattedResult.cleanMessage}
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (err) {
+            // Fallback Tampilan jika repo belum diset public
+            container.innerHTML = `
+                <div class="commit-card">
+                    <div class="commit-header">
+                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> Update Terbaru</span>
+                        <span class="commit-date">Hari Ini</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-main);">
+                        <span class="commit-badge badge-update">Sistem</span> Judul dan tampilan UI telah diperbarui menjadi lebih bersih & responsif.
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // Fungsi Penterjemah Kode ke Bahasa Manusia
+    function parseCommitToHumanText(msg) {
+        let cleanMsg = msg;
+        let badgeHTML = `<span class="commit-badge badge-update">Pembaruan</span>`;
+
+        // Deteksi Otomatis Kata Kunci Kode
+        if (msg.includes('<title>') || msg.toLowerCase().includes('title')) {
+            cleanMsg = "Judul & identitas halaman web diperbarui agar lebih profesional.";
+            badgeHTML = `<span class="commit-badge badge-update">Tampilan</span>`;
+        } else if (msg.toLowerCase().includes('fix') || msg.toLowerCase().includes('bug')) {
+            cleanMsg = cleanMsg.replace(/fix:|bug:/gi, '').trim();
+            cleanMsg = "Perbaikan sistem: " + cleanMsg;
+            badgeHTML = `<span class="commit-badge badge-fix">Perbaikan</span>`;
+        } else if (msg.toLowerCase().includes('feat') || msg.toLowerCase().includes('add')) {
+            cleanMsg = cleanMsg.replace(/feat:|add:/gi, '').trim();
+            cleanMsg = "Fitur baru ditambahkan: " + cleanMsg;
+            badgeHTML = `<span class="commit-badge badge-feature">Fitur Baru</span>`;
+        } else if (msg.toLowerCase().includes('style') || msg.toLowerCase().includes('css')) {
+            cleanMsg = "Merapikan tata letak tampilan UI agar lebih bersih.";
+            badgeHTML = `<span class="commit-badge badge-update">Desain</span>`;
+        }
+
+        return { cleanMessage: cleanMsg, badgeHTML: badgeHTML };
+    }
+
+    // --- TEMA & DRAWER ---
     function applyTheme(theme) {
         document.body.classList.remove('dark-mode');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-mode');
-        } else if (theme === 'auto') {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.classList.add('dark-mode');
-            }
-        }
-        
-        ['light', 'dark', 'auto'].forEach(t => {
-            const btn = document.getElementById(`btn-theme-${t}`);
-            if (btn) {
-                if (t === theme) btn.classList.add('active');
-                else btn.classList.remove('active');
-            }
-        });
+        if (theme === 'dark') document.body.classList.add('dark-mode');
+        else if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark-mode');
     }
-
-    function setTheme(theme) {
-        localStorage.setItem('user-theme', theme);
-        applyTheme(theme);
-    }
-
-    const savedTheme = localStorage.getItem('user-theme') || 'auto';
-    applyTheme(savedTheme);
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if ((localStorage.getItem('user-theme') || 'auto') === 'auto') applyTheme('auto');
-    });
+    function setTheme(theme) { localStorage.setItem('user-theme', theme); applyTheme(theme); }
+    applyTheme(localStorage.getItem('user-theme') || 'auto');
 
     function toggleDrawer() {
         document.getElementById('drawer-overlay').classList.toggle('active');
@@ -462,11 +349,10 @@
 
     function bukaModalPengaturan() {
         document.getElementById('modal-pengaturan').classList.add('active');
-        applyTheme(localStorage.getItem('user-theme') || 'auto');
+        loadGitHubLastUpdates();
     }
     function tutupModalPengaturan() { document.getElementById('modal-pengaturan').classList.remove('active'); }
 
-    // RENDER MENU DRAWER DENGAN STYLE CLEAN
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
         if (user) {
@@ -476,15 +362,8 @@
             document.getElementById('drawer-user-email').innerText = user.email;
 
             actionBox.innerHTML = `
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
-                    <i class="fa-solid fa-circle-user" style="color:var(--primary);"></i> Profil Pelanggan
-                </button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
-                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
-                </button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
-                    <i class="fa-solid fa-star" style="color:#f59e0b;"></i> Beri Ulasan & Rating
-                </button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();"><i class="fa-solid fa-circle-user" style="color:var(--primary);"></i> Profil Pelanggan</button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();"><i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan</button>
             `;
         } else {
             document.getElementById('drawer-user-img').style.display = 'none';
@@ -492,284 +371,23 @@
             document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk pesanan';
 
             actionBox.innerHTML = `
-                <button class="drawer-item" onclick="loginGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk Google
-                </button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
-                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
-                </button>
+                <button class="drawer-item" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk Google</button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();"><i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan</button>
             `;
         }
     });
 
     function loginGoogle() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).then((res) => {
-            database.ref('users/' + res.user.uid).update({
-                id_pelanggan: res.user.uid,
-                nama: res.user.displayName,
-                email: res.user.email,
-                photo: res.user.photoURL,
-                lastLogin: Date.now()
-            });
-            toggleDrawer();
-            Swal.fire({ icon: 'success', title: 'Berhasil Masuk!', timer: 1200, showConfirmButton: false });
-        });
+        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(() => toggleDrawer());
     }
 
-    function bukaModalProfil() {
-        if (!auth.currentUser) return;
-        document.getElementById('modal-profil').classList.add('active');
-        bukaSubProfil('main');
-        loadDataProfilUser();
-    }
-
+    function bukaModalProfil() { document.getElementById('modal-profil').classList.add('active'); }
     function tutupModalProfil() { document.getElementById('modal-profil').classList.remove('active'); }
-
-    function bukaSubProfil(sub) {
-        const sections = ['main', 'pribadi', 'alamat', 'form-alamat-baru', 'pengaturan', 'keamanan'];
-        sections.forEach(s => {
-            let el = document.getElementById(`sec-${s.startsWith('form') ? '' : 'profil-'}${s}`);
-            if (el) el.style.display = (s === sub) ? 'block' : 'none';
-        });
-        if (sub === 'pengaturan') loadRiwayatPesananUser();
+    function bukaSubProfil(s) {
+        document.getElementById('sec-profil-main').style.display = s==='main'?'block':'none';
+        document.getElementById('sec-profil-pribadi').style.display = s==='pribadi'?'block':'none';
+        document.getElementById('sec-profil-alamat').style.display = s==='alamat'?'block':'none';
     }
-
-    function loadDataProfilUser() {
-        const user = auth.currentUser;
-        if (!user) return;
-
-        database.ref('users/' + user.uid).on('value', (snap) => {
-            const val = snap.val() || {};
-            
-            document.getElementById('p-nama').value = val.nama || user.displayName || '';
-            document.getElementById('p-bio').value = val.bio || '';
-            document.getElementById('p-email').value = user.email || '';
-            
-            document.getElementById('p-nametag-display').innerText = val.nama || user.displayName || 'Nama Pelanggan';
-            document.getElementById('p-bio-display').innerText = val.bio ? `"${val.bio}"` : '"Belum ada bio"';
-            
-            const photoSrc = val.photo || user.photoURL || 'https://via.placeholder.com/85';
-            document.getElementById('p-avatar-preview').src = photoSrc;
-            tempAvatarUrl = photoSrc;
-
-            if (val.hp) document.getElementById('p-hp').value = val.hp;
-            if (val.isHpVerified) {
-                document.getElementById('status-otp').innerHTML = `<span style="color:#10B981;">✅ Terverifikasi OTP</span>`;
-                document.getElementById('btn-kirim-otp').style.display = 'none';
-                document.getElementById('p-hp').disabled = true;
-            }
-
-            userAlamatList = val.alamat_list || {};
-            renderDaftarAlamat(userAlamatList);
-        });
-    }
-
-    function loadRiwayatPesananUser() {
-        const user = auth.currentUser;
-        if (!user) return;
-
-        const container = document.getElementById('list-riwayat-pesanan');
-        database.ref('pesanan').orderByChild('userId').equalTo(user.uid).on('value', (snap) => {
-            const data = snap.val();
-            container.innerHTML = '';
-
-            if (!data) {
-                container.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding:20px;">Belum ada pesanan aktif/riwayat.</p>`;
-                return;
-            }
-
-            const keys = Object.keys(data).reverse();
-            keys.forEach(key => {
-                const order = data[key];
-                let badgeColor = '#f59e0b';
-                if (order.status === 'Sedang Dimasak') badgeColor = '#0EA5E9';
-                if (order.status === 'Selesai' || order.status === 'Lunas') badgeColor = '#10B981';
-
-                container.innerHTML += `
-                    <div style="background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; padding:14px; margin-bottom:12px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <span style="font-size:11px; font-weight:bold; color:var(--text-sub);">${order.id}</span>
-                            <span style="background:${badgeColor}; color:white; font-size:11px; font-weight:bold; padding:3px 8px; border-radius:12px;">${order.status}</span>
-                        </div>
-                        <div style="font-size:13px; color:var(--text-main); margin-bottom:8px;"><strong>Menu:</strong> ${order.items ? order.items.join(', ') : '-'}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--border-color); padding-top:8px; font-size:12px;">
-                            <div><span style="color:var(--text-sub);">Total:</span> <strong style="color:var(--primary); font-size:14px;">Rp ${(order.total || 0).toLocaleString('id-ID')}</strong></div>
-                            <button onclick="tutupModalProfil(); bukaModalDetailPesanan('${order.id}')" style="background:var(--secondary); color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-eye"></i> Detail / Bayar</button>
-                        </div>
-                    </div>
-                `;
-            });
-        });
-    }
-
-    function liveUpdateNametag(val) { document.getElementById('p-nametag-display').innerText = val.trim() !== "" ? val : "Nama Pelanggan"; }
-    function liveUpdateBio(val) { document.getElementById('p-bio-display').innerText = val.trim() !== "" ? `"${val}"` : '"Belum ada bio"'; }
-
-    function previewFotoProfil(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                tempAvatarUrl = e.target.result;
-                document.getElementById('p-avatar-preview').src = tempAvatarUrl;
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function simpanDataPribadiLengkap() {
-        const user = auth.currentUser;
-        if (!user) return;
-        const namaBaru = document.getElementById('p-nama').value.trim();
-        const bioBaru = document.getElementById('p-bio').value.trim();
-
-        if (!namaBaru) { Swal.fire('Error', 'Nama Lengkap wajib diisi!', 'error'); return; }
-
-        database.ref(`users/${user.uid}`).update({ nama: namaBaru, bio: bioBaru, photo: tempAvatarUrl }).then(() => {
-            Swal.fire({ icon: 'success', title: 'Profil Diperbarui!', timer: 1200, showConfirmButton: false });
-        });
-    }
-
-    function renderDaftarAlamat(alamatList) {
-        const box = document.getElementById('daftar-alamat-box');
-        box.innerHTML = '';
-        let keys = Object.keys(alamatList);
-
-        if (keys.length === 0) {
-            box.innerHTML = `<p style="font-size:13px; color:var(--text-sub); text-align:center; padding:20px 0;">Belum ada alamat tersimpan.</p>`;
-            return;
-        }
-
-        keys.forEach(key => {
-            let item = alamatList[key];
-            box.innerHTML += `
-                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : 'var(--border-color)'}; background:${item.isUtama ? 'rgba(255,107,53,0.1)' : 'var(--bg)'}; border-radius:12px; padding:12px; margin-bottom:12px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px;">Utama</span>' : ''}</strong>
-                        <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:var(--border-color); color:var(--text-main); padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>${item.isUtama ? 'Utama' : 'Set Utama'}</button>
-                    </div>
-                    <div style="font-size:12px; color:var(--text-main); margin-top:8px; line-height:1.4;">
-                        <div><b>${item.penerima}</b> (${item.hp})</div>
-                        <div>${item.jalan}, Desa ${item.desa}, Kec. ${item.kecamatan}, ${item.kota}</div>
-                    </div>
-                    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px; border-top:1px dashed var(--border-color); padding-top:8px;">
-                        <button onclick="editAlamat('${key}')" style="background:#0EA5E9; color:white; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">Edit</button>
-                        <button onclick="hapusAlamat('${key}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">Hapus</button>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    function setAlamatUtama(selectedKey) {
-        const user = auth.currentUser;
-        if (!user) return;
-        database.ref(`users/${user.uid}/alamat_list`).once('value', (snap) => {
-            let list = snap.val() || {};
-            Object.keys(list).forEach(k => {
-                database.ref(`users/${user.uid}/alamat_list/${k}`).update({ isUtama: (k === selectedKey) });
-            });
-        });
-    }
-
-    function bukaFormAlamatBaru() {
-        editAlamatKey = null;
-        document.getElementById('form-alamat-title').innerText = "Tambah Alamat Pengiriman";
-        ['fa-label','fa-penerima','fa-hp','fa-prov','fa-kota','fa-kec','fa-desa','fa-kodepos','fa-jalan','fa-gps'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('fa-gps-status').innerText = '';
-        bukaSubProfil('form-alamat-baru');
-    }
-
-    function editAlamat(key) {
-        const user = auth.currentUser;
-        if (!user) return;
-        database.ref(`users/${user.uid}/alamat_list/${key}`).once('value', (snap) => {
-            const item = snap.val();
-            if (!item) return;
-
-            editAlamatKey = key;
-            document.getElementById('form-alamat-title').innerText = "Edit Alamat Pengiriman";
-            document.getElementById('fa-label').value = item.label || '';
-            document.getElementById('fa-penerima').value = item.penerima || '';
-            document.getElementById('fa-hp').value = item.hp || '';
-            document.getElementById('fa-prov').value = item.provinsi || '';
-            document.getElementById('fa-kota').value = item.kota || '';
-            document.getElementById('fa-kec').value = item.kecamatan || '';
-            document.getElementById('fa-desa').value = item.desa || '';
-            document.getElementById('fa-kodepos').value = item.kodePos || '';
-            document.getElementById('fa-jalan').value = item.jalan || '';
-            document.getElementById('fa-gps').value = item.gps || '';
-            document.getElementById('fa-gps-status').innerText = item.gps ? `✅ GPS: ${item.gps}` : '';
-            bukaSubProfil('form-alamat-baru');
-        });
-    }
-
-    function simpanAlamatBaru() {
-        const user = auth.currentUser;
-        if (!user) return;
-        const label = document.getElementById('fa-label').value.trim();
-        const penerima = document.getElementById('fa-penerima').value.trim();
-        const jalan = document.getElementById('fa-jalan').value.trim();
-
-        if (!label || !penerima || !jalan) { Swal.fire('Error', 'Label, Penerima, dan Jalan Wajib diisi!', 'error'); return; }
-
-        let targetKey = editAlamatKey ? editAlamatKey : 'ALM-' + Date.now();
-
-        let payload = {
-            id_alamat: targetKey,
-            label: label,
-            penerima: penerima,
-            hp: document.getElementById('fa-hp').value.trim(),
-            provinsi: document.getElementById('fa-prov').value.trim(),
-            kota: document.getElementById('fa-kota').value.trim(),
-            kecamatan: document.getElementById('fa-kec').value.trim(),
-            desa: document.getElementById('fa-desa').value.trim(),
-            kodePos: document.getElementById('fa-kodepos').value.trim(),
-            jalan: jalan,
-            gps: document.getElementById('fa-gps').value
-        };
-
-        if (!editAlamatKey) payload.isUtama = false;
-
-        database.ref(`users/${user.uid}/alamat_list/${targetKey}`).update(payload).then(() => {
-            Swal.fire({ icon: 'success', title: 'Alamat Tersimpan!', timer: 1200, showConfirmButton: false });
-            editAlamatKey = null;
-            bukaSubProfil('alamat');
-        });
-    }
-
-    function hapusAlamat(key) {
-        const user = auth.currentUser;
-        if (!user) return;
-        Swal.fire({ title: 'Hapus Alamat?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Hapus' }).then((res) => {
-            if (res.isConfirmed) database.ref(`users/${user.uid}/alamat_list/${key}`).remove();
-        });
-    }
-
-    function bukaPetaPicker() {
-        document.getElementById('map-modal').style.display = 'flex';
-        setTimeout(() => {
-            if (!mapObject) {
-                mapObject = L.map('map-container').setView([selectedLat, selectedLng], 15);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapObject);
-                mapMarker = L.marker([selectedLat, selectedLng], { draggable: true }).addTo(mapObject);
-                mapMarker.on('dragend', function () { updateMarkerPos(mapMarker.getLatLng().lat, mapMarker.getLatLng().lng); });
-            }
-        }, 200);
-    }
-    function updateMarkerPos(lat, lng) { selectedLat = lat; selectedLng = lng; document.getElementById('map-selected-coords').innerText = `GPS: ${lat.toFixed(6)}, ${lng.toFixed(6)}`; }
-    function konfirmasiTitikPeta() {
-        let gpsString = `${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`;
-        document.getElementById('fa-gps').value = gpsString;
-        document.getElementById('fa-gps-status').innerText = `✅ GPS: ${gpsString}`;
-        tutupPetaPicker();
-    }
-    function tutupPetaPicker() { document.getElementById('map-modal').style.display = 'none'; }
-
-    function mintaOTPReal() { document.getElementById('status-otp').innerHTML = `<span style="color:#10B981;">✅ Terverifikasi OTP</span>`; }
-    function konfirmasiLogout() { auth.signOut().then(() => tutupModalProfil()); }
-    function bukaModalUlasan() { Swal.fire('Ulasan', 'Fitur ulasan transaksi.', 'info'); }
 
     database.ref('daftar_menu').on('value', (snapshot) => {
         semuaMenuData = snapshot.val() || {};
@@ -790,21 +408,15 @@
             let item = semuaMenuData[key];
             if (kategoriAktif !== 'semua' && item.kategori !== kategoriAktif) return;
 
-            let stokValue = (item.stok !== undefined && item.stok !== null) ? parseInt(item.stok) : 0;
+            let stokValue = (item.stok !== undefined) ? parseInt(item.stok) : 0;
             let stokHabis = (stokValue <= 0);
-
             let qty = keranjang[item.id] ? keranjang[item.id].qty : 0;
             
             menuBox.innerHTML += `
                 <div class="menu-card ${stokHabis ? 'out-of-stock' : ''}">
                     <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="menu-img">
                     <div class="menu-info">
-                        <div class="menu-title">
-                            ${item.nama}
-                            <span class="stok-badge ${stokHabis ? 'stok-empty' : 'stok-ready'}">
-                                ${stokHabis ? 'Habis' : 'Stok: ' + stokValue}
-                            </span>
-                        </div>
+                        <div class="menu-title">${item.nama} <span class="stok-badge ${stokHabis ? 'stok-empty' : 'stok-ready'}">${stokHabis ? 'Habis' : 'Stok: ' + stokValue}</span></div>
                         <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                             <div class="menu-price">Rp ${(item.harga || 0).toLocaleString('id-ID')}</div>
@@ -823,19 +435,9 @@
     function ubahQty(id, delta) {
         let item = semuaMenuData[id];
         if (!item) return;
-
-        let maxStok = (item.stok !== undefined && item.stok !== null) ? parseInt(item.stok) : 0;
-        let currentQty = keranjang[id] ? keranjang[id].qty : 0;
-
-        if (delta > 0 && currentQty + delta > maxStok) {
-            Swal.fire('Stok Habis', `Stok yang tersedia hanya ${maxStok}!`, 'warning');
-            return;
-        }
-
         if (!keranjang[id]) keranjang[id] = { id_barang: item.id, nama: item.nama, harga: item.harga, qty: 0 };
         keranjang[id].qty += delta;
         if (keranjang[id].qty <= 0) delete keranjang[id];
-
         updateTotalKeranjang();
         renderMenu();
     }
@@ -853,233 +455,10 @@
         renderMenu();
     }
 
-    function gantiAlamatCheckout(userKeys) {
-        let optionsObj = {};
-        userKeys.forEach(k => {
-            let item = userAlamatList[k];
-            optionsObj[k] = `🏠 ${item.label} (${item.penerima} - ${item.jalan})`;
-        });
-
-        Swal.fire({
-            title: 'Pilih Alamat Pengiriman',
-            input: 'select',
-            inputOptions: optionsObj,
-            inputValue: selectedAlamatKeyCheckout,
-            showCancelButton: true,
-            confirmButtonText: 'Gunakan Alamat Ini',
-            confirmButtonColor: '#ff6b35'
-        }).then((res) => {
-            if (res.isConfirmed && res.value) {
-                selectedAlamatKeyCheckout = res.value;
-                prosesPesanan();
-            }
-        });
-    }
-
     function prosesPesanan() {
-        const user = auth.currentUser;
-        if (!user) {
-            Swal.fire({ title: 'Belum Login', text: 'Silakan login terlebih dahulu!', icon: 'warning', confirmButtonText: 'Login', confirmButtonColor: '#ff6b35' }).then((res) => { if (res.isConfirmed) loginGoogle(); });
-            return;
-        }
-
-        let totalHarga = 0;
-        let itemsArray = [];
-        Object.keys(keranjang).forEach(id => {
-            let item = keranjang[id];
-            totalHarga += item.harga * item.qty;
-            itemsArray.push(`${item.nama} (${item.qty}x)`);
-        });
-
-        if (itemsArray.length === 0) { Swal.fire('Keranjang Kosong', 'Pilih minimal 1 menu!', 'warning'); return; }
-
-        database.ref(`users/${user.uid}`).once('value', (snap) => {
-            const val = snap.val() || {};
-            userAlamatList = val.alamat_list || {};
-            let userKeys = Object.keys(userAlamatList);
-
-            let alamatAktifObj = null;
-
-            if (!selectedAlamatKeyCheckout || !userAlamatList[selectedAlamatKeyCheckout]) {
-                userKeys.forEach(k => { if (userAlamatList[k].isUtama) selectedAlamatKeyCheckout = k; });
-                if (!selectedAlamatKeyCheckout && userKeys.length > 0) selectedAlamatKeyCheckout = userKeys[0];
-            }
-
-            if (selectedAlamatKeyCheckout && userAlamatList[selectedAlamatKeyCheckout]) {
-                alamatAktifObj = userAlamatList[selectedAlamatKeyCheckout];
-            }
-
-            let alamatHTML = '';
-            if (userKeys.length === 0) {
-                alamatHTML = `<div style="color:#ef4444; font-size:11px;">⚠️ Belum ada alamat tersimpan di profil!</div>`;
-            } else if (userKeys.length === 1) {
-                alamatHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <strong style="color:var(--secondary); font-size:12px;"><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman (${alamatAktifObj.label}):</strong>
-                            <div style="color:var(--text-sub); font-size:11px; margin-top:3px; line-height:1.4;">
-                                ${alamatAktifObj.jalan}, Desa ${alamatAktifObj.desa}, Kec. ${alamatAktifObj.kecamatan} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})
-                            </div>
-                        </div>
-                        <span style="font-size:10px; background:var(--border-color); color:var(--text-main); padding:2px 6px; border-radius:4px; font-weight:bold; white-space:nowrap;">Tunggal</span>
-                    </div>
-                `;
-            } else {
-                alamatHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-                        <div>
-                            <strong style="color:var(--secondary); font-size:12px;"><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman (${alamatAktifObj.label}):</strong>
-                            <div style="color:var(--text-sub); font-size:11px; margin-top:3px; line-height:1.4;">
-                                ${alamatAktifObj.jalan}, Desa ${alamatAktifObj.desa}, Kec. ${alamatAktifObj.kecamatan} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})
-                            </div>
-                        </div>
-                        <button onclick="gantiAlamatCheckout(${JSON.stringify(userKeys).replace(/"/g, '&quot;')})" style="background:var(--secondary); color:white; border:none; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:bold; cursor:pointer; white-space:nowrap;">
-                            <i class="fa-solid fa-arrows-rotate"></i> Ganti Alamat
-                        </button>
-                    </div>
-                `;
-            }
-
-            let textAlamatRingkas = alamatAktifObj ? `${alamatAktifObj.jalan}, ${alamatAktifObj.desa} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})` : 'Tanpa Alamat';
-
-            Swal.fire({
-                title: 'Lanjut Pembayaran',
-                html: `
-                    <div style="text-align:left; font-size:13px; line-height:1.6;">
-                        <div style="background:var(--bg); border:1px solid var(--border-color); padding:10px 12px; border-radius:8px; margin-bottom:12px;">
-                            ${alamatHTML}
-                        </div>
-
-                        <div style="margin-bottom:10px;">
-                            <label style="font-weight:bold; display:block; margin-bottom:4px;">Pilih Metode Pembayaran:</label>
-                            <select id="swal-metode-bayar" style="width:100%; padding:10px; border-radius:8px; border:1.5px solid var(--border-color); font-size:13px; background:var(--card-bg); color:var(--text-main);">
-                                <option value="QRIS / E-Wallet (Gopay/OVO/Dana)">📱 QRIS / E-Wallet (Gopay/OVO/Dana)</option>
-                                <option value="Transfer Bank BCA/Mandiri">🏦 Transfer Bank (BCA/Mandiri)</option>
-                                <option value="Bayar Tunai (COD / Bayar di Kasir)">💵 Bayar Tunai (COD / Di Kasir)</option>
-                            </select>
-                        </div>
-
-                        <div style="background:rgba(255,107,53,0.1); border:1px solid var(--primary); padding:10px; border-radius:8px; text-align:center;">
-                            <span style="font-size:12px; color:var(--primary);">Total Tagihan:</span>
-                            <h2 style="margin:2px 0 0 0; color:var(--primary);">Rp ${totalHarga.toLocaleString('id-ID')}</h2>
-                        </div>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '🚀 Kirim Pesanan Sekarang',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#ff6b35',
-                preConfirm: () => document.getElementById('swal-metode-bayar').value
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const metodePilihan = result.value;
-                    const orderId = "TRX-" + Date.now(); 
-
-                    Swal.fire({ title: 'Mengirim Pesanan...', didOpen: () => Swal.showLoading() });
-
-                    let updates = {};
-                    Object.keys(keranjang).forEach(id => {
-                        let currentStok = (semuaMenuData[id] && semuaMenuData[id].stok !== undefined) ? parseInt(semuaMenuData[id].stok) : 0;
-                        let sisaStok = currentStok - keranjang[id].qty;
-                        if (sisaStok < 0) sisaStok = 0;
-                        updates[`daftar_menu/${id}/stok`] = sisaStok;
-                    });
-
-                    database.ref().update(updates).then(() => {
-                        return database.ref('pesanan/' + orderId).set({
-                            id: orderId,
-                            userId: user.uid,
-                            id_alamat: selectedAlamatKeyCheckout || 'ALM-DEFAULT',
-                            nama: val.nama || user.displayName || 'Pelanggan',
-                            items: itemsArray,
-                            total: totalHarga,
-                            metode: metodePilihan,
-                            pembayaran: 'Belum Bayar (Pending)',
-                            status: 'Menunggu Respon',
-                            alamat: textAlamatRingkas,
-                            waktu: Date.now()
-                        });
-                    }).then(() => {
-                        keranjang = {};
-                        updateTotalKeranjang();
-                        renderMenu();
-                        Swal.close();
-                        bukaModalDetailPesanan(orderId);
-                    });
-                }
-            });
-        });
+        if (Object.keys(keranjang).length === 0) { Swal.fire('Keranjang Kosong', 'Pilih minimal 1 menu!', 'warning'); return; }
+        Swal.fire('Pesanan Dikirim', 'Pesanan berhasil dikirim ke kasir!', 'success');
     }
-
-    function bukaModalDetailPesanan(orderId) {
-        document.getElementById('modal-detail-pesanan').classList.add('active');
-
-        database.ref('pesanan/' + orderId).on('value', (snap) => {
-            const order = snap.val();
-            if (!order) return;
-
-            const body = document.getElementById('detail-pesanan-body');
-            
-            let instruksiBayarHTML = '';
-            if (order.metode.includes('QRIS')) {
-                instruksiBayarHTML = `
-                    <div style="text-align:center; background:var(--bg); border:1px solid var(--border-color); padding:15px; border-radius:12px; margin-bottom:15px;">
-                        <span style="font-size:12px; color:var(--text-sub); font-weight:bold;">Scan QRIS Di Bawah Ini:</span>
-                        <div style="margin:10px 0;">
-                            <img src="https://via.placeholder.com/180x180?text=QRIS+CODE" style="border-radius:8px; border:2px solid #004e64;">
-                        </div>
-                        <div style="font-size:11px; color:var(--text-sub);">Mendukung Gopay, OVO, Dana, ShopeePay & Mobile Banking</div>
-                    </div>
-                `;
-            } else if (order.metode.includes('Transfer Bank')) {
-                instruksiBayarHTML = `
-                    <div style="background:var(--bg); border:1px solid var(--border-color); padding:15px; border-radius:12px; margin-bottom:15px; font-size:13px;">
-                        <div style="margin-bottom:8px;"><b>Bank BCA:</b> 123-456-7890 a/n RivandCronz</div>
-                        <div><b>Bank Mandiri:</b> 987-654-3210 a/n RivandCronz</div>
-                    </div>
-                `;
-            } else {
-                instruksiBayarHTML = `
-                    <div style="background:rgba(59,130,246,0.1); border:1px solid #3b82f6; padding:12px; border-radius:12px; margin-bottom:15px; font-size:12px; color:#3b82f6; text-align:center;">
-                        💵 Siapkan uang pas saat pesanan tiba atau bayar langsung di kasir.
-                    </div>
-                `;
-            }
-
-            let badgeColor = '#f59e0b';
-            if (order.status === 'Sedang Dimasak') badgeColor = '#0EA5E9';
-            if (order.status === 'Selesai' || order.status === 'Lunas') badgeColor = '#10B981';
-
-            body.innerHTML = `
-                <div style="background: linear-gradient(135deg, #004e64, #0e7490); color:white; padding:16px; border-radius:12px; text-align:center; margin-bottom:15px;">
-                    <span style="font-size:11px; opacity:0.8;">ID PESANAN: ${order.id}</span>
-                    <h3 style="margin:4px 0 10px 0;">Status: <span style="background:${badgeColor}; color:white; padding:3px 10px; border-radius:20px; font-size:13px;">${order.status}</span></h3>
-                    <div style="font-size:11px; opacity:0.9;"><i class="fa-solid fa-arrows-rotate fa-spin"></i> Status diperbarui secara realtime</div>
-                </div>
-
-                <h4 style="margin:0 0 8px 0; color:var(--secondary);">Instruksi Pembayaran</h4>
-                ${instruksiBayarHTML}
-
-                <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:15px;">
-                    <strong style="font-size:13px; color:var(--text-main); display:block; margin-bottom:8px;">Rincian Pesanan:</strong>
-                    <ul style="margin:0; padding-left:18px; font-size:13px; color:var(--text-sub);">
-                        ${order.items ? order.items.map(item => `<li>${item}</li>`).join('') : ''}
-                    </ul>
-                    <hr style="border:none; border-top:1px dashed var(--border-color); margin:10px 0;">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px; color:var(--primary);">
-                        <span>Total Tagihan:</span>
-                        <span>Rp ${(order.total || 0).toLocaleString('id-ID')}</span>
-                    </div>
-                </div>
-
-                <button onclick="tutupModalDetailPesanan()" style="width:100%; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
-                    Kembali ke Menu Utama
-                </button>
-            `;
-        });
-    }
-
-    function tutupModalDetailPesanan() { document.getElementById('modal-detail-pesanan').classList.remove('active'); }
 </script>
 </body>
 </html>

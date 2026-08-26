@@ -146,7 +146,7 @@
             <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
                 <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 20px;"></i>
                 <div style="flex:1;">
-                    <strong>Alamat Saya</strong>
+                    <strong>📍 Alamat Saya</strong>
                     <div style="font-size: 12px; color: #64748b;">Kelola alamat & titik lokasi Peta</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
@@ -155,7 +155,7 @@
             <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid #f1f5f9; padding: 16px 12px;">
                 <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6; font-size: 20px;"></i>
                 <div style="flex:1;">
-                    <strong>Pesanan & Riwayat Saya</strong>
+                    <strong>📜 Pesanan & Riwayat Saya</strong>
                     <div style="font-size: 12px; color: #64748b;">Lihat pesanan aktif & transaksi lama</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
@@ -164,7 +164,7 @@
             <div class="drawer-item" onclick="bukaSubProfil('keamanan')" style="padding: 16px 12px;">
                 <i class="fa-solid fa-shield-halved" style="color:#10B981; font-size: 20px;"></i>
                 <div style="flex:1;">
-                    <strong>Keamanan</strong>
+                    <strong>🔒 Keamanan</strong>
                     <div style="font-size: 12px; color: #64748b;">Verifikasi OTP WhatsApp/SMS & Logout</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
@@ -357,9 +357,8 @@
     function loginGoogle() {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider).then((res) => {
-            // USR-UID sebagai Primary Key Pelanggan
             database.ref('users/' + res.user.uid).update({
-                id_pelanggan: res.user.uid, // Primary Key
+                id_pelanggan: res.user.uid,
                 nama: res.user.displayName,
                 email: res.user.email,
                 photo: res.user.photoURL,
@@ -423,7 +422,6 @@
         if (!user) return;
 
         const container = document.getElementById('list-riwayat-pesanan');
-        // Primary Key lookup via Foreign Key userId
         database.ref('pesanan').orderByChild('userId').equalTo(user.uid).on('value', (snap) => {
             const data = snap.val();
             container.innerHTML = '';
@@ -568,11 +566,10 @@
 
         if (!label || !penerima || !jalan) { Swal.fire('Error', 'Label, Penerima, dan Jalan Wajib diisi!', 'error'); return; }
 
-        // Primary Key Unik untuk Alamat (ALM-timestamp)
         let targetKey = editAlamatKey ? editAlamatKey : 'ALM-' + Date.now();
 
         let payload = {
-            id_alamat: targetKey, // Primary Key Alamat
+            id_alamat: targetKey,
             label: label,
             penerima: penerima,
             hp: document.getElementById('fa-hp').value.trim(),
@@ -632,6 +629,7 @@
         renderMenu();
     });
 
+    // LOGIKA RENDER MENU & STOK (KEMBALI KE BEBAS PESAN JIKA STOK KOSONG/TIDAK DIISI ADMIN)
     function renderMenu() {
         const menuBox = document.getElementById('user-menu-list');
         menuBox.innerHTML = "";
@@ -646,19 +644,25 @@
             let item = semuaMenuData[key];
             if (kategoriAktif !== 'semua' && item.kategori !== kategoriAktif) return;
 
+            // Jika stok diisi di admin dan nilainya <= 0, baru dianggap Habis.
+            // Jika stok tidak diisi (undefined/null), bebas dipesan seperti semula.
+            let adaStokLimit = (item.stok !== undefined && item.stok !== null && item.stok !== "");
+            let stokHabis = adaStokLimit && (parseInt(item.stok) <= 0);
+
             let qty = keranjang[item.id] ? keranjang[item.id].qty : 0;
+            
             menuBox.innerHTML += `
-                <div class="menu-card">
+                <div class="menu-card" style="${stokHabis ? 'opacity:0.6;' : ''}">
                     <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="menu-img">
                     <div class="menu-info">
-                        <div class="menu-title">${item.nama}</div>
+                        <div class="menu-title">${item.nama} ${stokHabis ? '<span style="color:#ef4444; font-size:11px;">(Habis)</span>' : ''}</div>
                         <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                             <div class="menu-price">Rp ${(item.harga || 0).toLocaleString('id-ID')}</div>
                             <div class="counter-box">
-                                <button class="btn-qty" onclick="ubahQty('${item.id}', -1)" ${qty === 0 ? 'disabled' : ''}>-</button>
+                                <button class="btn-qty" onclick="ubahQty('${item.id}', -1)" ${qty === 0 || stokHabis ? 'disabled' : ''}>-</button>
                                 <span class="qty-val">${qty}</span>
-                                <button class="btn-qty" onclick="ubahQty('${item.id}', 1)">+</button>
+                                <button class="btn-qty" onclick="ubahQty('${item.id}', 1)" ${stokHabis ? 'disabled' : ''}>+</button>
                             </div>
                         </div>
                     </div>
@@ -670,6 +674,17 @@
     function ubahQty(id, delta) {
         let item = semuaMenuData[id];
         if (!item) return;
+
+        // Pengecekan Batas Stok Maksimal jika diisi oleh Admin
+        let adaStokLimit = (item.stok !== undefined && item.stok !== null && item.stok !== "");
+        let maxStok = adaStokLimit ? parseInt(item.stok) : 999;
+
+        let currentQty = keranjang[id] ? keranjang[id].qty : 0;
+
+        if (delta > 0 && adaStokLimit && currentQty + delta > maxStok) {
+            Swal.fire('Stok Terbatas', `Stok tersisa hanya ${maxStok}!`, 'warning');
+            return;
+        }
 
         if (!keranjang[id]) keranjang[id] = { id_barang: item.id, nama: item.nama, harga: item.harga, qty: 0 };
         keranjang[id].qty += delta;
@@ -711,7 +726,7 @@
         }).then((res) => {
             if (res.isConfirmed && res.value) {
                 selectedAlamatKeyCheckout = res.value;
-                prosesPesanan(); // Re-render Modal Checkout dengan alamat pilihan baru
+                prosesPesanan();
             }
         });
     }
@@ -740,11 +755,8 @@
 
             let alamatAktifObj = null;
 
-            // Jika user belum pernah pilih alamat checkout secara eksplisit
             if (!selectedAlamatKeyCheckout || !userAlamatList[selectedAlamatKeyCheckout]) {
-                // Cari alamat berstatus Utama
                 userKeys.forEach(k => { if (userAlamatList[k].isUtama) selectedAlamatKeyCheckout = k; });
-                // Jika tidak ada status utama, pakai alamat pertama yang ditemukan
                 if (!selectedAlamatKeyCheckout && userKeys.length > 0) selectedAlamatKeyCheckout = userKeys[0];
             }
 
@@ -752,14 +764,12 @@
                 alamatAktifObj = userAlamatList[selectedAlamatKeyCheckout];
             }
 
-            // Konstruksi Komponen UI Tampilan Alamat Checkout
             let alamatHTML = '';
             if (userKeys.length === 0) {
                 alamatHTML = `
                     <div style="color:#ef4444; font-size:11px;">⚠️ Belum ada alamat tersimpan di profil!</div>
                 `;
             } else if (userKeys.length === 1) {
-                // LOGIKA 1: Jika Cuma 1 Alamat -> Kunci Tampilan (Tanpa Tombol Ganti)
                 alamatHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
@@ -772,7 +782,6 @@
                     </div>
                 `;
             } else {
-                // LOGIKA 2: Jika Lebih Dari 1 Alamat -> Tampilkan Tombol "Ganti Alamat"
                 alamatHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
                         <div>
@@ -821,17 +830,14 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const metodePilihan = result.value;
-                    
-                    // Primary Key Unik Transaksi
                     const orderId = "TRX-" + Date.now(); 
 
                     Swal.fire({ title: 'Mengirim Pesanan...', didOpen: () => Swal.showLoading() });
 
-                    // Simpan Ke Firebase dengan Struktur Primary Key & Foreign Key Relasional
                     database.ref('pesanan/' + orderId).set({
-                        id: orderId,                     // Primary Key Transaksi
-                        userId: user.uid,                // Foreign Key Pelanggan (PK users)
-                        id_alamat: selectedAlamatKeyCheckout || 'ALM-DEFAULT', // Foreign Key Alamat
+                        id: orderId,
+                        userId: user.uid,
+                        id_alamat: selectedAlamatKeyCheckout || 'ALM-DEFAULT',
                         nama: val.nama || user.displayName || 'Pelanggan',
                         items: itemsArray,
                         total: totalHarga,

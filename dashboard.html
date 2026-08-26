@@ -90,7 +90,7 @@
       </div>
     </header>
 
-    <!-- Konten Utam Dasbor -->
+    <!-- Konten Utama Dasbor -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       <!-- Ringkasan Statistik -->
@@ -161,15 +161,16 @@
 
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    // 1. Konfigurasi Firebase
+    // 1. Konfigurasi Firebase ASLI Milikmu
     const firebaseConfig = {
-      apiKey: "AIzaSyC...", // Otomatis tersambung dengan projek Firebase-mu
+      apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
       authDomain: "warung-pandawa-89cb5.firebaseapp.com",
       databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "warung-pandawa-89cb5",
-      storageBucket: "warung-pandawa-89cb5.appspot.com",
-      messagingSenderId: "338870377484",
-      appId: "1:338870377484:web:..."
+      storageBucket: "warung-pandawa-89cb5.firebasestorage.app",
+      messagingSenderId: "789317550948",
+      appId: "1:789317550948:web:b1c635d5728e3ffb13f071",
+      measurementId: "G-Y455NCGBGK"
     };
 
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
@@ -198,7 +199,7 @@
               allowOutsideClick: false
             }).then(() => {
               auth.signOut();
-              window.location.href = '/warungpandawa/';
+              window.location.href = '/';
             });
           } else {
             // AKUN ADALAH ADMIN

@@ -27,7 +27,6 @@
             --border-color: #e2e8f0;
         }
 
-        /* Dark Mode Theme Rules */
         body.dark-mode {
             --bg: #0f172a;
             --card-bg: #1e293b;
@@ -54,8 +53,10 @@
         .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        .drawer-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; }
+        /* Clean Navigation Items */
+        .drawer-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
         .drawer-item:hover { background: var(--bg); }
+        .drawer-item i { font-size: 18px; width: 22px; text-align: center; }
 
         .modal-full-container { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1005; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         .modal-full-container.active { bottom: 0; }
@@ -97,11 +98,12 @@
         #map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 2000; display: none; flex-direction: column; }
         #map-container { width: 100%; flex: 1; }
 
-        /* Commit/Changelog Style ala GitHub */
-        .commit-card { border-left: 3px solid var(--primary); background: var(--bg); padding: 10px 12px; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
-        .commit-ver { font-weight: bold; font-size: 13px; color: var(--primary); }
-        .commit-date { font-size: 10px; color: var(--text-sub); margin-bottom: 4px; }
-        .commit-msg { font-size: 12px; color: var(--text-main); margin: 0; padding-left: 14px; }
+        /* Style Last Update GitHub Commit Log */
+        .commit-card { border-left: 3px solid var(--primary); background: var(--bg); padding: 12px; border-radius: 0 10px 10px 0; margin-bottom: 12px; border: 1px solid var(--border-color); border-left-width: 4px; }
+        .commit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .commit-ver { font-weight: bold; font-size: 13px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .commit-date { font-size: 11px; color: var(--text-sub); }
+        .commit-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-main); line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -137,7 +139,7 @@
     <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
 
-<!-- Drawer Menu Utama -->
+<!-- Drawer Menu Utama Clean UI -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
     <div class="drawer-header">
@@ -154,16 +156,19 @@
     <div id="drawer-actions"></div>
 </div>
 
-<!-- Modal Pengaturan (Tema & Last Update GitHub Style) -->
+<!-- Modal Pengaturan (Tema & Last Update Changelog) -->
 <div id="modal-pengaturan" class="modal-full-container">
     <div class="modal-full-header">
-        <strong style="font-size: 16px;"><i class="fa-solid fa-gear"></i> Pengaturan Aplikasi</strong>
+        <strong style="font-size: 16px;"><i class="fa-solid fa-gear"></i> Pengaturan</strong>
         <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalPengaturan()"></i>
     </div>
     <div class="modal-full-body">
         
-        <div style="margin-bottom: 25px;">
-            <h4 style="margin: 0 0 10px 0; color: var(--primary);"><i class="fa-solid fa-palette"></i> Tema Tampilan</h4>
+        <!-- Setting Tema -->
+        <div style="background: var(--bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 20px;">
+            <label style="font-weight: bold; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <i class="fa-solid fa-palette" style="color:var(--primary);"></i> Mode Tampilan Tema
+            </label>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                 <button id="btn-theme-light" onclick="setTheme('light')" class="cat-btn" style="text-align: center; padding: 10px;"><i class="fa-solid fa-sun"></i> Light</button>
                 <button id="btn-theme-dark" onclick="setTheme('dark')" class="cat-btn" style="text-align: center; padding: 10px;"><i class="fa-solid fa-moon"></i> Dark</button>
@@ -171,32 +176,46 @@
             </div>
         </div>
 
+        <!-- Last Update Log (GitHub Style) -->
         <div>
-            <h4 style="margin: 0 0 10px 0; color: var(--primary);"><i class="fa-solid fa-code-commit"></i> Catatan Pembaruan (Last Updates)</h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <strong style="font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-code-commit" style="color:#10B981;"></i> Catatan Pembaruan (Last Update)
+                </strong>
+                <span style="font-size: 11px; background: rgba(16, 185, 129, 0.15); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold;">v1.2.0</span>
+            </div>
+
             <div id="github-changelog-container">
-                <!-- Log Pembaruan Versi GitHub Style -->
                 <div class="commit-card">
-                    <div class="commit-ver">v1.2.0 - Auto Stock & Settings</div>
-                    <div class="commit-date">26 Agustus 2026</div>
-                    <ul class="commit-msg">
-                        <li>Penanganan stok otomatis (pudar/habis jika stok 0).</li>
-                        <li>Stok otomatis berkurang saat transaksi berhasil.</li>
-                        <li>Penambahan Menu Pengaturan (Tema & Last Update).</li>
+                    <div class="commit-header">
+                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.2.0 - Stock & UI Upgrade</span>
+                        <span class="commit-date">26 Ags 2026</span>
+                    </div>
+                    <ul class="commit-list">
+                        <li><b>Auto Stock Indicator:</b> Menu pudar otomatis saat stok dari admin habis (`0`).</li>
+                        <li><b>Realtime Stock Deduction:</b> Stok Firebase berkurang otomatis begitu pesanan berhasil dikirim.</li>
+                        <li><b>Clean Settings Menu:</b> Pembaruan tampilan menu pengaturan & integrasi Catatan Update (Changelog).</li>
                     </ul>
                 </div>
+
                 <div class="commit-card">
-                    <div class="commit-ver">v1.1.0 - Pinpoint Location & Primary Key</div>
-                    <div class="commit-date">24 Agustus 2026</div>
-                    <ul class="commit-msg">
-                        <li>Penerapan sistem Primary Key unik (BRG-xxx).</li>
-                        <li>Integrasi Peta OpenStreetMap/Leaflet untuk alamat.</li>
+                    <div class="commit-header">
+                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.1.0 - GPS Map & Address System</span>
+                        <span class="commit-date">24 Ags 2026</span>
+                    </div>
+                    <ul class="commit-list">
+                        <li>Integrasi Peta Interaktif OpenStreetMap/Leaflet untuk penentuan titik lokasi presisi.</li>
+                        <li>Manajemen banyak alamat pengiriman per pelanggan.</li>
                     </ul>
                 </div>
+
                 <div class="commit-card">
-                    <div class="commit-ver">v1.0.0 - Initial Release</div>
-                    <div class="commit-date">20 Agustus 2026</div>
-                    <ul class="commit-msg">
-                        <li>Peluncuran resmi Web E-Commerce RivandCronz.</li>
+                    <div class="commit-header">
+                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.0.0 - Initial Release</span>
+                        <span class="commit-date">20 Ags 2026</span>
+                    </div>
+                    <ul class="commit-list">
+                        <li>Peluncuran resmi sistem pemesanan online RivandCronz.</li>
                     </ul>
                 </div>
             </div>
@@ -216,7 +235,7 @@
         
         <div id="sec-profil-main">
             <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-id-card" style="color:var(--primary); font-size: 20px;"></i>
+                <i class="fa-solid fa-id-card" style="color:var(--primary);"></i>
                 <div style="flex:1;">
                     <strong>Data Pribadi</strong>
                     <div style="font-size: 12px; color: var(--text-sub);">Nametag, Bio & Foto Profil</div>
@@ -225,7 +244,7 @@
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-location-dot" style="color:#0EA5E9; font-size: 20px;"></i>
+                <i class="fa-solid fa-location-dot" style="color:#0EA5E9;"></i>
                 <div style="flex:1;">
                     <strong>📍 Alamat Saya</strong>
                     <div style="font-size: 12px; color: var(--text-sub);">Kelola alamat & titik lokasi Peta</div>
@@ -234,7 +253,7 @@
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6; font-size: 20px;"></i>
+                <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6;"></i>
                 <div style="flex:1;">
                     <strong>📜 Pesanan & Riwayat Saya</strong>
                     <div style="font-size: 12px; color: var(--text-sub);">Lihat pesanan aktif & transaksi lama</div>
@@ -243,7 +262,7 @@
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('keamanan')" style="padding: 16px 12px;">
-                <i class="fa-solid fa-shield-halved" style="color:#10B981; font-size: 20px;"></i>
+                <i class="fa-solid fa-shield-halved" style="color:#10B981;"></i>
                 <div style="flex:1;">
                     <strong>🔒 Keamanan</strong>
                     <div style="font-size: 12px; color: var(--text-sub);">Verifikasi OTP WhatsApp/SMS & Logout</div>
@@ -404,7 +423,7 @@
     let mapObject = null, mapMarker = null;
     let selectedLat = -6.940365, selectedLng = 109.609319;
 
-    // --- FITUR MANAJEMEN TEMA (LIGHT, DARK, AUTO) ---
+    // --- MANAJEMEN TEMA ---
     function applyTheme(theme) {
         document.body.classList.remove('dark-mode');
         if (theme === 'dark') {
@@ -429,15 +448,11 @@
         applyTheme(theme);
     }
 
-    // Load Theme Awal
     const savedTheme = localStorage.getItem('user-theme') || 'auto';
     applyTheme(savedTheme);
 
-    // Dynamic System Theme Listener
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if ((localStorage.getItem('user-theme') || 'auto') === 'auto') {
-            applyTheme('auto');
-        }
+        if ((localStorage.getItem('user-theme') || 'auto') === 'auto') applyTheme('auto');
     });
 
     function toggleDrawer() {
@@ -451,6 +466,7 @@
     }
     function tutupModalPengaturan() { document.getElementById('modal-pengaturan').classList.remove('active'); }
 
+    // RENDER MENU DRAWER DENGAN STYLE CLEAN
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
         if (user) {
@@ -460,18 +476,28 @@
             document.getElementById('drawer-user-email').innerText = user.email;
 
             actionBox.innerHTML = `
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();"><i class="fa-solid fa-circle-user" style="color:var(--primary); font-size:18px;"></i> Profil Pelanggan</button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();"><i class="fa-solid fa-gear" style="color:#6366f1; font-size:18px;"></i> Pengaturan</button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();"><i class="fa-solid fa-star" style="color:#f59e0b; font-size:18px;"></i> Beri Ulasan & Rating</button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
+                    <i class="fa-solid fa-circle-user" style="color:var(--primary);"></i> Profil Pelanggan
+                </button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
+                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
+                </button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
+                    <i class="fa-solid fa-star" style="color:#f59e0b;"></i> Beri Ulasan & Rating
+                </button>
             `;
         } else {
             document.getElementById('drawer-user-img').style.display = 'none';
             document.getElementById('drawer-user-name').innerText = 'Tamu';
-            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk auto-fill';
+            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk pesanan';
 
             actionBox.innerHTML = `
-                <button class="drawer-item" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk dengan Google</button>
-                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();"><i class="fa-solid fa-gear" style="color:#6366f1; font-size:18px;"></i> Pengaturan</button>
+                <button class="drawer-item" onclick="loginGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk Google
+                </button>
+                <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
+                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
+                </button>
             `;
         }
     });
@@ -745,13 +771,11 @@
     function konfirmasiLogout() { auth.signOut().then(() => tutupModalProfil()); }
     function bukaModalUlasan() { Swal.fire('Ulasan', 'Fitur ulasan transaksi.', 'info'); }
 
-    // REALTIME DATABASE LISTEN UNTUK STOK & MENU
     database.ref('daftar_menu').on('value', (snapshot) => {
         semuaMenuData = snapshot.val() || {};
         renderMenu();
     });
 
-    // RENDER MENU & CEK STOK DARI ADMIN (PUDAR JIKA KOSONG / STOK <= 0)
     function renderMenu() {
         const menuBox = document.getElementById('user-menu-list');
         menuBox.innerHTML = "";
@@ -766,7 +790,6 @@
             let item = semuaMenuData[key];
             if (kategoriAktif !== 'semua' && item.kategori !== kategoriAktif) return;
 
-            // Pengecekan stok
             let stokValue = (item.stok !== undefined && item.stok !== null) ? parseInt(item.stok) : 0;
             let stokHabis = (stokValue <= 0);
 
@@ -954,7 +977,6 @@
 
                     Swal.fire({ title: 'Mengirim Pesanan...', didOpen: () => Swal.showLoading() });
 
-                    // LOGIKA PENGURANGAN STOK OTOMATIS DI FIREBASE
                     let updates = {};
                     Object.keys(keranjang).forEach(id => {
                         let currentStok = (semuaMenuData[id] && semuaMenuData[id].stok !== undefined) ? parseInt(semuaMenuData[id].stok) : 0;
@@ -963,7 +985,6 @@
                         updates[`daftar_menu/${id}/stok`] = sisaStok;
                     });
 
-                    // Eksekusi Simpan Pesanan & Update Stok Sekaligus
                     database.ref().update(updates).then(() => {
                         return database.ref('pesanan/' + orderId).set({
                             id: orderId,

@@ -243,10 +243,10 @@
             <button onclick="bukaFormAlamatBaru()" style="width:100%; margin-top:15px; background:var(--secondary); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-plus"></i> Tambah Alamat Baru</button>
         </div>
 
-        <!-- SUB-MENU FORM TAMBAH ALAMAT -->
+        <!-- SUB-MENU FORM TAMBAH / EDIT ALAMAT -->
         <div id="sec-form-alamat-baru" style="display:none;">
             <button onclick="bukaSubProfil('alamat')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Batal / Kembali</button>
-            <h3 style="margin-top:0; color:var(--secondary);">Tambah Alamat Pengiriman</h3>
+            <h3 style="margin-top:0; color:var(--secondary);" id="form-alamat-title">Form Alamat Pengiriman</h3>
 
             <div class="prof-field"><label>Label Alamat:</label><input id="fa-label" placeholder="Contoh: Rumah, Kantor, Kos" class="checkout-input"></div>
             <div class="prof-field"><label>Nama Penerima:</label><input id="fa-penerima" placeholder="Nama Lengkap Penerima" class="checkout-input"></div>
@@ -375,6 +375,7 @@
     let keranjang = {}; 
     let kategoriAktif = 'semua';
     let tempAvatarUrl = "";
+    let editAlamatKey = null; // Detector mode Tambah/Edit Alamat
     
     // Leaflet Map Variable
     let mapObject = null;
@@ -485,7 +486,7 @@
         });
     }
 
-    // FUNGSI LOAD RIWAYAT PESANAN AKTIF & LAMA
+    // LOAD RIWAYAT PESANAN AKTIF & LAMA
     function loadRiwayatPesananUser() {
         const user = auth.currentUser;
         if (!user) return;
@@ -592,7 +593,7 @@
         });
     }
 
-    // ALAMAT MANAGEMENT
+    // ALAMAT MANAGEMENT (WITH EDIT & HAPUS)
     function renderDaftarAlamat(alamatList) {
         const box = document.getElementById('daftar-alamat-box');
         box.innerHTML = '';
@@ -609,13 +610,25 @@
                 <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : '#e2e8f0'}; background:${item.isUtama ? '#fff7ed' : '#f8fafc'}; border-radius:12px; padding:12px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px; margin-left:4px;">Utama</span>' : ''}</strong>
-                        <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:#cbd5e1; padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>Pilih Utama</button>
+                        <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:#cbd5e1; padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>
+                            ${item.isUtama ? 'Utama' : 'Pilih Utama'}
+                        </button>
                     </div>
+
                     <div style="font-size:12px; color:#334155; margin-top:8px; line-height:1.5;">
                         <div><b>${item.penerima}</b> (${item.hp})</div>
                         <div>${item.jalan}, Desa/Kel. ${item.desa}, Kec. ${item.kecamatan}</div>
                         <div>${item.kota}, Prov. ${item.provinsi} (${item.kodePos})</div>
                         ${item.gps ? `<div style="color:var(--secondary); font-size:11px; margin-top:4px;"><i class="fa-solid fa-map-pin"></i> GPS Pinpoint: ${item.gps}</div>` : ''}
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px; border-top:1px dashed #cbd5e1; padding-top:8px;">
+                        <button onclick="editAlamat('${key}')" style="background:#0EA5E9; color:white; border:none; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
+                        <button onclick="hapusAlamat('${key}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
                     </div>
                 </div>
             `;
@@ -633,7 +646,62 @@
         });
     }
 
-    function bukaFormAlamatBaru() { bukaSubProfil('form-alamat-baru'); }
+    function bukaFormAlamatBaru() {
+        editAlamatKey = null;
+        document.getElementById('form-alamat-title').innerText = "Tambah Alamat Pengiriman";
+        
+        document.getElementById('fa-label').value = '';
+        document.getElementById('fa-penerima').value = '';
+        document.getElementById('fa-hp').value = '';
+        document.getElementById('fa-prov').value = '';
+        document.getElementById('fa-kota').value = '';
+        document.getElementById('fa-kec').value = '';
+        document.getElementById('fa-desa').value = '';
+        document.getElementById('fa-kodepos').value = '';
+        document.getElementById('fa-jalan').value = '';
+        document.getElementById('fa-gps').value = '';
+        document.getElementById('fa-gps-status').innerText = '';
+
+        bukaSubProfil('form-alamat-baru');
+    }
+
+    function editAlamat(key) {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        database.ref(`users/${user.uid}/alamat_list/${key}`).once('value', (snap) => {
+            const item = snap.val();
+            if (!item) return;
+
+            editAlamatKey = key;
+            document.getElementById('form-alamat-title').innerText = "Edit Alamat Pengiriman";
+
+            document.getElementById('fa-label').value = item.label || '';
+            document.getElementById('fa-penerima').value = item.penerima || '';
+            document.getElementById('fa-hp').value = item.hp || '';
+            document.getElementById('fa-prov').value = item.provinsi || '';
+            document.getElementById('fa-kota').value = item.kota || '';
+            document.getElementById('fa-kec').value = item.kecamatan || '';
+            document.getElementById('fa-desa').value = item.desa || '';
+            document.getElementById('fa-kodepos').value = item.kodePos || '';
+            document.getElementById('fa-jalan').value = item.jalan || '';
+            
+            if (item.gps) {
+                document.getElementById('fa-gps').value = item.gps;
+                document.getElementById('fa-gps-status').innerText = `✅ Titik Terkunci: ${item.gps}`;
+                let coords = item.gps.split(', ');
+                if (coords.length === 2) {
+                    selectedLat = parseFloat(coords[0]);
+                    selectedLng = parseFloat(coords[1]);
+                }
+            } else {
+                document.getElementById('fa-gps').value = '';
+                document.getElementById('fa-gps-status').innerText = '';
+            }
+
+            bukaSubProfil('form-alamat-baru');
+        });
+    }
 
     function simpanAlamatBaru() {
         const user = auth.currentUser;
@@ -648,7 +716,8 @@
             return;
         }
 
-        let newKey = Date.now();
+        let targetKey = editAlamatKey ? editAlamatKey : Date.now();
+
         let payload = {
             label: label,
             penerima: penerima,
@@ -660,12 +729,41 @@
             kodePos: document.getElementById('fa-kodepos').value.trim(),
             jalan: jalan,
             gps: document.getElementById('fa-gps').value,
-            isUtama: false
         };
 
-        database.ref(`users/${user.uid}/alamat_list/${newKey}`).set(payload).then(() => {
-            Swal.fire({ icon: 'success', title: 'Alamat Berhasil Disimpan!', timer: 1200, showConfirmButton: false });
+        if (!editAlamatKey) {
+            payload.isUtama = false;
+        }
+
+        database.ref(`users/${user.uid}/alamat_list/${targetKey}`).update(payload).then(() => {
+            Swal.fire({ 
+                icon: 'success', 
+                title: editAlamatKey ? 'Alamat Diperbarui!' : 'Alamat Disimpan!', 
+                timer: 1200, 
+                showConfirmButton: false 
+            });
+            editAlamatKey = null;
             bukaSubProfil('alamat');
+        });
+    }
+
+    function hapusAlamat(key) {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        Swal.fire({
+            title: 'Hapus Alamat?',
+            text: 'Alamat ini akan dihapus dari daftar kamu.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Ya, Hapus'
+        }).then((res) => {
+            if (res.isConfirmed) {
+                database.ref(`users/${user.uid}/alamat_list/${key}`).remove().then(() => {
+                    Swal.fire({ icon: 'success', title: 'Alamat Dihapus', timer: 1000, showConfirmButton: false });
+                });
+            }
         });
     }
 
@@ -690,7 +788,7 @@
                 });
             }
 
-            if (navigator.geolocation) {
+            if (navigator.geolocation && !editAlamatKey) {
                 navigator.geolocation.getCurrentPosition((pos) => {
                     let lat = pos.coords.latitude;
                     let lng = pos.coords.longitude;
@@ -925,7 +1023,6 @@
 
                     Swal.fire({ title: 'Mengirim Pesanan ke Dapur...', didOpen: () => Swal.showLoading() });
 
-                    // EMBED REALTIME KE DATABASE FIREBASE
                     database.ref('pesanan/' + orderId).set({
                         id: orderId,
                         nama: val.nama || user.displayName || 'Pelanggan',
@@ -952,7 +1049,7 @@
         });
     }
 
-    // FUNGSI TAMPIL DETAIL PESANAN & STATUS DAPUR LIVE SYNC
+    // FUNGSI DETAIL PESANAN & STATUS DAPUR LIVE SYNC
     function bukaModalDetailPesanan(orderId) {
         document.getElementById('modal-detail-pesanan').classList.add('active');
 

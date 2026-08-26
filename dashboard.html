@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dasbor Admin - Warung Pandawa</title>
+  
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Firebase SDK (Compatibility Mode) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(229, 231, 235, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- ================= LAYAR LOGIN (TAMPILAN CLEAN) ================= -->
+  <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4">
+    <div class="glass-card w-full max-w-md p-8 rounded-3xl shadow-2xl text-center space-y-6 transition-all duration-300">
+      
+      <!-- Brand Icon -->
+      <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-black">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Dasbor Dapur</h1>
+        <p class="text-slate-500 text-sm mt-1">Khusus Pengelola & Admin Warung Pandawa</p>
+      </div>
+
+      <!-- Tombol Login Google Clean -->
+      <button onclick="loginAdminGoogle()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3.5 px-4 border border-slate-200 rounded-xl shadow-sm hover:shadow transition duration-200 flex items-center justify-center gap-3">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Lanjut dengan Google</span>
+      </button>
+
+      <div class="text-xs text-slate-400">
+        Akses dibatasi. Hanya akun dengan verifikasi <span class="font-semibold text-slate-600">Admin</span> yang dapat masuk.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= DASBOR UTAMA ADMIN (TERSEMBUNYI) ================= -->
+  <div id="adminApp" class="hidden">
+    
+    <!-- Navbar Topbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-black">
+            <i class="fa-solid fa-utensils"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-slate-900 text-base leading-tight">Warung Pandawa</h2>
+            <p class="text-xs text-slate-500">Panel Manajemen Dapur & Stok</p>
+          </div>
+        </div>
+
+        <!-- Profil Admin & Logout -->
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden sm:block">
+            <p id="adminName" class="text-sm font-semibold text-slate-800">-</p>
+            <p id="adminEmail" class="text-xs text-slate-400">-</p>
+          </div>
+          <button onclick="logoutAdmin()" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition">
+            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Konten Utam Dasbor -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
+      <!-- Ringkasan Statistik -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pesanan</p>
+            <h3 id="statTotalPesanan" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Perlu Diproses</p>
+            <h3 id="statPerluDiproses" class="text-2xl font-bold text-amber-600 mt-1">0</h3>
+          </div>
+          <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-fire font-black"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pendapatan Hari Ini</p>
+            <h3 id="statOmset" class="text-2xl font-bold text-emerald-600 mt-1">Rp 0</h3>
+          </div>
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Manajemen: Daftar Pesanan & Stok Menu -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Kolom Kiri: Pesanan Masuk (2 Kolom) -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-amber-500"></i>
+              Pesanan Masuk Realtime
+            </h3>
+          </div>
+          <div id="listPesanan" class="space-y-4">
+            <p class="text-sm text-slate-400 italic">Memuat pesanan...</p>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Manajemen Stok Menu (1 Kolom) -->
+        <div class="space-y-4">
+          <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+            <i class="fa-solid fa-cubes text-amber-500"></i>
+            Atur Stok Menu
+          </h3>
+          <div id="listStokMenu" class="bg-white rounded-2xl border border-slate-200 p-4 divide-y divide-slate-100 shadow-sm space-y-3">
+            <p class="text-sm text-slate-400 italic">Memuat daftar menu...</p>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // 1. Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC...", // Otomatis tersambung dengan projek Firebase-mu
+      authDomain: "warung-pandawa-89cb5.firebaseapp.com",
+      databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "warung-pandawa-89cb5",
+      storageBucket: "warung-pandawa-89cb5.appspot.com",
+      messagingSenderId: "338870377484",
+      appId: "1:338870377484:web:..."
+    };
+
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // 2. Barikade System Login & Role Security
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Belum Login
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('adminApp').classList.add('hidden');
+      } else {
+        // Cek Role Pengguna di Database
+        database.ref('users/' + user.uid + '/role').once('value').then((snapshot) => {
+          const role = snapshot.val();
+          
+          if (role !== 'admin') {
+            // Pengguna Biasa / BUKAN Admin
+            Swal.fire({
+              icon: 'error',
+              title: 'Akses Ditolak!',
+              text: 'Akun ' + user.email + ' tidak memiliki otoritas Admin.',
+              confirmButtonText: 'Kembali ke Menu',
+              confirmButtonColor: '#f59e0b',
+              allowOutsideClick: false
+            }).then(() => {
+              auth.signOut();
+              window.location.href = '/warungpandawa/';
+            });
+          } else {
+            // AKUN ADALAH ADMIN
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminApp').classList.remove('hidden');
+            
+            document.getElementById('adminName').innerText = user.displayName || "Admin Warung";
+            document.getElementById('adminEmail').innerText = user.email;
+
+            // Jalankan Pemutakhiran Data Realtime
+            initDashboardData();
+          }
+        });
+      }
+    });
+
+    function loginAdminGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch((error) => {
+        Swal.fire('Login Gagal', error.message, 'error');
+      });
+    }
+
+    function logoutAdmin() {
+      auth.signOut().then(() => {
+        window.location.reload();
+      });
+    }
+
+    // 3. Memuat Data Realtime Dasbor
+    function initDashboardData() {
+      // Memuat Pesanan Realtime
+      database.ref('pesanan').on('value', (snapshot) => {
+        const data = snapshot.val();
+        renderPesanan(data);
+      });
+
+      // Memuat Stok Menu Realtime
+      database.ref('daftar_menu').on('value', (snapshot) => {
+        const data = snapshot.val();
+        renderStokMenu(data);
+      });
+    }
+
+    // Render List Pesanan Masuk
+    function renderPesanan(pesananData) {
+      const container = document.getElementById('listPesanan');
+      if (!pesananData) {
+        container.innerHTML = `<div class="bg-white p-8 rounded-2xl text-center text-slate-400 border border-slate-200">Belum ada pesanan masuk.</div>`;
+        updateStatistik(0, 0, 0);
+        return;
+      }
+
+      let html = '';
+      let totalCount = 0;
+      let perluDiproses = 0;
+      let totalOmset = 0;
+
+      const keys = Object.keys(pesananData).reverse();
+
+      keys.forEach((key) => {
+        const item = pesananData[key];
+        totalCount++;
+
+        if (item.status === 'Menunggu Respon' || item.status === 'Sedang Dimasak') {
+          perluDiproses++;
+        }
+        if (item.status === 'Selesai' || item.status === 'Lunas') {
+          totalOmset += (item.total || 0);
+        }
+
+        const badgeColor = {
+          'Menunggu Respon': 'bg-amber-100 text-amber-700 border-amber-200',
+          'Sedang Dimasak': 'bg-blue-100 text-blue-700 border-blue-200',
+          'Selesai': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+          'Dibatalkan': 'bg-rose-100 text-rose-700 border-rose-200'
+        }[item.status] || 'bg-slate-100 text-slate-600';
+
+        html += `
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <span class="text-xs font-bold text-slate-400">#${key.substr(-6)}</span>
+                <h4 class="font-bold text-slate-800 text-sm">${item.namaPemesan || 'Pelanggan'}</h4>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-full border ${badgeColor}">
+                ${item.status || 'Menunggu Respon'}
+              </span>
+            </div>
+
+            <div class="text-xs text-slate-600 space-y-1">
+              <p><strong>Alamat:</strong> ${item.alamatDetail || '-'}</p>
+              <p><strong>Pesanan:</strong> ${formatItems(item.items)}</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+              <span class="font-extrabold text-slate-900 text-sm">Rp ${(item.total || 0).toLocaleString('id-ID')}</span>
+              
+              <select onchange="ubahStatusPesanan('${key}', this.value)" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 focus:ring-2 focus:ring-amber-500">
+                <option value="Menunggu Respon" ${item.status === 'Menunggu Respon' ? 'selected' : ''}>Menunggu Respon</option>
+                <option value="Sedang Dimasak" ${item.status === 'Sedang Dimasak' ? 'selected' : ''}>Sedang Dimasak</option>
+                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai / Lunas</option>
+                <option value="Dibatalkan" ${item.status === 'Dibatalkan' ? 'selected' : ''}>Batalkan</option>
+              </select>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      updateStatistik(totalCount, perluDiproses, totalOmset);
+    }
+
+    function formatItems(items) {
+      if (!items) return '-';
+      if (typeof items === 'string') return items;
+      return Object.values(items).map(i => `${i.nama} (x${i.qty})`).join(', ');
+    }
+
+    function ubahStatusPesanan(orderId, statusBaru) {
+      database.ref('pesanan/' + orderId + '/status').set(statusBaru);
+    }
+
+    // Render Manajemen Stok Menu
+    function renderStokMenu(menuData) {
+      const container = document.getElementById('listStokMenu');
+      if (!menuData) {
+        container.innerHTML = `<p class="text-sm text-slate-400">Belum ada menu terdaftar.</p>`;
+        return;
+      }
+
+      let html = '';
+      Object.keys(menuData).forEach((id) => {
+        const menu = menuData[id];
+        html += `
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <p class="font-bold text-slate-800 text-sm">${menu.nama}</p>
+              <p class="text-xs text-slate-400">Rp ${(menu.harga || 0).toLocaleString('id-ID')}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="updateStok('${id}', ${(menu.stok || 0) - 1})" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-xs">-</button>
+              <span class="w-8 text-center text-xs font-bold text-slate-800">${menu.stok || 0}</span>
+              <button onclick="updateStok('${id}', ${(menu.stok || 0) + 1})" class="w-7 h-7 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg font-bold text-xs">+</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function updateStok(menuId, stokBaru) {
+      if (stokBaru < 0) stokBaru = 0;
+      database.ref('daftar_menu/' + menuId + '/stok').set(stokBaru);
+    }
+
+    function updateStatistik(total, perlu, omset) {
+      document.getElementById('statTotalPesanan').innerText = total;
+      document.getElementById('statPerluDiproses').innerText = perlu;
+      document.getElementById('statOmset').innerText = `Rp ${omset.toLocaleString('id-ID')}`;
+    }
+  </script>
+</body>
+</html>

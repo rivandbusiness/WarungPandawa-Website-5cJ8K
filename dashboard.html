@@ -161,7 +161,7 @@
         
         <div class="form-group">
             <label>Kode Password Dashboard</label>
-            <input type="password" id="admin-pin-input" class="form-control" placeholder="Masukkan Kode..." style="text-align: center; font-size: 18px; letter-spacing: 2px;">
+            <input type="password" id="admin-pin-input" class="form-control" placeholder="Masukkan Kode..." style="text-align: center; font-size: 14px; letter-spacing: 1px;">
         </div>
         
         <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="verifyDashboardPin()">
@@ -179,7 +179,7 @@
     <div class="admin-profile">
         <img id="admin-avatar-img" src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=004e64&color=fff" class="admin-avatar">
         <div class="admin-name" id="admin-display-name">Admin Pandawa</div>
-        <div class="admin-email" id="admin-display-email">admin@warungpandawa.com</div>
+        <div class="admin-email" id="admin-display-email">rivandbusiness.wirausaha@gmail.com</div>
         <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
     </div>
 
@@ -377,10 +377,9 @@
 <script>
 // KONFIGURASI PENGATURAN AKSES ADMIN
 const ALLOWED_ADMIN_EMAILS = [
-    "admin@warungpandawa.com",
-    "your-email@gmail.com" // Ubah / Tambahkan email Google admin di sini
+    "rivandbusiness.wirausaha@gmail.com"
 ];
-const DASHBOARD_PASSWORD_PIN = "PANDAWA2026"; // Set password dashboard di sini
+const DASHBOARD_PASSWORD_PIN = "WRG-PDW-RivandCronz67.biz.id/dhad";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
@@ -404,15 +403,12 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 
 /* ================= AUTENTIKASI & KEAMANAN ADMIN ================= */
 
-// Listener Otomatis Perubahan Auth Sesi Firebase
 auth.onAuthStateChanged(user => {
     if (user) {
-        // Validation: Cek apakah email terdaftar dalam Whitelist Admin
         if (ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
             updateAdminUI(user);
             checkDashboardPinState();
         } else {
-            // Jika bukan email admin -> Logout paksa
             auth.signOut();
             Swal.fire('Akses Ditolak', 'Akun Google ini (' + user.email + ') tidak terdaftar sebagai Admin!', 'error');
             showGoogleStep();

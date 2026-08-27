@@ -38,6 +38,25 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text-main); transition: 0.3s; display: flex; }
 
+        /* Login Screen Overlay */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--bg); z-index: 9999; display: flex;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 30px; border-radius: 16px; width: 100%; max-width: 400px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        .btn-google {
+            background: #ffffff; color: #333; border: 1px solid var(--border-color);
+            padding: 12px; border-radius: 8px; font-weight: bold; width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-top: 15px;
+        }
+        .btn-google:hover { background: #f1f5f9; }
+
         /* Sidebar Styling */
         .sidebar { width: var(--sidebar-width); background: var(--card-bg); border-right: 1px solid var(--border-color); height: 100vh; position: fixed; display: flex; flex-direction: column; transition: 0.3s; z-index: 1000; overflow-y: auto; }
         .brand { padding: 20px; font-weight: bold; font-size: 18px; color: var(--secondary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); }
@@ -46,7 +65,7 @@
         .admin-profile { padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
         .admin-avatar { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 10px; object-fit: cover; }
         .admin-name { font-weight: bold; font-size: 15px; }
-        .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 15px; }
+        .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 15px; word-break: break-all; }
         .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; width: 100%; }
 
         .nav-section { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: bold; margin: 20px 20px 5px 20px; letter-spacing: 0.5px; }
@@ -56,9 +75,8 @@
         .nav-item i { width: 20px; text-align: center; font-size: 16px; }
 
         /* Main Content Styling */
-        .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; padding: 20px; transition: 0.3s; width: calc(100% - var(--sidebar-width)); }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; padding: 20px; transition: 0.3s; width: calc(100% - var(--sidebar-width)); display: none; }
         
-        /* Mobile Header */
         .mobile-header { display: none; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border-color); margin: -20px -20px 20px -20px; }
         .hamburger { background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; }
 
@@ -66,7 +84,6 @@
         .section-title { font-size: 22px; font-weight: bold; margin: 0; color: var(--secondary); }
         body.dark-mode .section-title { color: white; }
 
-        /* Cards & Grid */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .stat-title { font-size: 13px; color: var(--text-sub); font-weight: bold; margin-bottom: 8px; }
@@ -77,10 +94,8 @@
         .filter-btn { background: var(--bg); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; color: var(--text-main); cursor: pointer; white-space: nowrap; }
         .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
 
-        /* General Button */
         .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         
-        /* Menu List Styling */
         .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
         .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; }
         .menu-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; }
@@ -90,34 +105,29 @@
         .badge-kuning { background: #fef3c7; color: #b45309; }
         .badge-merah { background: #fee2e2; color: #b91c1c; }
 
-        /* Order Cards */
         .order-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .order-status { font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; }
         .status-menunggu { background: #fef3c7; color: #d97706; }
         .status-selesai { background: #dcfce7; color: #15803d; }
 
-        /* Tables */
         .table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
         th { background: var(--bg); padding: 12px 15px; font-weight: bold; color: var(--text-sub); border-bottom: 1px solid var(--border-color); }
         td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
 
-        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; font-weight: bold; font-size: 16px; }
         
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; font-size: 12px; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; }
         .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg); color: var(--text-main); font-size: 13px; }
 
-        /* Rating Cards */
         .rating-summary { text-align: center; padding: 20px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; }
         .rating-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar { left: -260px; }
             .sidebar.active { left: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
@@ -130,6 +140,36 @@
 </head>
 <body>
 
+<!-- LAYAR LOGIN ADMIN (OVERLAY) -->
+<div id="login-screen">
+    <!-- TAHAP 1: LOGIN GOOGLE -->
+    <div class="login-card" id="step-google-login">
+        <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: var(--primary); margin-bottom: 10px;"></i>
+        <h2 style="margin: 5px 0 10px 0;">Dashboard Admin</h2>
+        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Silakan login menggunakan akun Google Admin yang terdaftar.</p>
+        <button class="btn-google" onclick="loginWithGoogle()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+            Login via Google Admin
+        </button>
+    </div>
+
+    <!-- TAHAP 2: KODE VERIFIKASI / PASSWORD DASHBOARD -->
+    <div class="login-card" id="step-pin-login" style="display: none;">
+        <i class="fa-solid fa-lock" style="font-size: 45px; color: var(--secondary); margin-bottom: 10px;"></i>
+        <h2 style="margin: 5px 0 5px 0;">Verifikasi Keamanan</h2>
+        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Masukkan Kode Password khusus Dashboard Admin.</p>
+        
+        <div class="form-group">
+            <label>Kode Password Dashboard</label>
+            <input type="password" id="admin-pin-input" class="form-control" placeholder="Masukkan Kode..." style="text-align: center; font-size: 18px; letter-spacing: 2px;">
+        </div>
+        
+        <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="verifyDashboardPin()">
+            Verifikasi & Masuk
+        </button>
+    </div>
+</div>
+
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <div class="brand">
@@ -137,10 +177,10 @@
     </div>
     
     <div class="admin-profile">
-        <img src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=004e64&color=fff" class="admin-avatar">
-        <div class="admin-name">Admin Pandawa</div>
-        <div class="admin-email">admin@warungpandawa.com</div>
-        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <img id="admin-avatar-img" src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=004e64&color=fff" class="admin-avatar">
+        <div class="admin-name" id="admin-display-name">Admin Pandawa</div>
+        <div class="admin-email" id="admin-display-email">admin@warungpandawa.com</div>
+        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
     </div>
 
     <div class="nav-section">📊 Management</div>
@@ -156,7 +196,7 @@
 </div>
 
 <!-- MAIN CONTENT -->
-<div class="main-content">
+<div class="main-content" id="main-content">
     <div class="mobile-header">
         <div style="font-weight: bold; color: var(--primary);"><i class="fa-solid fa-utensils"></i> Admin Dashboard</div>
         <button class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
@@ -203,7 +243,7 @@
             <button class="btn-primary" onclick="resetMenuForm(); openModal('modal-menu')"><i class="fa-solid fa-plus"></i> Tambah Menu</button>
         </div>
         <div class="menu-list" id="admin-menu-list">
-            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat menu dari Firebase...</div>
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat menu...</div>
         </div>
     </div>
 
@@ -289,9 +329,7 @@
     </div>
 </div>
 
-<!-- ================= MODALS ================= -->
-
-<!-- Modal Tambah / Edit Menu -->
+<!-- MODAL MENU -->
 <div class="modal-overlay" id="modal-menu">
     <div class="modal-content">
         <div class="modal-header">
@@ -314,7 +352,7 @@
     </div>
 </div>
 
-<!-- Modal Detail Pesanan Masuk -->
+<!-- MODAL ORDER DETAIL -->
 <div class="modal-overlay" id="modal-detail-order">
     <div class="modal-content">
         <div class="modal-header">
@@ -337,6 +375,13 @@
 </div>
 
 <script>
+// KONFIGURASI PENGATURAN AKSES ADMIN
+const ALLOWED_ADMIN_EMAILS = [
+    "admin@warungpandawa.com",
+    "your-email@gmail.com" // Ubah / Tambahkan email Google admin di sini
+];
+const DASHBOARD_PASSWORD_PIN = "PANDAWA2026"; // Set password dashboard di sini
+
 const firebaseConfig = {
     apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
     authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -356,6 +401,101 @@ let selectedOrderId = null, selectedMenuId = null, revenueChart = null;
 
 const rupiah = n => 'Rp ' + Number(n || 0).toLocaleString('id-ID');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+
+/* ================= AUTENTIKASI & KEAMANAN ADMIN ================= */
+
+// Listener Otomatis Perubahan Auth Sesi Firebase
+auth.onAuthStateChanged(user => {
+    if (user) {
+        // Validation: Cek apakah email terdaftar dalam Whitelist Admin
+        if (ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+            updateAdminUI(user);
+            checkDashboardPinState();
+        } else {
+            // Jika bukan email admin -> Logout paksa
+            auth.signOut();
+            Swal.fire('Akses Ditolak', 'Akun Google ini (' + user.email + ') tidak terdaftar sebagai Admin!', 'error');
+            showGoogleStep();
+        }
+    } else {
+        showGoogleStep();
+    }
+});
+
+function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(err => {
+        Swal.fire('Gagal Login', err.message, 'error');
+    });
+}
+
+function checkDashboardPinState() {
+    const isVerified = localStorage.getItem('admin_verified') === 'true';
+    if (isVerified) {
+        unlockDashboardAccess();
+    } else {
+        showPinStep();
+    }
+}
+
+function verifyDashboardPin() {
+    const pin = document.getElementById('admin-pin-input').value;
+    if (pin === DASHBOARD_PASSWORD_PIN) {
+        localStorage.setItem('admin_verified', 'true');
+        Swal.fire({ icon: 'success', title: 'Verifikasi Berhasil', timer: 1000, showConfirmButton: false }).then(() => {
+            unlockDashboardAccess();
+        });
+    } else {
+        Swal.fire('Kode Salah', 'Password Dashboard Admin tidak valid!', 'error');
+    }
+}
+
+function unlockDashboardAccess() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    initRealtime();
+}
+
+function showGoogleStep() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('step-google-login').style.display = 'block';
+    document.getElementById('step-pin-login').style.display = 'none';
+    document.getElementById('main-content').style.display = 'none';
+}
+
+function showPinStep() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('step-google-login').style.display = 'none';
+    document.getElementById('step-pin-login').style.display = 'block';
+    document.getElementById('main-content').style.display = 'none';
+}
+
+function updateAdminUI(user) {
+    document.getElementById('admin-display-name').innerText = user.displayName || 'Admin Pandawa';
+    document.getElementById('admin-display-email').innerText = user.email;
+    if (user.photoURL) {
+        document.getElementById('admin-avatar-img').src = user.photoURL;
+    }
+}
+
+function logout() {
+    Swal.fire({
+        title: 'Keluar dari Dashboard?',
+        text: 'Anda harus memasukkan PIN keamanan lagi saat masuk kembali.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Logout'
+    }).then(res => {
+        if (res.isConfirmed) {
+            localStorage.removeItem('admin_verified');
+            auth.signOut().then(() => {
+                location.reload();
+            });
+        }
+    });
+}
+
+/* ================= MANAJEMEN DASHBOARD & UI ================= */
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -546,19 +686,12 @@ function updateChart(orders) {
     });
 }
 
-function logout() { auth.signOut().then(() => location.reload()); }
-
 function initRealtime() {
     database.ref('daftar_menu').on('value', s => { menuData = s.val() || {}; renderMenus(); });
     database.ref('pesanan').on('value', s => { orderData = s.val() || {}; renderOrders(); renderStats(); });
     database.ref('users').on('value', s => { userData = s.val() || {}; renderUsers(); renderStats(); });
     database.ref('ratings').on('value', s => { ratingData = s.val() || {}; renderRatings(); });
 }
-
-window.addEventListener('load', () => {
-    document.getElementById('tab-dashboard').style.display = 'block';
-    initRealtime();
-});
 </script>
 </body>
 </html>

@@ -1,531 +1,564 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dasbor Admin - Warung Pandawa</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#fffbebee', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Warung Pandawa</title>
+    
+    <!-- Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Firebase SDK (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --secondary: #004e64;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --sidebar-width: 260px;
         }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+        body.dark-mode {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #334155;
+        }
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  </style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text-main); transition: 0.3s; display: flex; }
+
+        /* Sidebar Styling */
+        .sidebar { width: var(--sidebar-width); background: var(--card-bg); border-right: 1px solid var(--border-color); height: 100vh; position: fixed; display: flex; flex-direction: column; transition: 0.3s; z-index: 1000; overflow-y: auto; }
+        .brand { padding: 20px; font-weight: bold; font-size: 18px; color: var(--secondary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); }
+        body.dark-mode .brand { color: var(--primary); }
+        
+        .admin-profile { padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .admin-avatar { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 10px; object-fit: cover; }
+        .admin-name { font-weight: bold; font-size: 15px; }
+        .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 15px; }
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; width: 100%; }
+
+        .nav-section { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: bold; margin: 20px 20px 5px 20px; letter-spacing: 0.5px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: var(--bg); }
+        .nav-item.active { background: rgba(255,107,53,0.1); color: var(--primary); border-left-color: var(--primary); }
+        .nav-item i { width: 20px; text-align: center; font-size: 16px; }
+
+        /* Main Content Styling */
+        .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; padding: 20px; transition: 0.3s; width: calc(100% - var(--sidebar-width)); }
+        
+        /* Mobile Header */
+        .mobile-header { display: none; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border-color); margin: -20px -20px 20px -20px; }
+        .hamburger { background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; }
+
+        .section-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 22px; font-weight: bold; margin: 0; color: var(--secondary); }
+        body.dark-mode .section-title { color: white; }
+
+        /* Cards & Grid */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .stat-title { font-size: 13px; color: var(--text-sub); font-weight: bold; margin-bottom: 8px; }
+        .stat-value { font-size: 24px; font-weight: bold; color: var(--primary); }
+
+        .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .chart-filters { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-btn { background: var(--bg); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; color: var(--text-main); cursor: pointer; white-space: nowrap; }
+        .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+        /* General Button */
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        
+        /* Menu List Styling */
+        .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; }
+        .menu-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; }
+        .menu-info { flex: 1; }
+        .stok-badge { font-size: 10px; font-weight: bold; padding: 3px 6px; border-radius: 4px; margin-top: 5px; display: inline-block; }
+        .badge-hijau { background: #dcfce7; color: #15803d; }
+        .badge-kuning { background: #fef3c7; color: #b45309; }
+        .badge-merah { background: #fee2e2; color: #b91c1c; }
+
+        /* Order Cards */
+        .order-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .order-status { font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; }
+        .status-menunggu { background: #fef3c7; color: #d97706; }
+        .status-selesai { background: #dcfce7; color: #15803d; }
+
+        /* Tables */
+        .table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { background: var(--bg); padding: 12px 15px; font-weight: bold; color: var(--text-sub); border-bottom: 1px solid var(--border-color); }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; font-weight: bold; font-size: 16px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg); color: var(--text-main); font-size: 13px; }
+
+        /* Rating Cards */
+        .rating-summary { text-align: center; padding: 20px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .rating-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { left: -260px; }
+            .sidebar.active { left: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+            .main-content { margin-left: 0; width: 100%; }
+            .mobile-header { display: flex; }
+            .order-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .order-card button { width: 100%; }
+        }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body>
 
-  <!-- ================= LAYAR LOGIN ================= -->
-  <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm p-6 rounded-3xl text-center space-y-6 shadow-2xl">
-      <div class="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black">
-        <i class="fa-solid fa-utensils"></i>
-      </div>
-      <div>
-        <h1 class="text-xl font-bold text-white">Dasbor Admin</h1>
-        <p class="text-slate-400 text-xs mt-1">Warung Pandawa Dapur Panel</p>
-      </div>
-      <button onclick="loginAdminGoogle()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-xl border border-slate-700 transition flex items-center justify-center gap-3 text-sm">
-        <i class="fa-brands fa-google text-amber-500"></i>
-        <span>Login Google Admin</span>
-      </button>
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <div class="brand">
+        <i class="fa-solid fa-utensils"></i> Admin Pandawa
     </div>
-  </div>
-
-
-  <!-- ================= CONTAINER UTAMA ================= -->
-  <div id="adminApp" class="hidden min-h-screen pb-20 md:pb-0 md:pl-64">
-
-    <!-- HEADER MOBILE -->
-    <header class="md:hidden sticky top-0 z-30 bg-slate-900/90 glass-nav border-b border-slate-800 px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-black rounded-lg flex items-center justify-center text-sm">
-          <i class="fa-solid fa-utensils"></i>
-        </div>
-        <span class="font-bold text-sm tracking-wide">PANDAWA ADMIN</span>
-      </div>
-      <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-500 p-1">
-        <i class="fa-solid fa-right-from-bracket"></i>
-      </button>
-    </header>
-
-    <!-- SIDEBAR DESKTOP -->
-    <aside class="hidden md:flex fixed top-0 left-0 bottom-0 w-64 bg-slate-900 border-r border-slate-800 flex-col justify-between p-4 z-40">
-      <div class="space-y-6">
-        <div class="flex items-center gap-3 px-2">
-          <div class="w-10 h-10 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center font-extrabold text-lg">
-            <i class="fa-solid fa-utensils"></i>
-          </div>
-          <div>
-            <h2 class="font-bold text-white leading-tight">Warung Pandawa</h2>
-            <p class="text-[10px] text-amber-500 font-bold uppercase tracking-wider">Panel Pengelola</p>
-          </div>
-        </div>
-
-        <nav class="space-y-1">
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Management</p>
-          <button onclick="switchTab('tabStatistik')" id="nav-tabStatistik" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-chart-pie w-5 text-amber-500"></i> Statistik
-          </button>
-          <button onclick="switchTab('tabMenu')" id="nav-tabMenu" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-burger w-5 text-amber-500"></i> Daftar Menu
-          </button>
-          <button onclick="switchTab('tabPesanan')" id="nav-tabPesanan" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-receipt w-5 text-amber-500"></i> Pesanan Masuk
-          </button>
-          <button onclick="switchTab('tabPengguna')" id="nav-tabPengguna" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-users w-5 text-amber-500"></i> Pengguna Aktif
-          </button>
-
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mt-6 mb-2">Pengaturan</p>
-          <button onclick="switchTab('tabHistory')" id="nav-tabHistory" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-clock-rotate-left w-5 text-amber-500"></i> History Pesanan
-          </button>
-          <button onclick="switchTab('tabRating')" id="nav-tabRating" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
-            <i class="fa-solid fa-star w-5 text-amber-500"></i> Rating Pelanggan
-          </button>
-        </nav>
-      </div>
-
-      <div class="border-t border-slate-800 pt-4 flex items-center justify-between px-2">
-        <div class="overflow-hidden">
-          <p id="adminName" class="font-bold text-xs text-white truncate">Admin</p>
-          <p id="adminEmail" class="text-[10px] text-slate-400 truncate">admin@gmail.com</p>
-        </div>
-        <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-500 p-2">
-          <i class="fa-solid fa-right-from-bracket"></i>
-        </button>
-      </div>
-    </aside>
-
-    <!-- NAVBAR BOTTOM MOBILE -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 glass-nav border-t border-slate-800 flex justify-around p-2">
-      <button onclick="switchTab('tabStatistik')" class="p-2 text-center text-slate-400 hover:text-amber-500">
-        <i class="fa-solid fa-chart-pie block text-lg mx-auto"></i>
-        <span class="text-[9px] font-semibold">Statistik</span>
-      </button>
-      <button onclick="switchTab('tabMenu')" class="p-2 text-center text-slate-400 hover:text-amber-500">
-        <i class="fa-solid fa-burger block text-lg mx-auto"></i>
-        <span class="text-[9px] font-semibold">Menu</span>
-      </button>
-      <button onclick="switchTab('tabPesanan')" class="p-2 text-center text-slate-400 hover:text-amber-500">
-        <i class="fa-solid fa-receipt block text-lg mx-auto"></i>
-        <span class="text-[9px] font-semibold">Pesanan</span>
-      </button>
-      <button onclick="switchTab('tabPengguna')" class="p-2 text-center text-slate-400 hover:text-amber-500">
-        <i class="fa-solid fa-users block text-lg mx-auto"></i>
-        <span class="text-[9px] font-semibold">User</span>
-      </button>
-      <button onclick="switchTab('tabHistory')" class="p-2 text-center text-slate-400 hover:text-amber-500">
-        <i class="fa-solid fa-clock-rotate-left block text-lg mx-auto"></i>
-        <span class="text-[9px] font-semibold">History</span>
-      </button>
+    
+    <div class="admin-profile">
+        <img src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=004e64&color=fff" class="admin-avatar">
+        <div class="admin-name">Admin Pandawa</div>
+        <div class="admin-email">admin@warungpandawa.com</div>
+        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
 
-    <!-- AREA KONTEN -->
-    <main class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div class="nav-section">📊 Management</div>
+    <div class="nav-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Statistik</div>
+    <div class="nav-item" onclick="switchTab('daftar-menu', this)"><i class="fa-solid fa-box-open"></i> Daftar Menu</div>
+    <div class="nav-item" onclick="switchTab('pesanan-masuk', this)"><i class="fa-solid fa-bell"></i> Pesanan Masuk</div>
+    <div class="nav-item" onclick="switchTab('pengguna', this)"><i class="fa-solid fa-users"></i> Pengguna Aktif</div>
 
-      <!-- 1. STATISTIK -->
-      <section id="tabStatistik" class="tab-content space-y-4">
-        <h2 class="text-xl font-bold text-white">Analisis & Statistik</h2>
+    <div class="nav-section">⚙️ Pengaturan</div>
+    <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-clock-rotate-left"></i> History Pesanan</div>
+    <div class="nav-item" onclick="switchTab('rating', this)"><i class="fa-solid fa-star"></i> Rating Pelanggan</div>
+    <div class="nav-item" onclick="switchTab('tema', this)"><i class="fa-solid fa-palette"></i> Tema Tampilan</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div class="mobile-header">
+        <div style="font-weight: bold; color: var(--primary);"><i class="fa-solid fa-utensils"></i> Admin Dashboard</div>
+        <button class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    <!-- TAB: STATISTIK -->
+    <div id="tab-dashboard" class="tab-content">
+        <div class="section-header">
+            <h2 class="section-title">Statistik Penjualan</h2>
+        </div>
         
-        <div class="grid grid-cols-3 gap-3">
-          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
-            <p class="text-[10px] font-bold text-slate-400 uppercase">Pendapatan</p>
-            <h3 id="statPendapatan" class="text-sm md:text-xl font-extrabold text-amber-500 mt-1">Rp 0</h3>
-          </div>
-          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
-            <p class="text-[10px] font-bold text-slate-400 uppercase">Pesanan</p>
-            <h3 id="statTotalPesanan" class="text-sm md:text-xl font-extrabold text-blue-400 mt-1">0</h3>
-          </div>
-          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
-            <p class="text-[10px] font-bold text-slate-400 uppercase">Pelanggan</p>
-            <h3 id="statTotalPelanggan" class="text-sm md:text-xl font-extrabold text-emerald-400 mt-1">0</h3>
-          </div>
+        <div class="grid-3">
+            <div class="stat-card">
+                <div class="stat-title">Pendapatan</div>
+                <div class="stat-value" id="stat-pendapatan">Rp 0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Pesanan Selesai</div>
+                <div class="stat-value" id="stat-selesai">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Pelanggan Aktif</div>
+                <div class="stat-value" id="stat-pelanggan">0</div>
+            </div>
         </div>
 
-        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between">
-            <h4 class="text-sm font-bold text-white">Grafik Pendapatan</h4>
-            <select class="text-xs bg-slate-900 border border-slate-700 px-2 py-1 rounded-lg text-slate-300">
-              <option>Hari ini</option>
-              <option>7 Hari</option>
-            </select>
-          </div>
-          <div id="chartPendapatan" class="w-full h-56"></div>
+        <div class="chart-container">
+            <div style="font-weight: bold; margin-bottom: 10px;">Grafik Pendapatan</div>
+            <div class="chart-filters">
+                <button class="filter-btn active">Hari ini</button>
+                <button class="filter-btn">7 hari</button>
+                <button class="filter-btn">30 hari</button>
+                <button class="filter-btn">Bulan ini</button>
+                <button class="filter-btn">Tahun ini</button>
+            </div>
+            <canvas id="revenueChart" height="100"></canvas>
         </div>
-      </section>
-
-      <!-- 2. DAFTAR MENU -->
-      <section id="tabMenu" class="tab-content space-y-4 hidden">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold text-white">Daftar Menu</h2>
-          <button onclick="openMenuModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Tambah Menu
-          </button>
-        </div>
-
-        <div id="gridDaftarMenu" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      </section>
-
-      <!-- 3. PESANAN MASUK -->
-      <section id="tabPesanan" class="tab-content space-y-4 hidden">
-        <h2 class="text-xl font-bold text-white">Pesanan Masuk</h2>
-        <div id="containerPesananMasuk" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </section>
-
-      <!-- 4. PENGGUNA AKTIF -->
-      <section id="tabPengguna" class="tab-content space-y-4 hidden">
-        <h2 class="text-xl font-bold text-white">Tabel Pengguna Aktif</h2>
-        <div class="bg-slate-800/60 rounded-2xl border border-slate-800 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[500px]">
-            <thead class="bg-slate-900 text-slate-400 font-bold uppercase text-[9px] tracking-wider">
-              <tr>
-                <th class="p-3">Nama</th>
-                <th class="p-3">Email</th>
-                <th class="p-3">No HP</th>
-                <th class="p-3">Alamat</th>
-              </tr>
-            </thead>
-            <tbody id="tablePenggunaBody" class="divide-y divide-slate-800"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- 5. HISTORY PESANAN -->
-      <section id="tabHistory" class="tab-content space-y-4 hidden">
-        <h2 class="text-xl font-bold text-white">History Pesanan</h2>
-        <div id="containerHistory" class="space-y-3"></div>
-      </section>
-
-      <!-- 6. RATING -->
-      <section id="tabRating" class="tab-content space-y-4 hidden">
-        <h2 class="text-xl font-bold text-white">Rating Pelanggan</h2>
-        <div id="containerRating" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </section>
-
-    </main>
-  </div>
-
-
-  <!-- MODAL EDIT/TAMBAH MENU -->
-  <div id="modalMenu" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-5 space-y-4">
-      <h3 id="modalMenuTitle" class="text-lg font-bold text-white">Tambah Menu</h3>
-      
-      <form id="formMenu" onsubmit="saveMenu(event)" class="space-y-3">
-        <input type="hidden" id="menuId">
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase">Nama Makanan/Minuman</label>
-          <input type="text" id="menuNama" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase">Kategori</label>
-            <select id="menuKategori" class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
-              <option value="Makanan">Makanan</option>
-              <option value="Minuman">Minuman</option>
-              <option value="Cemilan">Cemilan</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase">Harga (Rp)</label>
-            <input type="number" id="menuHarga" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase">Stok</label>
-          <input type="number" id="menuStok" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase">URL Gambar</label>
-          <input type="url" id="menuGambar" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase">Deskripsi</label>
-          <textarea id="menuDeskripsi" rows="2" class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white"></textarea>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-3">
-          <button type="button" onclick="closeMenuModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Batal</button>
-          <button type="submit" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">Simpan</button>
-        </div>
-      </form>
     </div>
-  </div>
 
+    <!-- TAB: DAFTAR MENU -->
+    <div id="tab-daftar-menu" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">Daftar Menu</h2>
+            <button class="btn-primary" onclick="resetMenuForm(); openModal('modal-menu')"><i class="fa-solid fa-plus"></i> Tambah Menu</button>
+        </div>
+        <div class="menu-list" id="admin-menu-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat menu dari Firebase...</div>
+        </div>
+    </div>
 
-  <!-- SCRIPT LOGIC FIREBASE -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
-      authDomain: "warung-pandawa-89cb5.firebaseapp.com",
-      databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "warung-pandawa-89cb5",
-      storageBucket: "warung-pandawa-89cb5.firebasestorage.app",
-      messagingSenderId: "789317550948",
-      appId: "1:789317550948:web:b1c635d5728e3ffb13f071",
-      measurementId: "G-Y455NCGBGK"
-    };
+    <!-- TAB: PESANAN MASUK -->
+    <div id="tab-pesanan-masuk" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">Pesanan Masuk</h2>
+        </div>
+        <div id="admin-order-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat pesanan...</div>
+        </div>
+    </div>
 
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-    const auth = firebase.auth();
-    const database = firebase.database();
+    <!-- TAB: PENGGUNA AKTIF -->
+    <div id="tab-pengguna" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">Tabel Pengguna Aktif</h2>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Pelanggan</th>
+                        <th>Nama Lengkap</th>
+                        <th>Email</th>
+                        <th>No. Telepon</th>
+                        <th>Alamat Utama</th>
+                        <th>Kode Pos</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-user-list">
+                    <tr><td colspan="6" style="text-align:center;">Memuat pengguna...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        document.getElementById('loginSection').classList.remove('hidden');
-        document.getElementById('adminApp').classList.add('hidden');
-      } else {
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('adminApp').classList.remove('hidden');
-        document.getElementById('adminName').innerText = user.displayName || "Admin";
-        document.getElementById('adminEmail').innerText = user.email;
-        
-        initData();
-      }
+    <!-- TAB: HISTORY PESANAN -->
+    <div id="tab-history" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">History Pesanan</h2>
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <select class="form-control" style="width: 150px;">
+                <option>Semua Kategori</option>
+                <option>Bulan Ini</option>
+            </select>
+            <input type="text" class="form-control" placeholder="🔎 Cari ID / Nama Pelanggan...">
+        </div>
+        <div id="admin-history-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat history...</div>
+        </div>
+    </div>
+
+    <!-- TAB: RATING PELANGGAN -->
+    <div id="tab-rating" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">Rating Pelanggan</h2>
+        </div>
+        <div class="rating-summary">
+            <div id="rating-average" style="font-size:40px;font-weight:bold;color:#f59e0b;">0.0</div>
+            <div id="rating-stars" style="color:#f59e0b;font-size:20px;">☆☆☆☆☆</div>
+            <div id="rating-count" style="font-size:13px;color:var(--text-sub);margin-top:5px;">Berdasarkan 0 Ulasan</div>
+        </div>
+        <div id="admin-rating-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada ulasan.</div>
+        </div>
+    </div>
+
+    <!-- TAB: TEMA -->
+    <div id="tab-tema" class="tab-content" style="display: none;">
+        <div class="section-header">
+            <h2 class="section-title">Pengaturan Tema</h2>
+        </div>
+        <div class="chart-container">
+            <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 15px;">Mode Tampilan Layar</label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                <button id="btn-theme-light" class="filter-btn active" onclick="setTheme('light')" style="padding: 15px;"><i class="fa-solid fa-sun"></i> Terang (Light)</button>
+                <button id="btn-theme-dark" class="filter-btn" onclick="setTheme('dark')" style="padding: 15px;"><i class="fa-solid fa-moon"></i> Gelap (Dark)</button>
+                <button id="btn-theme-auto" class="filter-btn" onclick="setTheme('auto')" style="padding: 15px;"><i class="fa-solid fa-desktop"></i> Ikuti Sistem</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- Modal Tambah / Edit Menu -->
+<div class="modal-overlay" id="modal-menu">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="menu-modal-title">Tambah Menu</span>
+            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal('modal-menu')"></i>
+        </div>
+        <input type="hidden" id="menu-edit-id">
+        <div class="form-group"><label>Nama Menu</label><input id="menu-nama" type="text" class="form-control" placeholder="Contoh: Ayam Geprek"></div>
+        <div class="form-group"><label>Kategori</label><input id="menu-kategori" type="text" class="form-control" placeholder="Makanan / Minuman / Cemilan"></div>
+        <div class="form-group"><label>URL Gambar</label><input id="menu-gambar" type="url" class="form-control" placeholder="https://..."></div>
+        <div class="form-group"><label>Deskripsi</label><textarea id="menu-deskripsi" class="form-control" rows="3"></textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            <div class="form-group"><label>Harga (Rp)</label><input id="menu-harga" type="number" min="0" class="form-control"></div>
+            <div class="form-group"><label>Stok</label><input id="menu-stok" type="number" min="0" class="form-control"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="form-control" style="background:var(--bg);font-weight:bold;cursor:pointer;" onclick="closeModal('modal-menu')">Batal</button>
+            <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveMenu()">Simpan Menu</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail Pesanan Masuk -->
+<div class="modal-overlay" id="modal-detail-order">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="order-modal-title">Detail Pesanan</span>
+            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal('modal-detail-order')"></i>
+        </div>
+        <div id="order-detail-body"></div>
+        <div class="form-group" style="margin-top: 15px;">
+            <label>Update Status Pesanan</label>
+            <select id="order-status-select" class="form-control">
+                <option>Menunggu Respon</option>
+                <option>Sedang Dimasak</option>
+                <option>Sedang Diantarkan</option>
+                <option>Selesai</option>
+                <option>❌ Dibatalkan</option>
+            </select>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="updateOrder()">Simpan Perubahan Status</button>
+    </div>
+</div>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
+    authDomain: "warung-pandawa-89cb5.firebaseapp.com",
+    projectId: "warung-pandawa-89cb5",
+    storageBucket: "warung-pandawa-89cb5.firebasestorage.app",
+    messagingSenderId: "789317550948",
+    appId: "1:789317550948:web:b1c635d5728e3ffb13f071",
+    measurementId: "G-Y455NCGBGK",
+    databaseURL: "https://warung-pandawa-89cb5-default-rtdb.asia-southeast1.firebasedatabase.app/"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database(), auth = firebase.auth();
+let menuData = {}, orderData = {}, userData = {}, ratingData = {};
+let selectedOrderId = null, selectedMenuId = null, revenueChart = null;
+
+const rupiah = n => 'Rp ' + Number(n || 0).toLocaleString('id-ID');
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchTab(tabId, element) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tabId).style.display = 'block';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    element.classList.add('active');
+    if (innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+function applyTheme(theme) {
+    document.body.classList.toggle('dark-mode', theme === 'dark' || (theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches));
+    ['light', 'dark', 'auto'].forEach(t => {
+        let b = document.getElementById('btn-theme-' + t);
+        if (b) b.classList.toggle('active', t === theme);
     });
+}
 
-    function loginAdminGoogle() {
-      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+function setTheme(theme) { localStorage.setItem('admin-theme', theme); applyTheme(theme); }
+applyTheme(localStorage.getItem('admin-theme') || 'auto');
+
+function badge(stok) {
+    stok = Number(stok || 0);
+    return stok <= 0 ? '<span class="stok-badge badge-merah">🔴 Habis (Stok: 0)</span>' : 
+           stok <= 5 ? `<span class="stok-badge badge-kuning">🟡 Terbatas (Stok: ${stok})</span>` : 
+           `<span class="stok-badge badge-hijau">🟢 Tersedia (Stok: ${stok})</span>`;
+}
+
+function renderMenus() {
+    let el = document.getElementById('admin-menu-list'), keys = Object.keys(menuData);
+    if (!keys.length) { el.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada menu di Firebase.</div>'; return; }
+    el.innerHTML = keys.map(id => {
+        let m = menuData[id] || {};
+        return `<div class="menu-item"><img src="${esc(m.gambar || 'https://via.placeholder.com/150')}" class="menu-img"><div class="menu-info"><div style="font-weight:bold;font-size:15px;">${esc(m.nama || id)}</div><div style="font-size:11px;color:var(--text-sub);">Kategori: ${esc(m.kategori || '-')}</div><div style="font-weight:bold;color:var(--primary);font-size:14px;margin-top:4px;">${rupiah(m.harga)}</div>${badge(m.stok)}</div><div style="display:flex;flex-direction:column;gap:8px;"><button style="background:#0ea5e9;color:white;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="editMenu('${esc(id)}')"><i class="fa-solid fa-pen"></i></button><button style="background:#ef4444;color:white;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="deleteMenu('${esc(id)}')"><i class="fa-solid fa-trash"></i></button></div></div>`;
+    }).join('');
+}
+
+function resetMenuForm() {
+    selectedMenuId = null;
+    document.getElementById('menu-edit-id').value = '';
+    document.getElementById('menu-modal-title').innerText = 'Tambah Menu';
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = '');
+}
+
+function editMenu(id) {
+    let m = menuData[id] || {};
+    selectedMenuId = id;
+    document.getElementById('menu-modal-title').innerText = 'Edit Menu';
+    document.getElementById('menu-edit-id').value = id;
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = m[x] ?? '');
+    openModal('modal-menu');
+}
+
+function saveMenu() {
+    let id = selectedMenuId || ('MENU-' + Date.now()), data = {
+        id: id,
+        nama: document.getElementById('menu-nama').value.trim(),
+        kategori: document.getElementById('menu-kategori').value.trim(),
+        gambar: document.getElementById('menu-gambar').value.trim(),
+        deskripsi: document.getElementById('menu-deskripsi').value.trim(),
+        harga: Number(document.getElementById('menu-harga').value || 0),
+        stok: Number(document.getElementById('menu-stok').value || 0)
+    };
+    if (!data.nama) return Swal.fire('Nama menu wajib diisi', '', 'warning');
+    database.ref('daftar_menu/' + id).set(data).then(() => {
+        closeModal('modal-menu');
+        Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1000, showConfirmButton: false });
+    }).catch(e => Swal.fire('Gagal', e.message, 'error'));
+}
+
+function deleteMenu(id) {
+    Swal.fire({
+        title: 'Hapus menu?',
+        text: 'Data akan dihapus dari Firebase.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Hapus'
+    }).then(r => { if (r.isConfirmed) database.ref('daftar_menu/' + id).remove(); });
+}
+
+function statusClass(st) { return st === 'Selesai' || st === 'Lunas' ? 'status-selesai' : 'status-menunggu'; }
+
+function renderOrders() {
+    let arr = Object.entries(orderData).map(([id, o]) => ({ ...o, _id: id })).sort((a, b) => (b.waktu || 0) - (a.waktu || 0));
+    let active = arr.filter(o => !['Selesai', 'Lunas', '❌ Dibatalkan'].includes(o.status));
+    document.getElementById('admin-order-list').innerHTML = active.length ? active.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:bold;">#${esc(o.id || o._id)}</div><div style="font-size:15px;font-weight:bold;margin:4px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:13px;color:var(--text-sub);">${Array.isArray(o.items) ? o.items.length : Object.keys(o.items || {}).length} Item - <strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div style="display:flex;align-items:center;gap:15px;"><span class="order-status ${statusClass(o.status)}">${esc(o.status || 'Menunggu Respon')}</span><button class="btn-primary" onclick="openOrder('${esc(o._id)}')">Lihat Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Tidak ada pesanan aktif.</div>';
+    renderHistory(arr);
+}
+
+function renderHistory(arr) {
+    document.getElementById('admin-history-list').innerHTML = arr.length ? arr.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:bold;">#${esc(o.id || o._id)} <span style="margin-left:8px;font-weight:normal;">${o.waktu ? new Date(o.waktu).toLocaleString('id-ID') : ''}</span></div><div style="font-size:15px;font-weight:bold;margin:4px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:13px;color:var(--text-sub);"><strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status || '-')}</span><button class="btn-primary" style="margin-left:8px;background:var(--secondary);" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada history pesanan.</div>';
+}
+
+function openOrder(id) {
+    selectedOrderId = id;
+    let o = orderData[id];
+    if (!o) return;
+    document.getElementById('order-modal-title').innerText = 'Detail Pesanan #' + (o.id || id);
+    document.getElementById('order-status-select').value = o.status || 'Menunggu Respon';
+    let items = Array.isArray(o.items) ? o.items : (o.items ? Object.values(o.items) : []);
+    document.getElementById('order-detail-body').innerHTML = `<div style="font-size:13px;line-height:1.6;"><p><b>Pelanggan:</b> ${esc(o.nama || '-')}</p><p><b>User ID:</b> ${esc(o.userId || '-')}</p><p><b>Alamat:</b> ${esc(o.alamat || '-')}</p><p><b>Pembayaran:</b> ${esc(o.pembayaran || '-')} (${esc(o.metode || '-')})</p><hr style="border:none;border-top:1px dashed var(--border-color)"><b>Rincian:</b><div style="margin-top:8px;">${items.map(x => `<div style="display:flex;justify-content:space-between;padding:4px 0;">${esc(x.nama || x)} <span>${x.qty ? `x${esc(x.qty)}` : ''}</span></div>`).join('')}</div><p style="font-weight:bold;color:var(--primary);text-align:right;">Total: ${rupiah(o.total)}</p></div>`;
+    openModal('modal-detail-order');
+}
+
+function updateOrder() {
+    if (!selectedOrderId) return;
+    let st = document.getElementById('order-status-select').value;
+    database.ref('pesanan/' + selectedOrderId + '/status').set(st).then(() => {
+        closeModal('modal-detail-order');
+        Swal.fire({ icon: 'success', title: 'Status diperbarui', timer: 900, showConfirmButton: false });
+    }).catch(e => Swal.fire('Gagal', e.message, 'error'));
+}
+
+function renderUsers() {
+    let arr = Object.entries(userData);
+    document.getElementById('admin-user-list').innerHTML = arr.length ? arr.map(([uid, u]) => {
+        let a = u.alamat_list || {};
+        let main = Object.values(a).find(x => x.isUtama) || Object.values(a)[0] || {};
+        return `<tr><td style="font-family:monospace;font-size:11px;">${esc(uid)}</td><td>${esc(u.nama || '-')}</td><td>${esc(u.email || '-')}</td><td>${esc(main.hp || '-')}</td><td>${esc(main.jalan || '-')}</td><td>${esc(main.kodePos || '-')}</td></tr>`;
+    }).join('') : '<tr><td colspan="6" style="text-align:center;">Belum ada pengguna.</td></tr>';
+}
+
+function renderRatings() {
+    let arr = Object.values(ratingData || {}), sum = arr.reduce((a, r) => a + Number(r.rating || 0), 0), avg = arr.length ? sum / arr.length : 0;
+    document.getElementById('rating-average').innerText = avg.toFixed(1);
+    document.getElementById('rating-stars').innerText = '★★★★★'.split('').map((x, i) => i < Math.round(avg) ? '★' : '☆').join('');
+    document.getElementById('rating-count').innerText = `Berdasarkan ${arr.length} Ulasan`;
+    document.getElementById('admin-rating-list').innerHTML = arr.length ? arr.reverse().map(r => `<div class="rating-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>${esc(r.nama || 'Pelanggan')}</strong><span style="color:#f59e0b;">${'★'.repeat(Number(r.rating || 0))}${'☆'.repeat(5 - Number(r.rating || 0))} ${Number(r.rating || 0)}.0</span></div><div style="font-size:13px;font-style:italic;">${esc(r.ulasan || r.review || '')}</div></div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--text-sub);">Belum ada ulasan pada node <b>ratings</b>.</div>';
+}
+
+function renderStats() {
+    let orders = Object.values(orderData || {}), users = Object.keys(userData || {});
+    let completed = orders.filter(o => o.status === 'Selesai' || o.status === 'Lunas');
+    let revenue = completed.reduce((a, o) => a + Number(o.total || 0), 0);
+    document.getElementById('stat-pendapatan').innerText = rupiah(revenue);
+    document.getElementById('stat-selesai').innerText = completed.length;
+    document.getElementById('stat-pelanggan').innerText = users.length;
+    updateChart(orders);
+}
+
+function updateChart(orders) {
+    let days = [];
+    for (let i = 6; i >= 0; i--) {
+        let d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i);
+        days.push(d);
     }
+    let labels = days.map(d => d.toLocaleDateString('id-ID', { weekday: 'short' }));
+    let data = days.map(d => orders.filter(o => {
+        let x = new Date(o.waktu || 0);
+        return (o.status === 'Selesai' || o.status === 'Lunas') && x.toDateString() === d.toDateString();
+    }).reduce((a, o) => a + Number(o.total || 0), 0));
 
-    function logoutAdmin() {
-      auth.signOut().then(() => window.location.reload());
-    }
+    let ctx = document.getElementById('revenueChart').getContext('2d');
+    let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(255, 107, 53, 0.4)');
+    gradient.addColorStop(1, 'rgba(255, 107, 53, 0)');
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-slate-800', 'text-white'));
-      
-      document.getElementById(tabId).classList.remove('hidden');
-      const navBtn = document.getElementById('nav-' + tabId);
-      if(navBtn) navBtn.classList.add('bg-slate-800', 'text-white');
-    }
-
-    function initData() {
-      switchTab('tabStatistik');
-      initChart();
-
-      // Realtime Path sesuai aplikasi utama
-      database.ref('menu').on('value', snap => renderMenu(snap.val()));
-      database.ref('orders').on('value', snap => renderPesanan(snap.val()));
-      database.ref('users').on('value', snap => renderUsers(snap.val()));
-      database.ref('reviews').on('value', snap => renderRating(snap.val()));
-    }
-
-    function renderMenu(data) {
-      const container = document.getElementById('gridDaftarMenu');
-      if (!data) return container.innerHTML = '<p class="text-xs text-slate-500">Belum ada menu.</p>';
-      
-      let html = '';
-      Object.keys(data).forEach(id => {
-        const item = data[id];
-        const stok = item.stok || 0;
-        let badgeStok = '🟢 Tersedia';
-        if (stok === 0) badgeStok = '🔴 Habis';
-        else if (stok <= 5) badgeStok = '🟡 Stok Terbatas';
-
-        html += `
-          <div class="bg-slate-800/60 rounded-2xl border border-slate-800 p-3 space-y-2">
-            <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="w-full h-32 object-cover rounded-xl">
-            <div class="flex items-center justify-between text-[10px]">
-              <span class="font-bold text-amber-500 uppercase">${item.kategori || 'Umum'}</span>
-              <span class="font-semibold">${badgeStok} (${stok})</span>
-            </div>
-            <h4 class="font-bold text-sm text-white">${item.nama || item.name}</h4>
-            <p class="font-black text-amber-400 text-sm">Rp ${(item.harga || item.price || 0).toLocaleString('id-ID')}</p>
-            <div class="flex gap-2 pt-1">
-              <button onclick="editMenu('${id}')" class="flex-1 py-1.5 bg-slate-700 text-white rounded-lg font-bold text-xs">Edit</button>
-              <button onclick="deleteMenu('${id}')" class="py-1.5 px-3 bg-rose-500/20 text-rose-400 rounded-lg font-bold text-xs">Hapus</button>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function openMenuModal() {
-      document.getElementById('formMenu').reset();
-      document.getElementById('menuId').value = '';
-      document.getElementById('modalMenuTitle').innerText = 'Tambah Menu';
-      document.getElementById('modalMenu').classList.remove('hidden');
-    }
-
-    function closeMenuModal() {
-      document.getElementById('modalMenu').classList.add('hidden');
-    }
-
-    function saveMenu(e) {
-      e.preventDefault();
-      const id = document.getElementById('menuId').value || database.ref('menu').push().key;
-      const data = {
-        nama: document.getElementById('menuNama').value,
-        kategori: document.getElementById('menuKategori').value,
-        harga: parseInt(document.getElementById('menuHarga').value),
-        stok: parseInt(document.getElementById('menuStok').value),
-        gambar: document.getElementById('menuGambar').value,
-        deskripsi: document.getElementById('menuDeskripsi').value
-      };
-
-      database.ref('menu/' + id).set(data).then(() => {
-        closeMenuModal();
-        Swal.fire({ icon: 'success', title: 'Tersimpan', showConfirmButton: false, timer: 1500 });
-      });
-    }
-
-    function editMenu(id) {
-      database.ref('menu/' + id).once('value').then(snap => {
-        const item = snap.val();
-        document.getElementById('menuId').value = id;
-        document.getElementById('menuNama').value = item.nama || item.name;
-        document.getElementById('menuKategori').value = item.kategori || 'Makanan';
-        document.getElementById('menuHarga').value = item.harga || item.price;
-        document.getElementById('menuStok').value = item.stok || 0;
-        document.getElementById('menuGambar').value = item.gambar || '';
-        document.getElementById('menuDeskripsi').value = item.deskripsi || '';
-        
-        document.getElementById('modalMenuTitle').innerText = 'Edit Menu';
-        document.getElementById('modalMenu').classList.remove('hidden');
-      });
-    }
-
-    function deleteMenu(id) {
-      Swal.fire({ title: 'Hapus menu ini?', icon: 'warning', showCancelButton: true }).then(res => {
-        if(res.isConfirmed) database.ref('menu/' + id).remove();
-      });
-    }
-
-    function renderPesanan(data) {
-      const containerMasuk = document.getElementById('containerPesananMasuk');
-      const containerHistory = document.getElementById('containerHistory');
-      if(!data) return;
-
-      let htmlMasuk = '', htmlHistory = '', totalOmset = 0, countPesanan = 0;
-
-      Object.keys(data).reverse().forEach(key => {
-        const item = data[key];
-        countPesanan++;
-
-        if(item.status === 'Selesai') {
-          totalOmset += (item.total || 0);
-          htmlHistory += `
-            <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
-              <div>
-                <p class="font-bold text-white">#${key.substr(-6)} - ${item.namaPemesan || item.userName || 'Pelanggan'}</p>
-                <p class="text-[10px] text-slate-400">Rp ${(item.total || 0).toLocaleString('id-ID')}</p>
-              </div>
-              <span class="font-bold text-emerald-400">✅ Selesai</span>
-            </div>
-          `;
-        } else {
-          htmlMasuk += `
-            <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-2">
-              <div class="flex justify-between items-center text-xs">
-                <h4 class="font-bold text-white">#${key.substr(-6)} - ${item.namaPemesan || item.userName || 'Pelanggan'}</h4>
-                <span class="font-bold text-amber-500">${item.status || 'Menunggu Respon'}</span>
-              </div>
-              <p class="text-xs text-slate-400">${item.alamatDetail || item.address || '-'}</p>
-              <div class="flex justify-between items-center pt-2">
-                <span class="font-black text-amber-400 text-sm">Rp ${(item.total || 0).toLocaleString('id-ID')}</span>
-                <select onchange="updateStatus('${key}', this.value)" class="text-xs p-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-semibold">
-                  <option value="Menunggu Respon" ${item.status==='Menunggu Respon'?'selected':''}>Menunggu Respon</option>
-                  <option value="Sedang Dimasak" ${item.status==='Sedang Dimasak'?'selected':''}>Sedang Dimasak</option>
-                  <option value="Sedang Diantarkan" ${item.status==='Sedang Diantarkan'?'selected':''}>Sedang Diantarkan</option>
-                  <option value="Selesai" ${item.status==='Selesai'?'selected':''}>Selesai</option>
-                  <option value="❌ Dibatalkan" ${item.status==='❌ Dibatalkan'?'selected':''}>❌ Dibatalkan</option>
-                </select>
-              </div>
-            </div>
-          `;
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Pendapatan (Rp)',
+                data,
+                borderColor: '#ff6b35',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                pointBackgroundColor: '#004e64',
+                pointRadius: 4,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.5)' } },
+                x: { grid: { display: false } }
+            }
         }
-      });
+    });
+}
 
-      containerMasuk.innerHTML = htmlMasuk || '<p class="text-xs text-slate-500">Tidak ada pesanan aktif.</p>';
-      containerHistory.innerHTML = htmlHistory || '<p class="text-xs text-slate-500">Belum ada history.</p>';
-      
-      document.getElementById('statPendapatan').innerText = 'Rp ' + totalOmset.toLocaleString('id-ID');
-      document.getElementById('statTotalPesanan').innerText = countPesanan;
-    }
+function logout() { auth.signOut().then(() => location.reload()); }
 
-    function updateStatus(id, status) {
-      database.ref('orders/' + id + '/status').set(status);
-    }
+function initRealtime() {
+    database.ref('daftar_menu').on('value', s => { menuData = s.val() || {}; renderMenus(); });
+    database.ref('pesanan').on('value', s => { orderData = s.val() || {}; renderOrders(); renderStats(); });
+    database.ref('users').on('value', s => { userData = s.val() || {}; renderUsers(); renderStats(); });
+    database.ref('ratings').on('value', s => { ratingData = s.val() || {}; renderRatings(); });
+}
 
-    function renderUsers(users) {
-      const container = document.getElementById('tablePenggunaBody');
-      if (!users) return;
-      let html = '', count = 0;
-      Object.keys(users).forEach(uid => {
-        count++;
-        const u = users[uid];
-        html += `
-          <tr>
-            <td class="p-3 font-bold text-white">${u.nama || u.name || '-'}</td>
-            <td class="p-3">${u.email || '-'}</td>
-            <td class="p-3">${u.telepon || u.phone || '-'}</td>
-            <td class="p-3">${u.alamat || u.address || '-'}</td>
-          </tr>
-        `;
-      });
-      container.innerHTML = html;
-      document.getElementById('statTotalPelanggan').innerText = count;
-    }
-
-    function renderRating(reviews) {
-      const container = document.getElementById('containerRating');
-      if(!reviews) return container.innerHTML = '<p class="text-xs text-slate-500">Belum ada ulasan.</p>';
-      let html = '';
-      Object.keys(reviews).forEach(id => {
-        const r = reviews[id];
-        html += `
-          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <span class="font-bold text-white">${r.nama || 'Pelanggan'}</span>
-              <span class="text-amber-400 font-bold">⭐ ${r.rating || 5}.0</span>
-            </div>
-            <p class="text-xs text-slate-300 italic">"${r.ulasan || r.comment || '-'}"</p>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function initChart() {
-      const options = {
-        chart: { type: 'area', height: 200, toolbar: { show: false }, background: 'transparent' },
-        theme: { mode: 'dark' },
-        series: [{ name: 'Pendapatan', data: [30, 40, 35, 50, 49, 60, 70] }],
-        xaxis: { categories: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'] },
-        colors: ['#f59e0b']
-      };
-      new ApexCharts(document.querySelector("#chartPendapatan"), options).render();
-    }
-  </script>
+window.addEventListener('load', () => {
+    document.getElementById('tab-dashboard').style.display = 'block';
+    initRealtime();
+});
+</script>
 </body>
 </html>

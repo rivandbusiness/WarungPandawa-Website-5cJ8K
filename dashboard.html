@@ -1,19 +1,28 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dasbor Admin - Warung Pandawa</title>
   
-  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#fffbebee', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' }
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- SweetAlert2 & ApexCharts (Grafik) -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-  <!-- Firebase SDK (Compatibility Mode) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -21,278 +30,257 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-    .dark .glass-card {
-      background: rgba(15, 23, 42, 0.9);
-      border-color: rgba(51, 65, 85, 0.8);
-    }
+    .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
 
   <!-- ================= LAYAR LOGIN ================= -->
-  <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4">
-    <div class="glass-card w-full max-w-md p-8 rounded-3xl shadow-2xl text-center space-y-6">
-      <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-black">
+  <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm p-6 rounded-3xl text-center space-y-6 shadow-2xl">
+      <div class="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black">
         <i class="fa-solid fa-utensils"></i>
       </div>
       <div>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Dasbor Dapur</h1>
-        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Khusus Pengelola & Admin Warung Pandawa</p>
+        <h1 class="text-xl font-bold text-white">Dasbor Admin</h1>
+        <p class="text-slate-400 text-xs mt-1">Warung Pandawa Dapur Panel</p>
       </div>
-      <button onclick="loginAdminGoogle()" class="w-full bg-white dark:bg-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-200 font-semibold py-3.5 px-4 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm transition flex items-center justify-center gap-3">
-        <svg class="w-5 h-5" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        <span>Lanjut dengan Google</span>
+      <button onclick="loginAdminGoogle()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-xl border border-slate-700 transition flex items-center justify-center gap-3 text-sm">
+        <i class="fa-brands fa-google text-amber-500"></i>
+        <span>Login Google Admin</span>
       </button>
     </div>
   </div>
 
 
-  <!-- ================= DASBOR UTAMA ADMIN ================= -->
-  <div id="adminApp" class="hidden flex min-h-screen">
-    
-    <!-- SIDEBAR NAVIGASI -->
-    <aside class="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col justify-between p-4 sticky top-0 h-screen">
+  <!-- ================= CONTAINER UTAMA ================= -->
+  <div id="adminApp" class="hidden min-h-screen pb-20 md:pb-0 md:pl-64">
+
+    <!-- HEADER MOBILE -->
+    <header class="md:hidden sticky top-0 z-30 bg-slate-900/90 glass-nav border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-black rounded-lg flex items-center justify-center text-sm">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <span class="font-bold text-sm tracking-wide">PANDAWA ADMIN</span>
+      </div>
+      <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-500 p-1">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </header>
+
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="hidden md:flex fixed top-0 left-0 bottom-0 w-64 bg-slate-900 border-r border-slate-800 flex-col justify-between p-4 z-40">
       <div class="space-y-6">
-        <!-- Logo -->
         <div class="flex items-center gap-3 px-2">
-          <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-black">
+          <div class="w-10 h-10 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center font-extrabold text-lg">
             <i class="fa-solid fa-utensils"></i>
           </div>
           <div>
-            <h2 class="font-bold text-slate-900 dark:text-white leading-tight">Pandawa Admin</h2>
-            <p class="text-xs text-slate-400">Panel Kelola Dapur</p>
+            <h2 class="font-bold text-white leading-tight">Warung Pandawa</h2>
+            <p class="text-[10px] text-amber-500 font-bold uppercase tracking-wider">Panel Pengelola</p>
           </div>
         </div>
 
-        <!-- Menu Navigation -->
         <nav class="space-y-1">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Management</p>
-          
-          <button onclick="switchTab('tabStatistik')" id="nav-tabStatistik" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
-            <i class="fa-solid fa-chart-line w-5 text-amber-500"></i> Statistik
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Management</p>
+          <button onclick="switchTab('tabStatistik')" id="nav-tabStatistik" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-chart-pie w-5 text-amber-500"></i> Statistik
           </button>
-          
-          <button onclick="switchTab('tabMenu')" id="nav-tabMenu" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+          <button onclick="switchTab('tabMenu')" id="nav-tabMenu" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
             <i class="fa-solid fa-burger w-5 text-amber-500"></i> Daftar Menu
           </button>
-          
-          <button onclick="switchTab('tabPesanan')" id="nav-tabPesanan" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
-            <i class="fa-solid fa-bell w-5 text-amber-500"></i> Pesanan Masuk
+          <button onclick="switchTab('tabPesanan')" id="nav-tabPesanan" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-receipt w-5 text-amber-500"></i> Pesanan Masuk
           </button>
-          
-          <button onclick="switchTab('tabPengguna')" id="nav-tabPengguna" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+          <button onclick="switchTab('tabPengguna')" id="nav-tabPengguna" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
             <i class="fa-solid fa-users w-5 text-amber-500"></i> Pengguna Aktif
           </button>
 
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mt-6 mb-2">Pengaturan</p>
-
-          <button onclick="switchTab('tabHistory')" id="nav-tabHistory" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mt-6 mb-2">Pengaturan</p>
+          <button onclick="switchTab('tabHistory')" id="nav-tabHistory" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
             <i class="fa-solid fa-clock-rotate-left w-5 text-amber-500"></i> History Pesanan
           </button>
-
-          <button onclick="switchTab('tabRating')" id="nav-tabRating" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+          <button onclick="switchTab('tabRating')" id="nav-tabRating" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800">
             <i class="fa-solid fa-star w-5 text-amber-500"></i> Rating Pelanggan
-          </button>
-
-          <button onclick="switchTab('tabSettings')" id="nav-tabSettings" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
-            <i class="fa-solid fa-sliders w-5 text-amber-500"></i> Pengaturan & Tema
           </button>
         </nav>
       </div>
 
-      <!-- User Profile Box -->
-      <div class="border-t border-slate-200 dark:border-slate-700 pt-4 flex items-center justify-between">
-        <div class="overflow-hidden pr-2">
-          <p id="adminName" class="font-bold text-sm text-slate-900 dark:text-white truncate">Admin</p>
-          <p id="adminEmail" class="text-xs text-slate-400 truncate">admin@gmail.com</p>
+      <div class="border-t border-slate-800 pt-4 flex items-center justify-between px-2">
+        <div class="overflow-hidden">
+          <p id="adminName" class="font-bold text-xs text-white truncate">Admin</p>
+          <p id="adminEmail" class="text-[10px] text-slate-400 truncate">admin@gmail.com</p>
         </div>
-        <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-500 p-2 rounded-lg">
-          <i class="fa-solid fa-right-from-bracket text-lg"></i>
+        <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-500 p-2">
+          <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
     </aside>
 
-    <!-- AREA KONTEN UTAMA -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <!-- NAVBAR BOTTOM MOBILE -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 glass-nav border-t border-slate-800 flex justify-around p-2">
+      <button onclick="switchTab('tabStatistik')" class="p-2 text-center text-slate-400 hover:text-amber-500">
+        <i class="fa-solid fa-chart-pie block text-lg mx-auto"></i>
+        <span class="text-[9px] font-semibold">Statistik</span>
+      </button>
+      <button onclick="switchTab('tabMenu')" class="p-2 text-center text-slate-400 hover:text-amber-500">
+        <i class="fa-solid fa-burger block text-lg mx-auto"></i>
+        <span class="text-[9px] font-semibold">Menu</span>
+      </button>
+      <button onclick="switchTab('tabPesanan')" class="p-2 text-center text-slate-400 hover:text-amber-500">
+        <i class="fa-solid fa-receipt block text-lg mx-auto"></i>
+        <span class="text-[9px] font-semibold">Pesanan</span>
+      </button>
+      <button onclick="switchTab('tabPengguna')" class="p-2 text-center text-slate-400 hover:text-amber-500">
+        <i class="fa-solid fa-users block text-lg mx-auto"></i>
+        <span class="text-[9px] font-semibold">User</span>
+      </button>
+      <button onclick="switchTab('tabHistory')" class="p-2 text-center text-slate-400 hover:text-amber-500">
+        <i class="fa-solid fa-clock-rotate-left block text-lg mx-auto"></i>
+        <span class="text-[9px] font-semibold">History</span>
+      </button>
+    </div>
 
-      <!-- 1. SECTION STATISTIK -->
-      <section id="tabStatistik" class="tab-content space-y-6">
-        <h2 class="text-2xl font-bold">Analisis & Statistik</h2>
+    <!-- AREA KONTEN -->
+    <main class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+
+      <!-- 1. STATISTIK -->
+      <section id="tabStatistik" class="tab-content space-y-4">
+        <h2 class="text-xl font-bold text-white">Analisis & Statistik</h2>
         
-        <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
-            <p class="text-xs font-semibold text-slate-400">Total Pendapatan</p>
-            <h3 id="statPendapatan" class="text-2xl font-extrabold text-emerald-500 mt-1">Rp 0</h3>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
+            <p class="text-[10px] font-bold text-slate-400 uppercase">Pendapatan</p>
+            <h3 id="statPendapatan" class="text-sm md:text-xl font-extrabold text-amber-500 mt-1">Rp 0</h3>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
-            <p class="text-xs font-semibold text-slate-400">Pesanan Masuk</p>
-            <h3 id="statTotalPesanan" class="text-2xl font-extrabold text-amber-500 mt-1">0</h3>
+          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
+            <p class="text-[10px] font-bold text-slate-400 uppercase">Pesanan</p>
+            <h3 id="statTotalPesanan" class="text-sm md:text-xl font-extrabold text-blue-400 mt-1">0</h3>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
-            <p class="text-xs font-semibold text-slate-400">Pelanggan Terdaftar</p>
-            <h3 id="statTotalPelanggan" class="text-2xl font-extrabold text-blue-500 mt-1">0</h3>
+          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800">
+            <p class="text-[10px] font-bold text-slate-400 uppercase">Pelanggan</p>
+            <h3 id="statTotalPelanggan" class="text-sm md:text-xl font-extrabold text-emerald-400 mt-1">0</h3>
           </div>
         </div>
 
-        <!-- Chart Section -->
-        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div class="flex items-center justify-between">
-            <h4 class="font-bold">Grafik Pendapatan</h4>
-            <select class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg border-0 font-semibold">
+            <h4 class="text-sm font-bold text-white">Grafik Pendapatan</h4>
+            <select class="text-xs bg-slate-900 border border-slate-700 px-2 py-1 rounded-lg text-slate-300">
               <option>Hari ini</option>
-              <option>7 hari terakhir</option>
-              <option>30 hari terakhir</option>
+              <option>7 Hari</option>
             </select>
           </div>
-          <div id="chartPendapatan" class="w-full h-64"></div>
+          <div id="chartPendapatan" class="w-full h-56"></div>
         </div>
       </section>
 
-      <!-- 2. SECTION DAFTAR MENU (CMS) -->
-      <section id="tabMenu" class="tab-content space-y-6 hidden">
+      <!-- 2. DAFTAR MENU -->
+      <section id="tabMenu" class="tab-content space-y-4 hidden">
         <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold">Manajemen Daftar Menu</h2>
-          <button onclick="openMenuModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 py-2.5 rounded-xl shadow transition text-sm flex items-center gap-2">
+          <h2 class="text-xl font-bold text-white">Daftar Menu</h2>
+          <button onclick="openMenuModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-2">
             <i class="fa-solid fa-plus"></i> Tambah Menu
           </button>
         </div>
 
-        <div id="gridDaftarMenu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Cards Menu akan di-render via Javascript -->
-        </div>
+        <div id="gridDaftarMenu" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </section>
 
-      <!-- 3. SECTION PESANAN MASUK -->
-      <section id="tabPesanan" class="tab-content space-y-6 hidden">
-        <h2 class="text-2xl font-bold">Pesanan Masuk Realtime</h2>
-        <div id="containerPesananMasuk" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- List Pesanan Masuk -->
-        </div>
+      <!-- 3. PESANAN MASUK -->
+      <section id="tabPesanan" class="tab-content space-y-4 hidden">
+        <h2 class="text-xl font-bold text-white">Pesanan Masuk</h2>
+        <div id="containerPesananMasuk" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </section>
 
-      <!-- 4. SECTION PENGGUNA AKTIF -->
-      <section id="tabPengguna" class="tab-content space-y-6 hidden">
-        <h2 class="text-2xl font-bold">Data Pengguna Terdaftar</h2>
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 font-bold uppercase text-[10px] tracking-wider">
+      <!-- 4. PENGGUNA AKTIF -->
+      <section id="tabPengguna" class="tab-content space-y-4 hidden">
+        <h2 class="text-xl font-bold text-white">Tabel Pengguna Aktif</h2>
+        <div class="bg-slate-800/60 rounded-2xl border border-slate-800 overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[500px]">
+            <thead class="bg-slate-900 text-slate-400 font-bold uppercase text-[9px] tracking-wider">
               <tr>
-                <th class="p-4">ID Pelanggan</th>
-                <th class="p-4">Nama</th>
-                <th class="p-4">Email</th>
-                <th class="p-4">No. Telpon</th>
-                <th class="p-4">Alamat Utama</th>
+                <th class="p-3">Nama</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">No HP</th>
+                <th class="p-3">Alamat</th>
               </tr>
             </thead>
-            <tbody id="tablePenggunaBody" class="divide-y divide-slate-100 dark:divide-slate-700">
-              <!-- Render via Javascript -->
-            </tbody>
+            <tbody id="tablePenggunaBody" class="divide-y divide-slate-800"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 5. SECTION HISTORY PESANAN -->
-      <section id="tabHistory" class="tab-content space-y-6 hidden">
-        <h2 class="text-2xl font-bold">History Pesanan Selesai</h2>
-        <div id="containerHistory" class="space-y-4">
-          <!-- Render History -->
-        </div>
+      <!-- 5. HISTORY PESANAN -->
+      <section id="tabHistory" class="tab-content space-y-4 hidden">
+        <h2 class="text-xl font-bold text-white">History Pesanan</h2>
+        <div id="containerHistory" class="space-y-3"></div>
       </section>
 
-      <!-- 6. SECTION RATING PELANGGAN -->
-      <section id="tabRating" class="tab-content space-y-6 hidden">
-        <div class="flex items-center gap-4">
-          <h2 class="text-2xl font-bold">Rating & Ulasan Pelanggan</h2>
-          <span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full text-xs">⭐ 4.8 / 5.0</span>
-        </div>
-        <div id="containerRating" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Render Rating -->
-        </div>
-      </section>
-
-      <!-- 7. SECTION PENGATURAN TEMA -->
-      <section id="tabSettings" class="tab-content space-y-6 hidden">
-        <h2 class="text-2xl font-bold">Pengaturan Tampilan Tema</h2>
-        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-md space-y-4">
-          <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer">
-            <span class="font-medium text-sm">○ Terang (Light Mode)</span>
-            <input type="radio" name="themeSetting" value="light" onclick="setTheme('light')">
-          </label>
-          <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer">
-            <span class="font-medium text-sm">● Gelap (Dark Mode)</span>
-            <input type="radio" name="themeSetting" value="dark" onclick="setTheme('dark')">
-          </label>
-        </div>
+      <!-- 6. RATING -->
+      <section id="tabRating" class="tab-content space-y-4 hidden">
+        <h2 class="text-xl font-bold text-white">Rating Pelanggan</h2>
+        <div id="containerRating" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </section>
 
     </main>
   </div>
 
 
-  <!-- ================= MODAL TAMBAH / EDIT MENU ================= -->
-  <div id="modalMenu" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4">
-      <h3 id="modalMenuTitle" class="text-xl font-bold">Tambah Menu Baru</h3>
+  <!-- MODAL EDIT/TAMBAH MENU -->
+  <div id="modalMenu" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-5 space-y-4">
+      <h3 id="modalMenuTitle" class="text-lg font-bold text-white">Tambah Menu</h3>
       
       <form id="formMenu" onsubmit="saveMenu(event)" class="space-y-3">
         <input type="hidden" id="menuId">
 
         <div>
-          <label class="text-xs font-semibold text-slate-500">Nama Makanan / Minuman</label>
-          <input type="text" id="menuNama" required class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm">
+          <label class="text-[10px] font-bold text-slate-400 uppercase">Nama Makanan/Minuman</label>
+          <input type="text" id="menuNama" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="text-xs font-semibold text-slate-500">Kategori</label>
-            <select id="menuKategori" class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm">
+            <label class="text-[10px] font-bold text-slate-400 uppercase">Kategori</label>
+            <select id="menuKategori" class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
               <option value="Makanan">Makanan</option>
               <option value="Minuman">Minuman</option>
               <option value="Cemilan">Cemilan</option>
             </select>
           </div>
           <div>
-            <label class="text-xs font-semibold text-slate-500">Harga (Rp)</label>
-            <input type="number" id="menuHarga" required class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm">
+            <label class="text-[10px] font-bold text-slate-400 uppercase">Harga (Rp)</label>
+            <input type="number" id="menuHarga" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
           </div>
         </div>
 
         <div>
-          <label class="text-xs font-semibold text-slate-500">Stok Barang</label>
-          <input type="number" id="menuStok" required class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm">
+          <label class="text-[10px] font-bold text-slate-400 uppercase">Stok</label>
+          <input type="number" id="menuStok" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
         </div>
 
         <div>
-          <label class="text-xs font-semibold text-slate-500">URL Gambar (Link Foto)</label>
-          <input type="url" id="menuGambar" placeholder="https://..." required class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm">
+          <label class="text-[10px] font-bold text-slate-400 uppercase">URL Gambar</label>
+          <input type="url" id="menuGambar" required class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white">
         </div>
 
         <div>
-          <label class="text-xs font-semibold text-slate-500">Deskripsi Menu</label>
-          <textarea id="menuDeskripsi" rows="3" class="w-full mt-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-sm"></textarea>
+          <label class="text-[10px] font-bold text-slate-400 uppercase">Deskripsi</label>
+          <textarea id="menuDeskripsi" rows="2" class="w-full mt-1 p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white"></textarea>
         </div>
 
-        <div class="flex justify-end gap-3 pt-4">
-          <button type="button" onclick="closeMenuModal()" class="px-5 py-2.5 rounded-xl border font-semibold text-sm">Batal</button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 text-white font-semibold text-sm">Simpan</button>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" onclick="closeMenuModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">Simpan</button>
         </div>
       </form>
     </div>
   </div>
 
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- SCRIPT LOGIC FIREBASE -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
@@ -309,27 +297,17 @@
     const auth = firebase.auth();
     const database = firebase.database();
 
-    // Verification Role Admin
     auth.onAuthStateChanged((user) => {
       if (!user) {
         document.getElementById('loginSection').classList.remove('hidden');
         document.getElementById('adminApp').classList.add('hidden');
       } else {
-        database.ref('users/' + user.uid + '/role').once('value').then((snapshot) => {
-          if (snapshot.val() !== 'admin') {
-            Swal.fire('Akses Ditolak!', 'Akun tidak memiliki role admin.', 'error').then(() => {
-              auth.signOut();
-              window.location.href = '/';
-            });
-          } else {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('adminApp').classList.remove('hidden');
-            document.getElementById('adminName').innerText = user.displayName || "Admin Warung";
-            document.getElementById('adminEmail').innerText = user.email;
-            
-            initData();
-          }
-        });
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('adminApp').classList.remove('hidden');
+        document.getElementById('adminName').innerText = user.displayName || "Admin";
+        document.getElementById('adminEmail').innerText = user.email;
+        
+        initData();
       }
     });
 
@@ -341,34 +319,29 @@
       auth.signOut().then(() => window.location.reload());
     }
 
-    // Navigation Switcher
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-amber-50', 'text-amber-600', 'dark:bg-slate-700'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-slate-800', 'text-white'));
       
       document.getElementById(tabId).classList.remove('hidden');
-      document.getElementById('nav-' + tabId).classList.add('bg-amber-50', 'text-amber-600', 'dark:bg-slate-700');
+      const navBtn = document.getElementById('nav-' + tabId);
+      if(navBtn) navBtn.classList.add('bg-slate-800', 'text-white');
     }
 
-    // Load Realtime Data
     function initData() {
       switchTab('tabStatistik');
       initChart();
 
-      // Load Menu
-      database.ref('daftar_menu').on('value', snap => renderMenu(snap.val()));
-      
-      // Load Pesanan
-      database.ref('pesanan').on('value', snap => renderPesanan(snap.val()));
-
-      // Load Users
+      // Realtime Path sesuai aplikasi utama
+      database.ref('menu').on('value', snap => renderMenu(snap.val()));
+      database.ref('orders').on('value', snap => renderPesanan(snap.val()));
       database.ref('users').on('value', snap => renderUsers(snap.val()));
+      database.ref('reviews').on('value', snap => renderRating(snap.val()));
     }
 
-    // CRUD Daftar Menu
     function renderMenu(data) {
       const container = document.getElementById('gridDaftarMenu');
-      if (!data) return container.innerHTML = '<p class="text-slate-400">Belum ada menu.</p>';
+      if (!data) return container.innerHTML = '<p class="text-xs text-slate-500">Belum ada menu.</p>';
       
       let html = '';
       Object.keys(data).forEach(id => {
@@ -379,17 +352,17 @@
         else if (stok <= 5) badgeStok = '🟡 Stok Terbatas';
 
         html += `
-          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
-            <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="w-full h-40 object-cover rounded-xl">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-amber-500 uppercase">${item.kategori}</span>
-              <span class="text-xs font-semibold">${badgeStok} (${stok})</span>
+          <div class="bg-slate-800/60 rounded-2xl border border-slate-800 p-3 space-y-2">
+            <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="w-full h-32 object-cover rounded-xl">
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-amber-500 uppercase">${item.kategori || 'Umum'}</span>
+              <span class="font-semibold">${badgeStok} (${stok})</span>
             </div>
-            <h4 class="font-bold text-lg">${item.nama}</h4>
-            <p class="font-extrabold text-slate-900 dark:text-white">Rp ${(item.harga || 0).toLocaleString('id-ID')}</p>
-            <div class="flex gap-2 pt-2">
-              <button onclick="editMenu('${id}')" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl font-semibold text-xs">Edit</button>
-              <button onclick="deleteMenu('${id}')" class="py-2 px-3 bg-rose-50 text-rose-600 rounded-xl font-semibold text-xs">Hapus</button>
+            <h4 class="font-bold text-sm text-white">${item.nama || item.name}</h4>
+            <p class="font-black text-amber-400 text-sm">Rp ${(item.harga || item.price || 0).toLocaleString('id-ID')}</p>
+            <div class="flex gap-2 pt-1">
+              <button onclick="editMenu('${id}')" class="flex-1 py-1.5 bg-slate-700 text-white rounded-lg font-bold text-xs">Edit</button>
+              <button onclick="deleteMenu('${id}')" class="py-1.5 px-3 bg-rose-500/20 text-rose-400 rounded-lg font-bold text-xs">Hapus</button>
             </div>
           </div>
         `;
@@ -400,7 +373,7 @@
     function openMenuModal() {
       document.getElementById('formMenu').reset();
       document.getElementById('menuId').value = '';
-      document.getElementById('modalMenuTitle').innerText = 'Tambah Menu Baru';
+      document.getElementById('modalMenuTitle').innerText = 'Tambah Menu';
       document.getElementById('modalMenu').classList.remove('hidden');
     }
 
@@ -410,7 +383,7 @@
 
     function saveMenu(e) {
       e.preventDefault();
-      const id = document.getElementById('menuId').value || database.ref('daftar_menu').push().key;
+      const id = document.getElementById('menuId').value || database.ref('menu').push().key;
       const data = {
         nama: document.getElementById('menuNama').value,
         kategori: document.getElementById('menuKategori').value,
@@ -420,22 +393,22 @@
         deskripsi: document.getElementById('menuDeskripsi').value
       };
 
-      database.ref('daftar_menu/' + id).set(data).then(() => {
+      database.ref('menu/' + id).set(data).then(() => {
         closeMenuModal();
-        Swal.fire('Berhasil!', 'Menu tersimpan', 'success');
+        Swal.fire({ icon: 'success', title: 'Tersimpan', showConfirmButton: false, timer: 1500 });
       });
     }
 
     function editMenu(id) {
-      database.ref('daftar_menu/' + id).once('value').then(snap => {
+      database.ref('menu/' + id).once('value').then(snap => {
         const item = snap.val();
         document.getElementById('menuId').value = id;
-        document.getElementById('menuNama').value = item.nama;
-        document.getElementById('menuKategori').value = item.kategori;
-        document.getElementById('menuHarga').value = item.harga;
-        document.getElementById('menuStok').value = item.stok;
-        document.getElementById('menuGambar').value = item.gambar;
-        document.getElementById('menuDeskripsi').value = item.deskripsi;
+        document.getElementById('menuNama').value = item.nama || item.name;
+        document.getElementById('menuKategori').value = item.kategori || 'Makanan';
+        document.getElementById('menuHarga').value = item.harga || item.price;
+        document.getElementById('menuStok').value = item.stok || 0;
+        document.getElementById('menuGambar').value = item.gambar || '';
+        document.getElementById('menuDeskripsi').value = item.deskripsi || '';
         
         document.getElementById('modalMenuTitle').innerText = 'Edit Menu';
         document.getElementById('modalMenu').classList.remove('hidden');
@@ -444,11 +417,10 @@
 
     function deleteMenu(id) {
       Swal.fire({ title: 'Hapus menu ini?', icon: 'warning', showCancelButton: true }).then(res => {
-        if(res.isConfirmed) database.ref('daftar_menu/' + id).remove();
+        if(res.isConfirmed) database.ref('menu/' + id).remove();
       });
     }
 
-    // Render Pesanan Masuk & History
     function renderPesanan(data) {
       const containerMasuk = document.getElementById('containerPesananMasuk');
       const containerHistory = document.getElementById('containerHistory');
@@ -463,25 +435,25 @@
         if(item.status === 'Selesai') {
           totalOmset += (item.total || 0);
           htmlHistory += `
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+            <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
               <div>
-                <p class="font-bold">#${key.substr(-6)} - ${item.namaPemesan || 'Pelanggan'}</p>
-                <p class="text-xs text-slate-400">Rp ${(item.total || 0).toLocaleString('id-ID')}</p>
+                <p class="font-bold text-white">#${key.substr(-6)} - ${item.namaPemesan || item.userName || 'Pelanggan'}</p>
+                <p class="text-[10px] text-slate-400">Rp ${(item.total || 0).toLocaleString('id-ID')}</p>
               </div>
-              <span class="text-xs font-bold text-emerald-500">✅ Selesai</span>
+              <span class="font-bold text-emerald-400">✅ Selesai</span>
             </div>
           `;
         } else {
           htmlMasuk += `
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
-              <div class="flex justify-between">
-                <h4 class="font-bold">#${key.substr(-6)} - ${item.namaPemesan || 'Pelanggan'}</h4>
-                <span class="text-xs font-bold text-amber-500">${item.status || 'Menunggu Respon'}</span>
+            <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <h4 class="font-bold text-white">#${key.substr(-6)} - ${item.namaPemesan || item.userName || 'Pelanggan'}</h4>
+                <span class="font-bold text-amber-500">${item.status || 'Menunggu Respon'}</span>
               </div>
-              <p class="text-xs text-slate-500">${item.alamatDetail || '-'}</p>
+              <p class="text-xs text-slate-400">${item.alamatDetail || item.address || '-'}</p>
               <div class="flex justify-between items-center pt-2">
-                <span class="font-bold">Rp ${(item.total || 0).toLocaleString('id-ID')}</span>
-                <select onchange="updateStatus('${key}', this.value)" class="text-xs p-2 rounded-lg border dark:bg-slate-900">
+                <span class="font-black text-amber-400 text-sm">Rp ${(item.total || 0).toLocaleString('id-ID')}</span>
+                <select onchange="updateStatus('${key}', this.value)" class="text-xs p-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-semibold">
                   <option value="Menunggu Respon" ${item.status==='Menunggu Respon'?'selected':''}>Menunggu Respon</option>
                   <option value="Sedang Dimasak" ${item.status==='Sedang Dimasak'?'selected':''}>Sedang Dimasak</option>
                   <option value="Sedang Diantarkan" ${item.status==='Sedang Diantarkan'?'selected':''}>Sedang Diantarkan</option>
@@ -494,18 +466,17 @@
         }
       });
 
-      containerMasuk.innerHTML = htmlMasuk || '<p class="text-slate-400">Tidak ada pesanan aktif.</p>';
-      containerHistory.innerHTML = htmlHistory || '<p class="text-slate-400">Belum ada history.</p>';
+      containerMasuk.innerHTML = htmlMasuk || '<p class="text-xs text-slate-500">Tidak ada pesanan aktif.</p>';
+      containerHistory.innerHTML = htmlHistory || '<p class="text-xs text-slate-500">Belum ada history.</p>';
       
       document.getElementById('statPendapatan').innerText = 'Rp ' + totalOmset.toLocaleString('id-ID');
       document.getElementById('statTotalPesanan').innerText = countPesanan;
     }
 
     function updateStatus(id, status) {
-      database.ref('pesanan/' + id + '/status').set(status);
+      database.ref('orders/' + id + '/status').set(status);
     }
 
-    // Render Users
     function renderUsers(users) {
       const container = document.getElementById('tablePenggunaBody');
       if (!users) return;
@@ -515,11 +486,10 @@
         const u = users[uid];
         html += `
           <tr>
-            <td class="p-4 font-mono text-xs">${uid.substr(0,8)}...</td>
-            <td class="p-4 font-bold">${u.nama || '-'}</td>
-            <td class="p-4">${u.email || '-'}</td>
-            <td class="p-4">${u.telepon || '-'}</td>
-            <td class="p-4">${u.alamat || '-'}</td>
+            <td class="p-3 font-bold text-white">${u.nama || u.name || '-'}</td>
+            <td class="p-3">${u.email || '-'}</td>
+            <td class="p-3">${u.telepon || u.phone || '-'}</td>
+            <td class="p-3">${u.alamat || u.address || '-'}</td>
           </tr>
         `;
       });
@@ -527,16 +497,29 @@
       document.getElementById('statTotalPelanggan').innerText = count;
     }
 
-    // Theme Switcher
-    function setTheme(theme) {
-      if(theme === 'dark') document.documentElement.classList.add('dark');
-      else document.documentElement.classList.remove('dark');
+    function renderRating(reviews) {
+      const container = document.getElementById('containerRating');
+      if(!reviews) return container.innerHTML = '<p class="text-xs text-slate-500">Belum ada ulasan.</p>';
+      let html = '';
+      Object.keys(reviews).forEach(id => {
+        const r = reviews[id];
+        html += `
+          <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-800 space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-white">${r.nama || 'Pelanggan'}</span>
+              <span class="text-amber-400 font-bold">⭐ ${r.rating || 5}.0</span>
+            </div>
+            <p class="text-xs text-slate-300 italic">"${r.ulasan || r.comment || '-'}"</p>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
     }
 
-    // Chart ApexCharts
     function initChart() {
       const options = {
-        chart: { type: 'area', height: 240, toolbar: { show: false } },
+        chart: { type: 'area', height: 200, toolbar: { show: false }, background: 'transparent' },
+        theme: { mode: 'dark' },
         series: [{ name: 'Pendapatan', data: [30, 40, 35, 50, 49, 60, 70] }],
         xaxis: { categories: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'] },
         colors: ['#f59e0b']

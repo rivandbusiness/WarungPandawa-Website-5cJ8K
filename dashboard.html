@@ -15,9 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Menambahkan Firebase Storage untuk Upload Video) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
     <style>
@@ -47,7 +48,7 @@
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
         body { margin: 0; background: var(--bg); color: var(--text-main); transition: 0.2s ease; display: flex; }
 
-        /* Login Overlay */
+        /* Login Overlay Clean */
         #login-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; box-shadow: var(--shadow); }
         .btn-google { background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 10px; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; margin-top: 24px; font-size: 14px; }
@@ -61,7 +62,8 @@
         .admin-name { font-weight: 700; font-size: 14px; color: var(--text-main); }
         .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 12px; word-break: break-all; }
         .btn-logout { background: #fef2f2; color: #ef4444; border: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
-        
+        .btn-logout:hover { background: #fee2e2; }
+
         .nav-section { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: 700; margin: 20px 20px 8px 20px; letter-spacing: 0.8px; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--text-sub); text-decoration: none; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: 0.2s; border-radius: 0 8px 8px 0; margin-right: 12px; }
         .nav-item:hover { color: var(--primary); background: var(--primary-light); }
@@ -82,9 +84,13 @@
         .stat-value { font-size: 22px; font-weight: 700; color: var(--text-main); }
 
         .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
-        
+        .chart-filters { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; }
+        .filter-btn { background: var(--bg); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-sub); cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
         .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-        
+        .btn-primary:hover { opacity: 0.9; }
+
         .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
         .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px; display: flex; gap: 16px; align-items: center; box-shadow: var(--shadow); }
         .menu-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; }
@@ -130,7 +136,7 @@
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- LAYAR LOGIN ADMIN OVERLAY -->
 <div id="login-screen">
     <div class="login-card">
         <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--primary);"></i>
@@ -181,6 +187,7 @@
         <div class="section-header">
             <h2 class="section-title">Ringkasan Penjualan</h2>
         </div>
+        
         <div class="grid-3">
             <div class="stat-card">
                 <div class="stat-title">Pendapatan</div>
@@ -195,8 +202,16 @@
                 <div class="stat-value" id="stat-pelanggan">0</div>
             </div>
         </div>
+
         <div class="chart-container">
-            <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px;">Grafik Pendapatan 7 Hari</div>
+            <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px;">Grafik Pendapatan</div>
+            <div class="chart-filters">
+                <button class="filter-btn active">Hari ini</button>
+                <button class="filter-btn">7 hari</button>
+                <button class="filter-btn">30 hari</button>
+                <button class="filter-btn">Bulan ini</button>
+                <button class="filter-btn">Tahun ini</button>
+            </div>
             <canvas id="revenueChart" height="100"></canvas>
         </div>
     </div>
@@ -207,71 +222,118 @@
             <h2 class="section-title">Daftar Menu</h2>
             <button class="btn-primary" onclick="resetMenuForm(); openModal('modal-menu')"><i class="fa-solid fa-plus"></i> Tambah Menu</button>
         </div>
-        <div class="menu-list" id="admin-menu-list"></div>
+        <div class="menu-list" id="admin-menu-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat menu...</div>
+        </div>
     </div>
 
     <!-- TAB: PESANAN MASUK -->
     <div id="tab-pesanan-masuk" class="tab-content" style="display: none;">
-        <div class="section-header"><h2 class="section-title">Pesanan Masuk</h2></div>
-        <div id="admin-order-list"></div>
+        <div class="section-header">
+            <h2 class="section-title">Pesanan Masuk</h2>
+        </div>
+        <div id="admin-order-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat pesanan...</div>
+        </div>
     </div>
 
-    <!-- TAB: PENGGUNA -->
+    <!-- TAB: PENGGUNA AKTIF -->
     <div id="tab-pengguna" class="tab-content" style="display: none;">
-        <div class="section-header"><h2 class="section-title">Pengguna Aktif</h2></div>
+        <div class="section-header">
+            <h2 class="section-title">Tabel Pengguna Aktif</h2>
+        </div>
         <div class="table-wrapper">
             <table>
-                <thead><tr><th>ID</th><th>Nama</th><th>Email</th><th>No HP</th><th>Alamat</th></tr></thead>
-                <tbody id="admin-user-list"></tbody>
+                <thead>
+                    <tr>
+                        <th>ID Pelanggan</th>
+                        <th>Nama Lengkap</th>
+                        <th>Email</th>
+                        <th>No. Telepon</th>
+                        <th>Alamat Utama</th>
+                        <th>Kode Pos</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-user-list">
+                    <tr><td colspan="6" style="text-align:center;">Memuat pengguna...</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <!-- TAB: HISTORY -->
+    <!-- TAB: HISTORY PESANAN -->
     <div id="tab-history" class="tab-content" style="display: none;">
-        <div class="section-header"><h2 class="section-title">History Pesanan</h2></div>
-        <div id="admin-history-list"></div>
+        <div class="section-header">
+            <h2 class="section-title">History Pesanan</h2>
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <select class="form-control" style="width: 160px;">
+                <option>Semua Kategori</option>
+                <option>Bulan Ini</option>
+            </select>
+            <input type="text" class="form-control" placeholder="🔍 Cari ID / Nama Pelanggan...">
+        </div>
+        <div id="admin-history-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat history...</div>
+        </div>
     </div>
 
-    <!-- TAB: RATING -->
+    <!-- TAB: RATING PELANGGAN -->
     <div id="tab-rating" class="tab-content" style="display: none;">
-        <div class="section-header"><h2 class="section-title">Rating Pelanggan</h2></div>
+        <div class="section-header">
+            <h2 class="section-title">Rating Pelanggan</h2>
+        </div>
         <div class="rating-summary">
             <div id="rating-average" style="font-size:36px;font-weight:700;color:#f59e0b;">0.0</div>
             <div id="rating-stars" style="color:#f59e0b;font-size:18px;margin:4px 0;">☆☆☆☆☆</div>
             <div id="rating-count" style="font-size:12px;color:var(--text-sub);">Berdasarkan 0 Ulasan</div>
         </div>
-        <div id="admin-rating-list"></div>
+        <div id="admin-rating-list">
+            <div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada ulasan.</div>
+        </div>
     </div>
 
-    <!-- TAB: VIDEO BOARD -->
+    <!-- TAB: VIDEO BOARD BANNER -->
     <div id="tab-board" class="tab-content" style="display: none;">
         <div class="section-header">
             <h2 class="section-title">Pengaturan Video Banner</h2>
         </div>
         <div class="chart-container">
             <label style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 12px; color: var(--text-sub);">
-                URL Video (Maksimal 10 Detik, Tanpa Suara)
+                Pilih Video dari Galeri (Maksimal 10 Detik, Tanpa Suara)
             </label>
             <div class="form-group">
-                <input type="url" id="board-video-url" class="form-control" placeholder="Masukkan Link URL Video (MP4)...">
+                <input type="file" id="board-video-file" accept="video/mp4,video/webm,video/*" class="form-control" onchange="previewVideo(event)">
             </div>
+            
+            <video id="video-preview" style="width: 100%; max-width: 400px; border-radius: 12px; display: none; margin-bottom: 12px; border: 2px dashed var(--border-color);" controls autoplay muted></video>
+            
             <div style="font-size:12px; color:var(--text-sub); margin-bottom: 16px;">
-                ⚠️ Sistem otomatis menolak video jika durasi melebihi 10 detik agar web tidak berat. Kosongkan & Simpan untuk mematikan banner.
+                ⚠️ Sistem otomatis menolak video jika durasi melebihi 10 detik agar web toko tidak berat saat diakses pelanggan.
             </div>
-            <button class="btn-primary" onclick="simpanVideoBoard()">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Video
-            </button>
+            
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="simpanVideoBoard()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Simpan
+                </button>
+                <button class="btn-primary" style="background: #ef4444; border:none;" onclick="hapusVideoBoard()">
+                    <i class="fa-solid fa-trash"></i> Hapus Banner
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- TAB: TEMA -->
     <div id="tab-tema" class="tab-content" style="display: none;">
-        <div class="section-header"><h2 class="section-title">Pengaturan Tampilan</h2></div>
+        <div class="section-header">
+            <h2 class="section-title">Pengaturan Tampilan</h2>
+        </div>
         <div class="chart-container">
+            <label style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 12px; color: var(--text-sub);">Mode Tema Layar</label>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-                <button id="btn-theme-light" class="btn-primary" style="background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);" onclick="setTheme('light')"><i class="fa-solid fa-sun"></i> Terang</button>
-                <button id="btn-theme-dark" class="btn-primary" style="background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);" onclick="setTheme('dark')"><i class="fa-solid fa-moon"></i> Gelap</button>
+                <button id="btn-theme-light" class="filter-btn active" onclick="setTheme('light')" style="padding: 12px;"><i class="fa-solid fa-sun"></i> Terang</button>
+                <button id="btn-theme-dark" class="filter-btn" onclick="setTheme('dark')" style="padding: 12px;"><i class="fa-solid fa-moon"></i> Gelap</button>
+                <button id="btn-theme-auto" class="filter-btn" onclick="setTheme('auto')" style="padding: 12px;"><i class="fa-solid fa-desktop"></i> Ikuti Sistem</button>
             </div>
         </div>
     </div>
@@ -285,15 +347,18 @@
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal('modal-menu')"></i>
         </div>
         <input type="hidden" id="menu-edit-id">
-        <div class="form-group"><label>Nama Menu</label><input id="menu-nama" type="text" class="form-control"></div>
+        <div class="form-group"><label>Nama Menu</label><input id="menu-nama" type="text" class="form-control" placeholder="Contoh: Ayam Geprek"></div>
         <div class="form-group"><label>Kategori</label><input id="menu-kategori" type="text" class="form-control" placeholder="makanan / minuman / cemilan"></div>
-        <div class="form-group"><label>URL Gambar</label><input id="menu-gambar" type="url" class="form-control"></div>
+        <div class="form-group"><label>URL Gambar</label><input id="menu-gambar" type="url" class="form-control" placeholder="https://..."></div>
         <div class="form-group"><label>Deskripsi</label><textarea id="menu-deskripsi" class="form-control" rows="3"></textarea></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div class="form-group"><label>Harga (Rp)</label><input id="menu-harga" type="number" min="0" class="form-control"></div>
             <div class="form-group"><label>Stok</label><input id="menu-stok" type="number" min="0" class="form-control"></div>
         </div>
-        <button class="btn-primary" style="width:100%;justify-content:center;margin-top:10px;" onclick="saveMenu()">Simpan Menu</button>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="form-control" style="background:var(--bg);font-weight:600;cursor:pointer;" onclick="closeModal('modal-menu')">Batal</button>
+            <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveMenu()">Simpan Menu</button>
+        </div>
     </div>
 </div>
 
@@ -306,7 +371,7 @@
         </div>
         <div id="order-detail-body"></div>
         <div class="form-group" style="margin-top: 16px;">
-            <label>Update Status</label>
+            <label>Update Status Pesanan</label>
             <select id="order-status-select" class="form-control">
                 <option>Menunggu Respon</option>
                 <option>Sedang Dimasak</option>
@@ -332,120 +397,293 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const database = firebase.database(), auth = firebase.auth();
+
+const database = firebase.database();
+const auth = firebase.auth();
+const storage = firebase.storage(); // Inisialisasi Firebase Storage
+
 let menuData = {}, orderData = {}, userData = {}, ratingData = {};
 let selectedOrderId = null, selectedMenuId = null, revenueChart = null;
+let selectedVideoFile = null;
 
 const rupiah = n => 'Rp ' + Number(n || 0).toLocaleString('id-ID');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
 
-// AUTH
+/* ================= AUTENTIKASI REALTIME TANPA LOCALSTORAGE / PASS ================= */
+
 auth.onAuthStateChanged(user => {
     if (user) {
-        database.ref('admins/' + user.uid).once('value').then(snapshot => {
-            if (snapshot.exists() && snapshot.val() === true) {
-                document.getElementById('admin-display-name').innerText = user.displayName;
-                document.getElementById('admin-display-email').innerText = user.email;
-                if(user.photoURL) document.getElementById('admin-avatar-img').src = user.photoURL;
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-                initRealtime();
-            } else { auth.signOut(); Swal.fire('Ditolak', 'Bukan Admin!', 'error'); }
-        });
-    } else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('main-content').style.display = 'none'; }
+        database.ref('admins/' + user.uid).once('value')
+            .then(snapshot => {
+                if (snapshot.exists() && snapshot.val() === true) {
+                    updateAdminUI(user);
+                    unlockDashboardAccess();
+                } else {
+                    auth.signOut();
+                    Swal.fire('Akses Ditolak', 'Akun (' + user.email + ') tidak memiliki hak akses Admin!', 'error');
+                    showLoginStep();
+                }
+            }).catch(err => {
+                auth.signOut();
+                Swal.fire('Akses Ditolak', 'Ditolak oleh Firebase Security Rules.', 'error');
+                showLoginStep();
+            });
+    } else {
+        showLoginStep();
+    }
 });
-function loginWithGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-function logout() { auth.signOut(); }
 
-// UI & TABS
-function switchTab(tabId, el) {
+function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(err => Swal.fire('Gagal Login', err.message, 'error'));
+}
+
+function unlockDashboardAccess() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    initRealtime();
+}
+
+function showLoginStep() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'none';
+}
+
+function updateAdminUI(user) {
+    document.getElementById('admin-display-name').innerText = user.displayName || 'Admin Pandawa';
+    document.getElementById('admin-display-email').innerText = user.email;
+    if (user.photoURL) document.getElementById('admin-avatar-img').src = user.photoURL;
+}
+
+function logout() {
+    Swal.fire({
+        title: 'Keluar dari Dashboard?', text: 'Sesi admin Anda akan diakhiri secara aman.', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Logout'
+    }).then(res => { if (res.isConfirmed) auth.signOut(); });
+}
+
+/* ================= MANAJEMEN DASHBOARD & UI ================= */
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchTab(tabId, element) {
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
     document.getElementById('tab-' + tabId).style.display = 'block';
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-    if (innerWidth <= 768) toggleSidebar();
+    element.classList.add('active');
+    if (innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
 }
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function setTheme(t) { document.body.classList.toggle('dark-mode', t==='dark'); }
 
-// MENU CRUD
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+function applyTheme(theme) {
+    document.body.classList.toggle('dark-mode', theme === 'dark' || (theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches));
+    ['light', 'dark', 'auto'].forEach(t => {
+        let b = document.getElementById('btn-theme-' + t);
+        if (b) b.classList.toggle('active', t === theme);
+    });
+}
+function setTheme(theme) { applyTheme(theme); }
+applyTheme('light');
+
+function badge(stok) {
+    stok = Number(stok || 0);
+    return stok <= 0 ? '<span class="stok-badge badge-merah">Habis (0)</span>' : 
+           stok <= 5 ? `<span class="stok-badge badge-kuning">Sisa ${stok}</span>` : 
+           `<span class="stok-badge badge-hijau">Stok ${stok}</span>`;
+}
+
 function renderMenus() {
     let el = document.getElementById('admin-menu-list'), keys = Object.keys(menuData);
-    el.innerHTML = keys.length ? keys.map(id => {
+    if (!keys.length) { el.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada menu di Firebase.</div>'; return; }
+    el.innerHTML = keys.map(id => {
         let m = menuData[id] || {};
-        return `<div class="menu-item"><img src="${esc(m.gambar)}" class="menu-img"><div class="menu-info"><div style="font-weight:700;font-size:14px;">${esc(m.nama)}</div><div style="font-size:11px;color:var(--text-sub);">${esc(m.kategori)}</div><div style="font-weight:700;color:var(--primary);font-size:13px;margin-top:2px;">${rupiah(m.harga)}</div>${m.stok<=0?'<span class="stok-badge badge-merah">Habis</span>':`<span class="stok-badge badge-hijau">Stok ${m.stok}</span>`}</div><div><button style="margin-bottom:6px;width:100%;" class="btn-primary" onclick="editMenu('${esc(id)}')">Edit</button><br><button class="btn-primary" style="background:#ef4444;width:100%;" onclick="deleteMenu('${esc(id)}')">Hapus</button></div></div>`;
-    }).join('') : '<p>Belum ada menu.</p>';
+        return `<div class="menu-item"><img src="${esc(m.gambar || 'https://via.placeholder.com/150')}" class="menu-img"><div class="menu-info"><div style="font-weight:700;font-size:14px;">${esc(m.nama || id)}</div><div style="font-size:11px;color:var(--text-sub);">${esc(m.kategori || '-')}</div><div style="font-weight:700;color:var(--primary);font-size:13px;margin-top:2px;">${rupiah(m.harga)}</div>${badge(m.stok)}</div><div style="display:flex;flex-direction:column;gap:6px;"><button style="background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);padding:6px;border-radius:6px;cursor:pointer;" onclick="editMenu('${esc(id)}')"><i class="fa-solid fa-pen"></i></button><button style="background:#fef2f2;color:#ef4444;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="deleteMenu('${esc(id)}')"><i class="fa-solid fa-trash"></i></button></div></div>`;
+    }).join('');
 }
-function resetMenuForm() { selectedMenuId = null; ['menu-edit-id','menu-nama','menu-kategori','menu-gambar','menu-deskripsi','menu-harga','menu-stok'].forEach(id=>document.getElementById(id).value=''); }
+
+function resetMenuForm() {
+    selectedMenuId = null;
+    document.getElementById('menu-edit-id').value = '';
+    document.getElementById('menu-modal-title').innerText = 'Tambah Menu';
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = '');
+}
+
 function editMenu(id) {
-    let m = menuData[id]; selectedMenuId = id;
-    ['nama','kategori','gambar','deskripsi','harga','stok'].forEach(k => document.getElementById('menu-'+k).value = m[k]||'');
+    let m = menuData[id] || {};
+    selectedMenuId = id;
+    document.getElementById('menu-modal-title').innerText = 'Edit Menu';
+    document.getElementById('menu-edit-id').value = id;
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = m[x] ?? '');
     openModal('modal-menu');
 }
-function saveMenu() {
-    let id = selectedMenuId || ('MENU-' + Date.now());
-    let data = { id, nama: document.getElementById('menu-nama').value, kategori: document.getElementById('menu-kategori').value, gambar: document.getElementById('menu-gambar').value, deskripsi: document.getElementById('menu-deskripsi').value, harga: Number(document.getElementById('menu-harga').value), stok: Number(document.getElementById('menu-stok').value) };
-    if(!data.nama) return Swal.fire('Error','Nama wajib','error');
-    database.ref('daftar_menu/'+id).set(data).then(()=> { closeModal('modal-menu'); Swal.fire('Sukses','Tersimpan','success'); });
-}
-function deleteMenu(id) { if(confirm('Hapus menu?')) database.ref('daftar_menu/'+id).remove(); }
 
-// ORDERS
-function statusClass(st) { return st === 'Selesai' || st === 'Lunas' ? 'status-selesai' : 'status-menunggu'; }
-function renderOrders() {
-    let arr = Object.values(orderData).sort((a,b)=>b.waktu-a.waktu);
-    document.getElementById('admin-order-list').innerHTML = arr.filter(o=>o.status!=='Selesai'&&o.status!=='❌ Dibatalkan').map(o=>`<div class="order-card"><div><div style="font-size:11px;font-weight:700;">#${o.id}</div><div style="font-weight:700;">${esc(o.nama)}</div><div><strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status)}</span> <button class="btn-primary" onclick="openOrder('${o.id}')">Detail</button></div></div>`).join('');
-    document.getElementById('admin-history-list').innerHTML = arr.map(o=>`<div class="order-card"><div><b>#${o.id}</b> - ${esc(o.nama)}<br><span style="color:var(--primary);font-weight:700;">${rupiah(o.total)}</span></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status)}</span></div></div>`).join('');
+function saveMenu() {
+    let id = selectedMenuId || ('MENU-' + Date.now()), data = {
+        id: id, nama: document.getElementById('menu-nama').value.trim(), kategori: document.getElementById('menu-kategori').value.trim().toLowerCase(),
+        gambar: document.getElementById('menu-gambar').value.trim(), deskripsi: document.getElementById('menu-deskripsi').value.trim(),
+        harga: Number(document.getElementById('menu-harga').value || 0), stok: Number(document.getElementById('menu-stok').value || 0)
+    };
+    if (!data.nama) return Swal.fire('Nama menu wajib diisi', '', 'warning');
+    database.ref('daftar_menu/' + id).set(data).then(() => { closeModal('modal-menu'); Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1000, showConfirmButton: false }); }).catch(e => Swal.fire('Gagal', e.message, 'error'));
 }
+
+function deleteMenu(id) {
+    Swal.fire({ title: 'Hapus menu?', text: 'Data akan dihapus permanen dari Database.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Hapus'
+    }).then(r => { if (r.isConfirmed) database.ref('daftar_menu/' + id).remove(); });
+}
+
+function statusClass(st) { return st === 'Selesai' || st === 'Lunas' ? 'status-selesai' : 'status-menunggu'; }
+
+function renderOrders() {
+    let arr = Object.entries(orderData).map(([id, o]) => ({ ...o, _id: id })).sort((a, b) => (b.waktu || 0) - (a.waktu || 0));
+    let active = arr.filter(o => !['Selesai', 'Lunas', '❌ Dibatalkan'].includes(o.status));
+    document.getElementById('admin-order-list').innerHTML = active.length ? active.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:700;">#${esc(o.id || o._id)}</div><div style="font-size:14px;font-weight:700;margin:2px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:12px;color:var(--text-sub);">${Array.isArray(o.items) ? o.items.length : Object.keys(o.items || {}).length} Item - <strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div style="display:flex;align-items:center;gap:12px;"><span class="order-status ${statusClass(o.status)}">${esc(o.status || 'Menunggu Respon')}</span><button class="btn-primary" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Tidak ada pesanan aktif.</div>';
+    renderHistory(arr);
+}
+
+function renderHistory(arr) {
+    document.getElementById('admin-history-list').innerHTML = arr.length ? arr.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:700;">#${esc(o.id || o._id)} <span style="margin-left:8px;font-weight:normal;">${o.waktu ? new Date(o.waktu).toLocaleString('id-ID') : ''}</span></div><div style="font-size:14px;font-weight:700;margin:2px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:12px;color:var(--text-sub);"><strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status || '-')}</span><button class="btn-primary" style="margin-left:8px;background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada history pesanan.</div>';
+}
+
 function openOrder(id) {
-    selectedOrderId = id; let o = orderData[id];
-    document.getElementById('order-status-select').value = o.status;
-    document.getElementById('order-detail-body').innerHTML = `<p><b>User:</b> ${esc(o.nama)}<br><b>Total:</b> ${rupiah(o.total)}<br><b>Item:</b> ${Array.isArray(o.items)?o.items.join(', '):''}</p>`;
+    selectedOrderId = id;
+    let o = orderData[id];
+    if (!o) return;
+    document.getElementById('order-modal-title').innerText = 'Detail Pesanan #' + (o.id || id);
+    document.getElementById('order-status-select').value = o.status || 'Menunggu Respon';
+    let items = Array.isArray(o.items) ? o.items : (o.items ? Object.values(o.items) : []);
+    document.getElementById('order-detail-body').innerHTML = `<div style="font-size:13px;line-height:1.6;"><p style="margin:4px 0;"><b>Pelanggan:</b> ${esc(o.nama || '-')}</p><p style="margin:4px 0;"><b>User ID:</b> ${esc(o.userId || '-')}</p><p style="margin:4px 0;"><b>Alamat:</b> ${esc(o.alamat || '-')}</p><p style="margin:4px 0;"><b>Pembayaran:</b> ${esc(o.pembayaran || '-')} (${esc(o.metode || '-')})</p><hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;"><b>Rincian Item:</b><div style="margin-top:6px;">${items.map(x => `<div style="display:flex;justify-content:space-between;padding:3px 0;">${esc(x.nama || x)} <span>${x.qty ? `x${esc(x.qty)}` : ''}</span></div>`).join('')}</div><p style="font-weight:700;color:var(--primary);text-align:right;font-size:15px;margin-top:10px;">Total: ${rupiah(o.total)}</p></div>`;
     openModal('modal-detail-order');
 }
+
 function updateOrder() {
-    database.ref('pesanan/'+selectedOrderId+'/status').set(document.getElementById('order-status-select').value).then(()=>{
-        closeModal('modal-detail-order'); Swal.fire('Sukses','Status Diperbarui','success');
+    if (!selectedOrderId) return;
+    database.ref('pesanan/' + selectedOrderId + '/status').set(document.getElementById('order-status-select').value).then(() => { closeModal('modal-detail-order'); Swal.fire({ icon: 'success', title: 'Status diperbarui', timer: 900, showConfirmButton: false }); }).catch(e => Swal.fire('Gagal', e.message, 'error'));
+}
+
+function renderUsers() {
+    let arr = Object.entries(userData);
+    document.getElementById('admin-user-list').innerHTML = arr.length ? arr.map(([uid, u]) => {
+        let a = u.alamat_list || {}; let main = Object.values(a).find(x => x.isUtama) || Object.values(a)[0] || {};
+        return `<tr><td style="font-family:monospace;font-size:11px;">${esc(uid)}</td><td>${esc(u.nama || '-')}</td><td>${esc(u.email || '-')}</td><td>${esc(main.hp || '-')}</td><td>${esc(main.jalan || '-')}</td><td>${esc(main.kodePos || '-')}</td></tr>`;
+    }).join('') : '<tr><td colspan="6" style="text-align:center;">Belum ada pengguna.</td></tr>';
+}
+
+function renderRatings() {
+    let arr = Object.values(ratingData || {}), sum = arr.reduce((a, r) => a + Number(r.rating || 0), 0), avg = arr.length ? sum / arr.length : 0;
+    document.getElementById('rating-average').innerText = avg.toFixed(1);
+    document.getElementById('rating-stars').innerText = '★★★★★'.split('').map((x, i) => i < Math.round(avg) ? '★' : '☆').join('');
+    document.getElementById('rating-count').innerText = `Berdasarkan ${arr.length} Ulasan`;
+    document.getElementById('admin-rating-list').innerHTML = arr.length ? arr.reverse().map(r => `<div class="rating-card"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong>${esc(r.nama || 'Pelanggan')}</strong><span style="color:#f59e0b;font-size:12px;">${'★'.repeat(Number(r.rating || 0))}${'☆'.repeat(5 - Number(r.rating || 0))} ${Number(r.rating || 0)}.0</span></div><div style="font-size:13px;color:var(--text-sub);">${esc(r.ulasan || r.review || '')}</div></div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--text-sub);">Belum ada ulasan.</div>';
+}
+
+function renderStats() {
+    let orders = Object.values(orderData || {}), users = Object.keys(userData || {});
+    let completed = orders.filter(o => o.status === 'Selesai' || o.status === 'Lunas');
+    let revenue = completed.reduce((a, o) => a + Number(o.total || 0), 0);
+    document.getElementById('stat-pendapatan').innerText = rupiah(revenue);
+    document.getElementById('stat-selesai').innerText = completed.length;
+    document.getElementById('stat-pelanggan').innerText = users.length;
+    updateChart(orders);
+}
+
+function updateChart(orders) {
+    let days = [];
+    for (let i = 6; i >= 0; i--) { let d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i); days.push(d); }
+    let labels = days.map(d => d.toLocaleDateString('id-ID', { weekday: 'short' }));
+    let data = days.map(d => orders.filter(o => { let x = new Date(o.waktu || 0); return (o.status === 'Selesai' || o.status === 'Lunas') && x.toDateString() === d.toDateString(); }).reduce((a, o) => a + Number(o.total || 0), 0));
+
+    let ctx = document.getElementById('revenueChart').getContext('2d');
+    let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(255, 107, 53, 0.2)');
+    gradient.addColorStop(1, 'rgba(255, 107, 53, 0)');
+
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctx, {
+        type: 'line', data: { labels, datasets: [{ label: 'Pendapatan', data, borderColor: '#ff6b35', backgroundColor: gradient, borderWidth: 2, pointBackgroundColor: '#ff6b35', pointRadius: 3, fill: true, tension: 0.3 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.4)' } }, x: { grid: { display: false } } } }
     });
 }
 
-// USERS & SETTINGS
-function renderUsers() {
-    document.getElementById('admin-user-list').innerHTML = Object.entries(userData).map(([uid, u])=>`<tr><td>${uid.substring(0,8)}</td><td>${esc(u.nama)}</td><td>${esc(u.email)}</td><td>-</td><td>-</td></tr>`).join('');
-}
+/* ================= VIDEO BANNER (PILIH DARI GALERI) ================= */
+function previewVideo(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-// ================= VIDEO BANNER LOGIC =================
-database.ref('settings/banner_video').on('value', snap => {
-    if (snap.exists() && document.getElementById('board-video-url')) document.getElementById('board-video-url').value = snap.val();
-});
+    selectedVideoFile = file;
+    const vidPreview = document.getElementById('video-preview');
+    vidPreview.src = URL.createObjectURL(file);
+    vidPreview.style.display = 'block';
 
-function simpanVideoBoard() {
-    const url = document.getElementById('board-video-url').value.trim();
-    if (!url) {
-        database.ref('settings/banner_video').remove();
-        Swal.fire('Dihapus', 'Video banner dimatikan.', 'success');
-        return;
-    }
-
-    Swal.fire({ title: 'Memeriksa Durasi...', didOpen: () => Swal.showLoading() });
-    const vid = document.createElement('video');
-    vid.src = url;
-    vid.onloadedmetadata = function() {
-        if (vid.duration > 10.5) { 
-            Swal.fire('Gagal!', `Durasi video ${vid.duration.toFixed(1)} detik. Maksimal hanya 10 detik!`, 'error');
-        } else {
-            database.ref('settings/banner_video').set(url).then(() => Swal.fire('Berhasil!', 'Video banner berhasil diperbarui.', 'success'));
+    // Memeriksa metadata saat video dimuat di memori browser
+    vidPreview.onloadedmetadata = function() {
+        if (vidPreview.duration > 10.5) { 
+            Swal.fire('Video Terlalu Panjang!', `Durasi file ini ${vidPreview.duration.toFixed(1)} detik. Maksimal hanya 10 detik!`, 'error');
+            document.getElementById('board-video-file').value = '';
+            vidPreview.style.display = 'none';
+            selectedVideoFile = null;
         }
     };
-    vid.onerror = function() { Swal.fire('Gagal!', 'Format URL video tidak valid atau gagal dimuat!', 'error'); };
+}
+
+function simpanVideoBoard() {
+    if (!selectedVideoFile) return Swal.fire('Peringatan', 'Silakan klik "Choose File" / "Pilih File" dari galeri Anda terlebih dahulu.', 'warning');
+
+    Swal.fire({ title: 'Mengupload Video...', text: 'Tergantung kecepatan internet Anda', didOpen: () => Swal.showLoading() });
+
+    // Menyimpan video ke Firebase Storage dengan nama unik
+    const videoRef = storage.ref().child('settings/banner_video_master.mp4');
+    videoRef.put(selectedVideoFile).then((snapshot) => {
+        return snapshot.ref.getDownloadURL();
+    }).then((downloadURL) => {
+        // Simpan URL unduhan video ke Firebase Realtime Database
+        return database.ref('settings/banner_video').set(downloadURL);
+    }).then(() => {
+        Swal.fire('Berhasil!', 'Video banner tersimpan dan tampil di toko.', 'success');
+        document.getElementById('board-video-file').value = '';
+        selectedVideoFile = null;
+    }).catch(error => {
+        Swal.fire('Gagal Upload!', error.message, 'error');
+    });
+}
+
+function hapusVideoBoard() {
+    Swal.fire({
+        title: 'Hapus Video Banner?', text: 'Banner video akan dihilangkan dari tampilan pelanggan.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Ya, Hapus'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            database.ref('settings/banner_video').remove().then(() => {
+                // Opsional: Hapus juga dari storage untuk menghemat ruang
+                storage.ref().child('settings/banner_video_master.mp4').delete().catch(e=>console.log(e));
+                
+                document.getElementById('video-preview').style.display = 'none';
+                document.getElementById('video-preview').src = '';
+                document.getElementById('board-video-file').value = '';
+                Swal.fire('Dihapus!', 'Video banner telah dinonaktifkan.', 'success');
+            });
+        }
+    });
 }
 
 function initRealtime() {
     database.ref('daftar_menu').on('value', s => { menuData = s.val() || {}; renderMenus(); });
-    database.ref('pesanan').on('value', s => { orderData = s.val() || {}; renderOrders(); });
-    database.ref('users').on('value', s => { userData = s.val() || {}; renderUsers(); });
+    database.ref('pesanan').on('value', s => { orderData = s.val() || {}; renderOrders(); renderStats(); });
+    database.ref('users').on('value', s => { userData = s.val() || {}; renderUsers(); renderStats(); });
+    database.ref('ratings').on('value', s => { ratingData = s.val() || {}; renderRatings(); });
+    
+    // Listener Banner Video Aktif
+    database.ref('settings/banner_video').on('value', snap => {
+        const url = snap.val();
+        const vidPreview = document.getElementById('video-preview');
+        if (url) {
+            vidPreview.src = url;
+            vidPreview.style.display = 'block';
+        } else {
+            vidPreview.style.display = 'none';
+            vidPreview.src = '';
+        }
+    });
 }
 </script>
 </body>

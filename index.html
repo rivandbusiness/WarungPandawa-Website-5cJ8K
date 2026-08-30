@@ -25,29 +25,30 @@
 
     <style>
         :root {
-            --primary: #ff6b35;
-            --primary-light: rgba(255, 107, 53, 0.08);
-            --secondary: #0f172a;
+            --primary: #ff6b35;          /* Warna Oranye Utama */
+            --primary-light: rgba(255, 107, 53, 0.1);
+            --secondary: #004e64;        /* Warna Biru Navy Utama */
+            --secondary-light: rgba(0, 78, 100, 0.08);
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-sub: #64748b;
-            --border-color: #f1f5f9;
+            --border-color: #e2e8f0;
             --radius: 16px;
-            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
+            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.05);
         }
 
         body.dark-mode {
-            --bg: #0b0f19;
-            --card-bg: #151c2c;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --border-color: #1e293b;
-            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.25);
+            --border-color: #334155;
+            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.3);
         }
 
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-        body { margin: 0; padding: 16px; background: var(--bg); color: var(--text-main); padding-bottom: 96px; transition: background 0.3s, color 0.3s; }
+        body { margin: 0; padding: 15px; background: var(--bg); color: var(--text-main); padding-bottom: 96px; transition: background 0.3s, color 0.3s; }
         .container { max-width: 680px; margin: auto; }
         
         .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: var(--card-bg); padding: 12px 18px; border-radius: 14px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
@@ -58,7 +59,7 @@
         /* Clean Drawer Navigation Styling */
         .drawer-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(15, 23, 42, 0.4); 
+            background: rgba(0, 78, 100, 0.4); 
             backdrop-filter: blur(4px); 
             z-index: 1000; opacity: 0; visibility: hidden; 
             transition: all 0.3s ease; 
@@ -69,7 +70,7 @@
             position: fixed; top: 0; right: -320px; width: 300px; height: 100%; 
             background: var(--card-bg); color: var(--text-main); 
             z-index: 1001; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding: 24px 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.08); 
+            padding: 24px 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.1); 
             display: flex; flex-direction: column; 
             border-top-left-radius: 20px; border-bottom-left-radius: 20px;
         }
@@ -80,7 +81,9 @@
             padding-bottom: 16px; margin-bottom: 20px; 
             border-bottom: 1px solid var(--border-color); 
         }
-        .drawer-header strong { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .drawer-header strong { font-size: 16px; font-weight: 700; color: var(--secondary); }
+        body.dark-mode .drawer-header strong { color: var(--primary); }
+
         .close-drawer-btn {
             background: var(--bg); border: none; width: 32px; height: 32px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -99,7 +102,7 @@
         .user-avatar { 
             width: 100%; height: 100%; border-radius: 50%; 
             object-fit: cover; border: 2.5px solid var(--primary); 
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
         }
         .user-name { font-weight: 700; font-size: 14.5px; color: var(--text-main); margin-bottom: 2px; }
         .user-email { font-size: 11.5px; color: var(--text-sub); word-break: break-all; }
@@ -128,13 +131,13 @@
         .modal-full-header { background: var(--secondary); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .modal-full-body { padding: 20px; flex: 1; overflow-y: auto; max-width: 600px; margin: 0 auto; width: 100%; }
 
-        .header { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 24px 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow); }
+        .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 24px 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow); }
         .header h1 { margin: 0; font-size: 20px; font-weight: 700; }
-        .header p { margin: 6px 0 0 0; font-size: 12px; opacity: 0.8; }
+        .header p { margin: 6px 0 0 0; font-size: 12px; opacity: 0.9; }
 
         .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; scrollbar-width: none; }
         .category-container::-webkit-scrollbar { display: none; }
-        .cat-btn { background: var(--card-bg); color: var(--text-sub); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* MENU GRID CLEAN */
@@ -204,7 +207,7 @@
         .btn-qty:disabled { opacity: 0.3; cursor: not-allowed; }
         .qty-val { font-weight: 700; font-size: 13px; color: var(--text-main); }
 
-        .cart-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 640px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3); z-index: 99; }
+        .cart-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 640px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0, 78, 100, 0.3); z-index: 99; }
         .btn-checkout { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; }
         .btn-checkout:hover { opacity: 0.9; }
 
@@ -576,7 +579,7 @@
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
                     <div class="drawer-item-left">
-                        <div class="drawer-icon-box" style="color:var(--primary); background:rgba(255,107,53,0.08); border-color:transparent;"><i class="fa-solid fa-circle-user"></i></div>
+                        <div class="drawer-icon-box" style="color:var(--primary); background:rgba(255,107,53,0.1); border-color:transparent;"><i class="fa-solid fa-circle-user"></i></div>
                         <span>Profil Pelanggan</span>
                     </div>
                     <i class="fa-solid fa-chevron-right drawer-arrow"></i>
@@ -584,7 +587,7 @@
 
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
                     <div class="drawer-item-left">
-                        <div class="drawer-icon-box" style="color:#6366f1; background:rgba(99,102,241,0.08); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
+                        <div class="drawer-icon-box" style="color:var(--secondary); background:rgba(0,78,100,0.1); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
                         <span>Pengaturan</span>
                     </div>
                     <i class="fa-solid fa-chevron-right drawer-arrow"></i>
@@ -592,7 +595,7 @@
 
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
                     <div class="drawer-item-left">
-                        <div class="drawer-icon-box" style="color:#f59e0b; background:rgba(245,158,11,0.08); border-color:transparent;"><i class="fa-solid fa-star"></i></div>
+                        <div class="drawer-icon-box" style="color:#f59e0b; background:rgba(245,158,11,0.1); border-color:transparent;"><i class="fa-solid fa-star"></i></div>
                         <span>Beri Ulasan & Rating</span>
                     </div>
                     <i class="fa-solid fa-chevron-right drawer-arrow"></i>
@@ -610,7 +613,7 @@
                 </button>
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
                     <div class="drawer-item-left">
-                        <div class="drawer-icon-box" style="color:#6366f1; background:rgba(99,102,241,0.08); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
+                        <div class="drawer-icon-box" style="color:var(--secondary); background:rgba(0,78,100,0.1); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
                         <span>Pengaturan</span>
                     </div>
                     <i class="fa-solid fa-chevron-right drawer-arrow"></i>
@@ -761,7 +764,7 @@
         keys.forEach(key => {
             let item = alamatList[key];
             box.innerHTML += `
-                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : 'var(--border-color)'}; background:${item.isUtama ? 'rgba(255,107,53,0.1)' : 'var(--bg)'}; border-radius:12px; padding:12px; margin-bottom:12px;">
+                <div style="border:1px solid ${item.isUtama ? 'var(--primary)' : 'var(--border-color)'}; background:${item.isUtama ? 'rgba(255,107,53,0.08)' : 'var(--bg)'}; border-radius:12px; padding:12px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong>🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px;">Utama</span>' : ''}</strong>
                         <button onclick="setAlamatUtama('${key}')" style="font-size:11px; border:none; background:var(--border-color); color:var(--text-main); padding:4px 8px; border-radius:4px; cursor:pointer;" ${item.isUtama ? 'disabled' : ''}>${item.isUtama ? 'Utama' : 'Set Utama'}</button>

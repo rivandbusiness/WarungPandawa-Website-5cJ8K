@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RivandCronz - E-Commerce App</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -19,77 +26,132 @@
     <style>
         :root {
             --primary: #ff6b35;
-            --secondary: #004e64;
+            --primary-light: rgba(255, 107, 53, 0.08);
+            --secondary: #0f172a;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-sub: #64748b;
-            --border-color: #e2e8f0;
+            --border-color: #f1f5f9;
+            --radius: 16px;
+            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
         }
 
         body.dark-mode {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
+            --bg: #0b0f19;
+            --card-bg: #151c2c;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --border-color: #334155;
+            --border-color: #1e293b;
+            --shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.25);
         }
 
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: var(--text-main); padding-bottom: 90px; transition: background 0.3s, color 0.3s; }
-        .container { max-width: 600px; margin: auto; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+        body { margin: 0; padding: 16px; background: var(--bg); color: var(--text-main); padding-bottom: 96px; transition: background 0.3s, color 0.3s; }
+        .container { max-width: 680px; margin: auto; }
         
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--card-bg); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .brand-logo { font-weight: bold; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: var(--card-bg); padding: 12px 18px; border-radius: 14px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
+        .brand-logo { font-weight: 700; font-size: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
         body.dark-mode .brand-logo { color: var(--primary); }
-        .hamburger-btn { background: var(--bg); border: none; font-size: 18px; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .hamburger-btn { background: var(--bg); border: none; font-size: 16px; color: var(--text-main); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer-content { position: fixed; top: 0; right: -290px; width: 290px; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1001; transition: 0.3s ease-in-out; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .drawer-content { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1001; transition: 0.3s ease-in-out; padding: 24px; box-shadow: -5px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .drawer-content.active { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px; }
 
-        .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 14px; margin-bottom: 16px; }
         .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
         
-        /* Clean Navigation Items */
-        .drawer-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
+        .drawer-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 13.5px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
         .drawer-item:hover { background: var(--bg); }
-        .drawer-item i { font-size: 18px; width: 22px; text-align: center; }
+        .drawer-item i { font-size: 17px; width: 22px; text-align: center; }
 
         .modal-full-container { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1005; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         .modal-full-container.active { bottom: 0; }
         .modal-full-header { background: var(--secondary); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .modal-full-body { padding: 20px; flex: 1; overflow-y: auto; max-width: 600px; margin: 0 auto; width: 100%; }
 
-        .header { background: linear-gradient(135deg, #004e64, #2575fc); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; }
-        .header h1 { margin: 0; font-size: 22px; }
+        .header { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 24px 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow); }
+        .header h1 { margin: 0; font-size: 20px; font-weight: 700; }
+        .header p { margin: 6px 0 0 0; font-size: 12px; opacity: 0.8; }
 
-        .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
-        .cat-btn { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .category-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; scrollbar-width: none; }
+        .category-container::-webkit-scrollbar { display: none; }
+        .cat-btn { background: var(--card-bg); color: var(--text-sub); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .menu-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 12px; display: flex; gap: 12px; align-items: center; transition: 0.2s; }
-        .menu-card.out-of-stock { opacity: 0.5; filter: grayscale(80%); }
-        .menu-img { width: 85px; height: 85px; border-radius: 10px; object-fit: cover; background: var(--bg); flex-shrink: 0; }
-        .menu-info { flex: 1; }
-        .menu-title { font-weight: bold; font-size: 15px; color: var(--text-main); }
-        .menu-desc { font-size: 11px; color: var(--text-sub); margin-bottom: 6px; }
-        .menu-price { font-size: 14px; font-weight: bold; color: var(--primary); }
+        /* TAMPILAN CLEAN MENU GRID (2 Kolom di Ponsel) */
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        @media (max-width: 360px) {
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+        @media (min-width: 600px) {
+            .menu-grid { grid-template-columns: repeat(3, 1fr); }
+        }
 
-        .stok-badge { display: inline-block; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
-        .stok-ready { background: #dcfce7; color: #15803d; }
-        .stok-empty { background: #fee2e2; color: #b91c1c; }
+        .menu-card { 
+            background: var(--card-bg); 
+            border-radius: var(--radius); 
+            border: 1px solid var(--border-color); 
+            padding: 12px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            box-shadow: var(--shadow); 
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-card:hover { transform: translateY(-2px); }
+        .menu-card.out-of-stock { opacity: 0.65; filter: grayscale(90%); }
 
-        .counter-box { display: flex; align-items: center; gap: 8px; }
-        .btn-qty { background: var(--bg); border: 1px solid var(--border-color); width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--text-main); }
-        .btn-qty:disabled { opacity: 0.4; cursor: not-allowed; }
-        .qty-val { font-weight: bold; font-size: 14px; width: 16px; text-align: center; color: var(--text-main); }
+        .menu-img-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* Aspect Ratio 4:3 */
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg);
+            margin-bottom: 10px;
+        }
 
-        .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 580px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99; }
-        .btn-checkout { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .menu-img { 
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+        }
+
+        .stok-badge { 
+            position: absolute;
+            top: 8px; left: 8px;
+            font-size: 10px; 
+            font-weight: 700; 
+            padding: 3px 8px; 
+            border-radius: 12px; 
+            backdrop-filter: blur(4px);
+        }
+        .stok-ready { background: rgba(220, 252, 231, 0.9); color: #15803d; }
+        .stok-empty { background: rgba(254, 226, 226, 0.9); color: #b91c1c; }
+
+        .menu-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .menu-title { font-weight: 700; font-size: 13.5px; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
+        .menu-desc { font-size: 11px; color: var(--text-sub); margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        
+        .menu-bottom { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+        .menu-price { font-size: 14px; font-weight: 700; color: var(--primary); }
+
+        .counter-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 3px; }
+        .btn-qty { background: var(--card-bg); border: 1px solid var(--border-color); width: 28px; height: 28px; border-radius: 8px; font-weight: 700; cursor: pointer; color: var(--text-main); display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+        .btn-qty:active { transform: scale(0.9); }
+        .btn-qty:disabled { opacity: 0.3; cursor: not-allowed; }
+        .qty-val { font-weight: 700; font-size: 13px; color: var(--text-main); }
+
+        .cart-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 640px; background: var(--secondary); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3); z-index: 99; }
+        .btn-checkout { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .btn-checkout:hover { opacity: 0.9; }
 
         .checkout-input { width: 100% !important; margin: 0 0 10px 0 !important; box-sizing: border-box !important; padding: 10px 12px !important; border: 1.5px solid var(--border-color) !important; border-radius: 8px !important; font-size: 13px !important; background: var(--card-bg); color: var(--text-main); }
         .prof-field { text-align: left; margin-bottom: 12px; }
@@ -98,10 +160,9 @@
         #map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 2000; display: none; flex-direction: column; }
         #map-container { width: 100%; flex: 1; }
 
-        /* Style Last Update GitHub Commit Log */
         .commit-card { border-left: 3px solid var(--primary); background: var(--bg); padding: 12px; border-radius: 0 10px 10px 0; margin-bottom: 12px; border: 1px solid var(--border-color); border-left-width: 4px; }
         .commit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .commit-ver { font-weight: bold; font-size: 13px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .commit-ver { font-weight: 700; font-size: 13px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         .commit-date { font-size: 11px; color: var(--text-sub); }
         .commit-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-main); line-height: 1.5; }
     </style>
@@ -116,7 +177,7 @@
 
     <div class="header">
         <h1>Daftar Menu</h1>
-        <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">Pilih menu favoritmu & pesan langsung!</p>
+        <p>Pilih menu favoritmu & pesan langsung!</p>
     </div>
 
     <div class="category-container">
@@ -127,14 +188,14 @@
     </div>
 
     <div id="user-menu-list" class="menu-grid">
-        <p style="text-align: center; color: var(--text-sub); padding: 30px;">Memuat menu...</p>
+        <p style="grid-column: 1 / -1; text-align: center; color: var(--text-sub); padding: 40px 0;">Memuat menu...</p>
     </div>
 </div>
 
 <div class="cart-bar">
     <div>
         <span style="font-size: 11px; opacity: 0.8; display: block;">Total Pesanan:</span>
-        <strong id="cart-total" style="font-size: 16px; color: #ffc107;">Rp 0</strong>
+        <strong id="cart-total" style="font-size: 15px; color: #ffc107;">Rp 0</strong>
     </div>
     <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
@@ -149,22 +210,20 @@
 
     <div class="user-box">
         <img id="drawer-user-img" class="user-avatar" src="">
-        <div id="drawer-user-name" style="font-weight:bold; font-size:14px;">Tamu</div>
+        <div id="drawer-user-name" style="font-weight:700; font-size:14px;">Tamu</div>
         <div id="drawer-user-email" style="font-size:11px; color:var(--text-sub);">Belum Masuk</div>
     </div>
 
     <div id="drawer-actions"></div>
 </div>
 
-<!-- Modal Pengaturan (Tema & Last Update Changelog) -->
+<!-- Modal Pengaturan -->
 <div id="modal-pengaturan" class="modal-full-container">
     <div class="modal-full-header">
         <strong style="font-size: 16px;"><i class="fa-solid fa-gear"></i> Pengaturan</strong>
         <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalPengaturan()"></i>
     </div>
     <div class="modal-full-body">
-        
-        <!-- Setting Tema -->
         <div style="background: var(--bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 20px;">
             <label style="font-weight: bold; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                 <i class="fa-solid fa-palette" style="color:var(--primary);"></i> Mode Tampilan Tema
@@ -176,7 +235,6 @@
             </div>
         </div>
 
-        <!-- Last Update Log (GitHub Style) -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <strong style="font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
@@ -197,30 +255,8 @@
                         <li><b>Clean Settings Menu:</b> Pembaruan tampilan menu pengaturan & integrasi Catatan Update (Changelog).</li>
                     </ul>
                 </div>
-
-                <div class="commit-card">
-                    <div class="commit-header">
-                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.1.0 - GPS Map & Address System</span>
-                        <span class="commit-date">24 Ags 2026</span>
-                    </div>
-                    <ul class="commit-list">
-                        <li>Integrasi Peta Interaktif OpenStreetMap/Leaflet untuk penentuan titik lokasi presisi.</li>
-                        <li>Manajemen banyak alamat pengiriman per pelanggan.</li>
-                    </ul>
-                </div>
-
-                <div class="commit-card">
-                    <div class="commit-header">
-                        <span class="commit-ver"><i class="fa-solid fa-tag"></i> v1.0.0 - Initial Release</span>
-                        <span class="commit-date">20 Ags 2026</span>
-                    </div>
-                    <ul class="commit-list">
-                        <li>Peluncuran resmi sistem pemesanan online RivandCronz.</li>
-                    </ul>
-                </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -232,7 +268,6 @@
     </div>
 
     <div class="modal-full-body">
-        
         <div id="sec-profil-main">
             <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
                 <i class="fa-solid fa-id-card" style="color:var(--primary);"></i>
@@ -371,7 +406,6 @@
             </div>
             <button onclick="konfirmasiLogout()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
         </div>
-
     </div>
 </div>
 
@@ -423,7 +457,6 @@
     let mapObject = null, mapMarker = null;
     let selectedLat = -6.940365, selectedLng = 109.609319;
 
-    // --- MANAJEMEN TEMA ---
     function applyTheme(theme) {
         document.body.classList.remove('dark-mode');
         if (theme === 'dark') {
@@ -466,7 +499,6 @@
     }
     function tutupModalPengaturan() { document.getElementById('modal-pengaturan').classList.remove('active'); }
 
-    // RENDER MENU DRAWER DENGAN STYLE CLEAN
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
         if (user) {
@@ -776,19 +808,22 @@
         renderMenu();
     });
 
+    /* RENDER KARTU MENU DENGAN TAMPILAN GRID CLEAN */
     function renderMenu() {
         const menuBox = document.getElementById('user-menu-list');
         menuBox.innerHTML = "";
         let keys = Object.keys(semuaMenuData);
 
         if (keys.length === 0) {
-            menuBox.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding:30px;">Belum ada menu.</p>`;
+            menuBox.innerHTML = `<p style="grid-column: 1 / -1; text-align:center; color:var(--text-sub); padding:40px 0;">Belum ada menu tersedia.</p>`;
             return;
         }
 
         keys.forEach(key => {
             let item = semuaMenuData[key];
-            if (kategoriAktif !== 'semua' && item.kategori !== kategoriAktif) return;
+            
+            // Filter kategori fleksibel (case insensitive)
+            if (kategoriAktif !== 'semua' && String(item.kategori || '').toLowerCase() !== kategoriAktif) return;
 
             let stokValue = (item.stok !== undefined && item.stok !== null) ? parseInt(item.stok) : 0;
             let stokHabis = (stokValue <= 0);
@@ -797,16 +832,20 @@
             
             menuBox.innerHTML += `
                 <div class="menu-card ${stokHabis ? 'out-of-stock' : ''}">
-                    <img src="${item.gambar || 'https://via.placeholder.com/150'}" class="menu-img">
+                    <div class="menu-img-wrapper">
+                        <img src="${item.gambar || 'https://via.placeholder.com/300x225?text=No+Image'}" class="menu-img">
+                        <span class="stok-badge ${stokHabis ? 'stok-empty' : 'stok-ready'}">
+                            ${stokHabis ? 'Habis' : 'Stok: ' + stokValue}
+                        </span>
+                    </div>
+
                     <div class="menu-info">
-                        <div class="menu-title">
-                            ${item.nama}
-                            <span class="stok-badge ${stokHabis ? 'stok-empty' : 'stok-ready'}">
-                                ${stokHabis ? 'Habis' : 'Stok: ' + stokValue}
-                            </span>
+                        <div>
+                            <div class="menu-title">${item.nama || key}</div>
+                            <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
                         </div>
-                        <div class="menu-desc">${item.deskripsi || 'Tidak ada deskripsi.'}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+
+                        <div class="menu-bottom">
                             <div class="menu-price">Rp ${(item.harga || 0).toLocaleString('id-ID')}</div>
                             <div class="counter-box">
                                 <button class="btn-qty" onclick="ubahQty('${item.id}', -1)" ${qty === 0 || stokHabis ? 'disabled' : ''}>-</button>
@@ -847,7 +886,7 @@
     }
 
     function filterKategori(kat, btn) {
-        kategoriAktif = kat;
+        kategoriAktif = kat.toLowerCase();
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderMenu();

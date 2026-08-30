@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Warung Pandawa</title>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -18,27 +23,31 @@
     <style>
         :root {
             --primary: #ff6b35;
-            --secondary: #004e64;
+            --primary-light: rgba(255, 107, 53, 0.08);
+            --secondary: #0f172a;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --border-color: #e2e8f0;
+            --text-main: #334155;
+            --text-sub: #94a3b8;
+            --border-color: #f1f5f9;
             --sidebar-width: 260px;
+            --radius: 12px;
+            --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
         }
 
         body.dark-mode {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border-color: #334155;
+            --bg: #0b0f19;
+            --card-bg: #151c2c;
+            --text-main: #f1f5f9;
+            --text-sub: #64748b;
+            --border-color: #1e293b;
+            --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.2);
         }
 
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text-main); transition: 0.3s; display: flex; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+        body { margin: 0; background: var(--bg); color: var(--text-main); transition: 0.2s ease; display: flex; }
 
-        /* Login Screen Overlay */
+        /* Login Overlay Clean */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: var(--bg); z-index: 9999; display: flex;
@@ -46,130 +55,110 @@
         }
         .login-card {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 30px; border-radius: 16px; width: 100%; max-width: 400px;
-            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 380px;
+            text-align: center; box-shadow: var(--shadow);
         }
         .btn-google {
-            background: #ffffff; color: #333; border: 1px solid var(--border-color);
-            padding: 12px; border-radius: 8px; font-weight: bold; width: 100%;
+            background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0;
+            padding: 12px 16px; border-radius: 10px; font-weight: 600; width: 100%;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-top: 15px;
+            cursor: pointer; transition: 0.2s; margin-top: 24px; font-size: 14px;
         }
-        .btn-google:hover { background: #f1f5f9; }
+        .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; }
 
         /* Sidebar Styling */
         .sidebar { width: var(--sidebar-width); background: var(--card-bg); border-right: 1px solid var(--border-color); height: 100vh; position: fixed; display: flex; flex-direction: column; transition: 0.3s; z-index: 1000; overflow-y: auto; }
-        .brand { padding: 20px; font-weight: bold; font-size: 18px; color: var(--secondary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); }
-        body.dark-mode .brand { color: var(--primary); }
+        .brand { padding: 24px; font-weight: 700; font-size: 18px; color: var(--primary); display: flex; align-items: center; gap: 12px; }
         
-        .admin-profile { padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        .admin-avatar { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 10px; object-fit: cover; }
-        .admin-name { font-weight: bold; font-size: 15px; }
-        .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 15px; word-break: break-all; }
-        .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; width: 100%; }
+        .admin-profile { padding: 0 20px 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .admin-avatar { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 12px; object-fit: cover; }
+        .admin-name { font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .admin-email { font-size: 12px; color: var(--text-sub); margin-bottom: 12px; word-break: break-all; }
+        .btn-logout { background: #fef2f2; color: #ef4444; border: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
+        .btn-logout:hover { background: #fee2e2; }
 
-        .nav-section { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: bold; margin: 20px 20px 5px 20px; letter-spacing: 0.5px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
-        .nav-item:hover { background: var(--bg); }
-        .nav-item.active { background: rgba(255,107,53,0.1); color: var(--primary); border-left-color: var(--primary); }
-        .nav-item i { width: 20px; text-align: center; font-size: 16px; }
+        .nav-section { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: 700; margin: 20px 20px 8px 20px; letter-spacing: 0.8px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--text-sub); text-decoration: none; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: 0.2s; border-radius: 0 8px 8px 0; margin-right: 12px; }
+        .nav-item:hover { color: var(--primary); background: var(--primary-light); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); border-left: 3px solid var(--primary); }
+        .nav-item i { width: 20px; text-align: center; font-size: 15px; }
 
         /* Main Content Styling */
-        .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; padding: 20px; transition: 0.3s; width: calc(100% - var(--sidebar-width)); display: none; }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; padding: 32px; transition: 0.3s; width: calc(100% - var(--sidebar-width)); display: none; }
         
-        .mobile-header { display: none; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border-color); margin: -20px -20px 20px -20px; }
-        .hamburger { background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; }
+        .mobile-header { display: none; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 16px 20px; border-bottom: 1px solid var(--border-color); margin: -32px -32px 24px -32px; }
+        .hamburger { background: none; border: none; font-size: 18px; color: var(--text-main); cursor: pointer; }
 
-        .section-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .section-title { font-size: 22px; font-weight: bold; margin: 0; color: var(--secondary); }
-        body.dark-mode .section-title { color: white; }
+        .section-header { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 20px; font-weight: 700; margin: 0; color: var(--text-main); }
 
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .stat-title { font-size: 13px; color: var(--text-sub); font-weight: bold; margin-bottom: 8px; }
-        .stat-value { font-size: 24px; font-weight: bold; color: var(--primary); }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+        .stat-title { font-size: 12px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--text-main); }
 
-        .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .chart-filters { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .filter-btn { background: var(--bg); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; color: var(--text-main); cursor: pointer; white-space: nowrap; }
-        .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+        .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
+        .chart-filters { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; }
+        .filter-btn { background: var(--bg); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-sub); cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        
-        .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; }
-        .menu-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-primary:hover { opacity: 0.9; }
+
+        .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px; display: flex; gap: 16px; align-items: center; box-shadow: var(--shadow); }
+        .menu-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; }
         .menu-info { flex: 1; }
-        .stok-badge { font-size: 10px; font-weight: bold; padding: 3px 6px; border-radius: 4px; margin-top: 5px; display: inline-block; }
+        .stok-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; margin-top: 6px; display: inline-block; }
         .badge-hijau { background: #dcfce7; color: #15803d; }
         .badge-kuning { background: #fef3c7; color: #b45309; }
         .badge-merah { background: #fee2e2; color: #b91c1c; }
 
-        .order-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .order-status { font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; }
-        .status-menunggu { background: #fef3c7; color: #d97706; }
-        .status-selesai { background: #dcfce7; color: #15803d; }
+        .order-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+        .order-status { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+        .status-menunggu { background: #fffbebe5; color: #d97706; }
+        .status-selesai { background: #f0fdf4; color: #16a34a; }
 
-        .table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow-x: auto; }
+        .table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        th { background: var(--bg); padding: 12px 15px; font-weight: bold; color: var(--text-sub); border-bottom: 1px solid var(--border-color); }
-        td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        th { background: var(--bg); padding: 14px 18px; font-weight: 600; color: var(--text-sub); border-bottom: 1px solid var(--border-color); }
+        td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--card-bg); border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; }
-        .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; font-weight: bold; font-size: 16px; }
+        .modal-content { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: scale(0.95); transition: 0.2s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 18px; font-weight: 700; font-size: 16px; }
         
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 12px; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; }
-        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg); color: var(--text-main); font-size: 13px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg); color: var(--text-main); font-size: 13px; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
 
-        /* Preview Image Container */
-        .image-preview-wrapper { width: 100%; height: 120px; border: 2px dashed var(--border-color); border-radius: 8px; margin-top: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg); }
-        .image-preview-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
-
-        .rating-summary { text-align: center; padding: 20px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; }
-        .rating-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+        .rating-summary { text-align: center; padding: 24px; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: var(--shadow); }
+        .rating-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
 
         @media (max-width: 768px) {
             .sidebar { left: -260px; }
-            .sidebar.active { left: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
-            .main-content { margin-left: 0; width: 100%; }
+            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
             .mobile-header { display: flex; }
-            .order-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .order-card { flex-direction: column; align-items: flex-start; gap: 12px; }
             .order-card button { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<!-- LAYAR LOGIN ADMIN (OVERLAY) -->
+<!-- LAYAR LOGIN ADMIN OVERLAY -->
 <div id="login-screen">
-    <!-- TAHAP 1: LOGIN GOOGLE -->
-    <div class="login-card" id="step-google-login">
-        <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: var(--primary); margin-bottom: 10px;"></i>
-        <h2 style="margin: 5px 0 10px 0;">Dashboard Admin</h2>
-        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Silakan login menggunakan akun Google Admin yang terdaftar.</p>
+    <div class="login-card">
+        <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--primary);"></i>
+        <h2 style="margin: 16px 0 6px 0; font-size: 20px;">Dashboard Admin</h2>
+        <p style="font-size: 13px; color: var(--text-sub); margin: 0;">Silakan masuk menggunakan akun Google Admin terdaftar.</p>
         <button class="btn-google" onclick="loginWithGoogle()">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-            Login via Google Admin
-        </button>
-    </div>
-
-    <!-- TAHAP 2: KODE VERIFIKASI / PASSWORD DASHBOARD -->
-    <div class="login-card" id="step-pin-login" style="display: none;">
-        <i class="fa-solid fa-lock" style="font-size: 45px; color: var(--secondary); margin-bottom: 10px;"></i>
-        <h2 style="margin: 5px 0 5px 0;">Verifikasi Keamanan</h2>
-        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Masukkan Kode Password khusus Dashboard Admin.</p>
-        
-        <div class="form-group">
-            <label>Kode Password Dashboard</label>
-            <input type="password" id="admin-pin-input" class="form-control" placeholder="Masukkan Kode..." style="text-align: center; font-size: 14px; letter-spacing: 1px;">
-        </div>
-        
-        <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="verifyDashboardPin()">
-            Verifikasi & Masuk
+            Masuk dengan Google Admin
         </button>
     </div>
 </div>
@@ -181,19 +170,19 @@
     </div>
     
     <div class="admin-profile">
-        <img id="admin-avatar-img" src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=004e64&color=fff" class="admin-avatar">
-        <div class="admin-name" id="admin-display-name">Admin Pandawa</div>
-        <div class="admin-email" id="admin-display-email">rivandbusiness.wirausaha@gmail.com</div>
-        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
+        <img id="admin-avatar-img" src="https://ui-avatars.com/api/?name=Admin+Pandawa&background=0f172a&color=fff" class="admin-avatar">
+        <div class="admin-name" id="admin-display-name">Memuat...</div>
+        <div class="admin-email" id="admin-display-email">...</div>
+        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
 
-    <div class="nav-section">📊 Management</div>
+    <div class="nav-section">Management</div>
     <div class="nav-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Statistik</div>
     <div class="nav-item" onclick="switchTab('daftar-menu', this)"><i class="fa-solid fa-box-open"></i> Daftar Menu</div>
     <div class="nav-item" onclick="switchTab('pesanan-masuk', this)"><i class="fa-solid fa-bell"></i> Pesanan Masuk</div>
     <div class="nav-item" onclick="switchTab('pengguna', this)"><i class="fa-solid fa-users"></i> Pengguna Aktif</div>
 
-    <div class="nav-section">⚙️ Pengaturan</div>
+    <div class="nav-section">Pengaturan</div>
     <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-clock-rotate-left"></i> History Pesanan</div>
     <div class="nav-item" onclick="switchTab('rating', this)"><i class="fa-solid fa-star"></i> Rating Pelanggan</div>
     <div class="nav-item" onclick="switchTab('tema', this)"><i class="fa-solid fa-palette"></i> Tema Tampilan</div>
@@ -202,14 +191,14 @@
 <!-- MAIN CONTENT -->
 <div class="main-content" id="main-content">
     <div class="mobile-header">
-        <div style="font-weight: bold; color: var(--primary);"><i class="fa-solid fa-utensils"></i> Admin Dashboard</div>
+        <div style="font-weight: 700; color: var(--primary);"><i class="fa-solid fa-utensils"></i> Admin Dashboard</div>
         <button class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
     <!-- TAB: STATISTIK -->
     <div id="tab-dashboard" class="tab-content">
         <div class="section-header">
-            <h2 class="section-title">Statistik Penjualan</h2>
+            <h2 class="section-title">Ringkasan Penjualan</h2>
         </div>
         
         <div class="grid-3">
@@ -228,7 +217,7 @@
         </div>
 
         <div class="chart-container">
-            <div style="font-weight: bold; margin-bottom: 10px;">Grafik Pendapatan</div>
+            <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px;">Grafik Pendapatan</div>
             <div class="chart-filters">
                 <button class="filter-btn active">Hari ini</button>
                 <button class="filter-btn">7 hari</button>
@@ -291,11 +280,11 @@
             <h2 class="section-title">History Pesanan</h2>
         </div>
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <select class="form-control" style="width: 150px;">
+            <select class="form-control" style="width: 160px;">
                 <option>Semua Kategori</option>
                 <option>Bulan Ini</option>
             </select>
-            <input type="text" class="form-control" placeholder="🔎 Cari ID / Nama Pelanggan...">
+            <input type="text" class="form-control" placeholder="🔍 Cari ID / Nama Pelanggan...">
         </div>
         <div id="admin-history-list">
             <div style="padding:30px;text-align:center;color:var(--text-sub);">Memuat history...</div>
@@ -308,9 +297,9 @@
             <h2 class="section-title">Rating Pelanggan</h2>
         </div>
         <div class="rating-summary">
-            <div id="rating-average" style="font-size:40px;font-weight:bold;color:#f59e0b;">0.0</div>
-            <div id="rating-stars" style="color:#f59e0b;font-size:20px;">☆☆☆☆☆</div>
-            <div id="rating-count" style="font-size:13px;color:var(--text-sub);margin-top:5px;">Berdasarkan 0 Ulasan</div>
+            <div id="rating-average" style="font-size:36px;font-weight:700;color:#f59e0b;">0.0</div>
+            <div id="rating-stars" style="color:#f59e0b;font-size:18px;margin:4px 0;">☆☆☆☆☆</div>
+            <div id="rating-count" style="font-size:12px;color:var(--text-sub);">Berdasarkan 0 Ulasan</div>
         </div>
         <div id="admin-rating-list">
             <div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada ulasan.</div>
@@ -320,20 +309,20 @@
     <!-- TAB: TEMA -->
     <div id="tab-tema" class="tab-content" style="display: none;">
         <div class="section-header">
-            <h2 class="section-title">Pengaturan Tema</h2>
+            <h2 class="section-title">Pengaturan Tampilan</h2>
         </div>
         <div class="chart-container">
-            <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 15px;">Mode Tampilan Layar</label>
+            <label style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 12px; color: var(--text-sub);">Mode Tema Layar</label>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-                <button id="btn-theme-light" class="filter-btn active" onclick="setTheme('light')" style="padding: 15px;"><i class="fa-solid fa-sun"></i> Terang (Light)</button>
-                <button id="btn-theme-dark" class="filter-btn" onclick="setTheme('dark')" style="padding: 15px;"><i class="fa-solid fa-moon"></i> Gelap (Dark)</button>
-                <button id="btn-theme-auto" class="filter-btn" onclick="setTheme('auto')" style="padding: 15px;"><i class="fa-solid fa-desktop"></i> Ikuti Sistem</button>
+                <button id="btn-theme-light" class="filter-btn active" onclick="setTheme('light')" style="padding: 12px;"><i class="fa-solid fa-sun"></i> Terang</button>
+                <button id="btn-theme-dark" class="filter-btn" onclick="setTheme('dark')" style="padding: 12px;"><i class="fa-solid fa-moon"></i> Gelap</button>
+                <button id="btn-theme-auto" class="filter-btn" onclick="setTheme('auto')" style="padding: 12px;"><i class="fa-solid fa-desktop"></i> Ikuti Sistem</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- MODAL MENU (UPDATE DENGAN UPLOAD FOTO & DROPDOWN KATEGORI) -->
+<!-- MODAL MENU -->
 <div class="modal-overlay" id="modal-menu">
     <div class="modal-content">
         <div class="modal-header">
@@ -341,41 +330,16 @@
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal('modal-menu')"></i>
         </div>
         <input type="hidden" id="menu-edit-id">
-        <div class="form-group">
-            <label>Nama Menu</label>
-            <input id="menu-nama" type="text" class="form-control" placeholder="Contoh: Ayam Geprek">
-        </div>
-        
-        <!-- Pilihan Kategori Dropdown -->
-        <div class="form-group">
-            <label>Kategori Menu</label>
-            <select id="menu-kategori" class="form-control">
-                <option value="Makanan">Makanan</option>
-                <option value="Minuman">Minuman</option>
-                <option value="Cemilan">Cemilan</option>
-            </select>
-        </div>
-        
-        <!-- Upload Foto Menu -->
-        <div class="form-group">
-            <label>Pilih Gambar Menu</label>
-            <input id="menu-gambar-file" type="file" accept="image/*" class="form-control" onchange="previewImage(this)">
-            <div class="image-preview-wrapper">
-                <img id="menu-gambar-preview" src="" alt="Preview Gambar">
-                <span id="preview-text" style="font-size: 11px; color: var(--text-sub);">Preview foto akan muncul di sini</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Deskripsi</label>
-            <textarea id="menu-deskripsi" class="form-control" rows="3" placeholder="Deskripsi rasa/porsi..."></textarea>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div class="form-group"><label>Nama Menu</label><input id="menu-nama" type="text" class="form-control" placeholder="Contoh: Ayam Geprek"></div>
+        <div class="form-group"><label>Kategori</label><input id="menu-kategori" type="text" class="form-control" placeholder="makanan / minuman / cemilan"></div>
+        <div class="form-group"><label>URL Gambar</label><input id="menu-gambar" type="url" class="form-control" placeholder="https://..."></div>
+        <div class="form-group"><label>Deskripsi</label><textarea id="menu-deskripsi" class="form-control" rows="3"></textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div class="form-group"><label>Harga (Rp)</label><input id="menu-harga" type="number" min="0" class="form-control"></div>
             <div class="form-group"><label>Stok</label><input id="menu-stok" type="number" min="0" class="form-control"></div>
         </div>
         <div style="display:flex;gap:10px;margin-top:10px;">
-            <button class="form-control" style="background:var(--bg);font-weight:bold;cursor:pointer;" onclick="closeModal('modal-menu')">Batal</button>
+            <button class="form-control" style="background:var(--bg);font-weight:600;cursor:pointer;" onclick="closeModal('modal-menu')">Batal</button>
             <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveMenu()">Simpan Menu</button>
         </div>
     </div>
@@ -389,7 +353,7 @@
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal('modal-detail-order')"></i>
         </div>
         <div id="order-detail-body"></div>
-        <div class="form-group" style="margin-top: 15px;">
+        <div class="form-group" style="margin-top: 16px;">
             <label>Update Status Pesanan</label>
             <select id="order-status-select" class="form-control">
                 <option>Menunggu Respon</option>
@@ -399,17 +363,11 @@
                 <option>❌ Dibatalkan</option>
             </select>
         </div>
-        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="updateOrder()">Simpan Perubahan Status</button>
+        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="updateOrder()">Simpan Status</button>
     </div>
 </div>
 
 <script>
-// KONFIGURASI PENGATURAN AKSES ADMIN
-const ALLOWED_ADMIN_EMAILS = [
-    "rivandbusiness.wirausaha@gmail.com"
-];
-const DASHBOARD_PASSWORD_PIN = "WRG-PDW-RivandCronz67.biz.id/dhad";
-
 const firebaseConfig = {
     apiKey: "AIzaSyAIcVk11dLwbwhHPmV--qfYmHrQuaHhXbw",
     authDomain: "warung-pandawa-89cb5.firebaseapp.com",
@@ -430,20 +388,32 @@ let selectedOrderId = null, selectedMenuId = null, revenueChart = null;
 const rupiah = n => 'Rp ' + Number(n || 0).toLocaleString('id-ID');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
 
-/* ================= AUTENTIKASI & KEAMANAN ADMIN ================= */
+/* ================= AUTENTIKASI REALTIME TANPA LOCALSTORAGE / PASS ================= */
 
 auth.onAuthStateChanged(user => {
     if (user) {
-        if (ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-            updateAdminUI(user);
-            checkDashboardPinState();
-        } else {
-            auth.signOut();
-            Swal.fire('Akses Ditolak', 'Akun Google ini (' + user.email + ') tidak terdaftar sebagai Admin!', 'error');
-            showGoogleStep();
-        }
+        // Cek langsung hak akses di database node /admins/{UID}
+        database.ref('admins/' + user.uid).once('value')
+            .then(snapshot => {
+                if (snapshot.exists() && snapshot.val() === true) {
+                    // Berhasil: UID terdaftar di node admins
+                    updateAdminUI(user);
+                    unlockDashboardAccess();
+                } else {
+                    // Ditolak: Login Google berhasil tapi UID bukan Admin
+                    auth.signOut();
+                    Swal.fire('Akses Ditolak', 'Akun (' + user.email + ') tidak memiliki hak akses Admin!', 'error');
+                    showLoginStep();
+                }
+            })
+            .catch(err => {
+                // Ditolak oleh Security Rules
+                auth.signOut();
+                Swal.fire('Akses Ditolak', 'Ditolak oleh Firebase Security Rules.', 'error');
+                showLoginStep();
+            });
     } else {
-        showGoogleStep();
+        showLoginStep();
     }
 });
 
@@ -454,44 +424,14 @@ function loginWithGoogle() {
     });
 }
 
-function checkDashboardPinState() {
-    const isVerified = localStorage.getItem('admin_verified') === 'true';
-    if (isVerified) {
-        unlockDashboardAccess();
-    } else {
-        showPinStep();
-    }
-}
-
-function verifyDashboardPin() {
-    const pin = document.getElementById('admin-pin-input').value;
-    if (pin === DASHBOARD_PASSWORD_PIN) {
-        localStorage.setItem('admin_verified', 'true');
-        Swal.fire({ icon: 'success', title: 'Verifikasi Berhasil', timer: 1000, showConfirmButton: false }).then(() => {
-            unlockDashboardAccess();
-        });
-    } else {
-        Swal.fire('Kode Salah', 'Password Dashboard Admin tidak valid!', 'error');
-    }
-}
-
 function unlockDashboardAccess() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
     initRealtime();
 }
 
-function showGoogleStep() {
+function showLoginStep() {
     document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('step-google-login').style.display = 'block';
-    document.getElementById('step-pin-login').style.display = 'none';
-    document.getElementById('main-content').style.display = 'none';
-}
-
-function showPinStep() {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('step-google-login').style.display = 'none';
-    document.getElementById('step-pin-login').style.display = 'block';
     document.getElementById('main-content').style.display = 'none';
 }
 
@@ -506,16 +446,13 @@ function updateAdminUI(user) {
 function logout() {
     Swal.fire({
         title: 'Keluar dari Dashboard?',
-        text: 'Anda harus memasukkan PIN keamanan lagi saat masuk kembali.',
+        text: 'Sesi admin Anda akan diakhiri secara aman.',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Ya, Logout'
     }).then(res => {
         if (res.isConfirmed) {
-            localStorage.removeItem('admin_verified');
-            auth.signOut().then(() => {
-                location.reload();
-            });
+            auth.signOut();
         }
     });
 }
@@ -543,14 +480,14 @@ function applyTheme(theme) {
     });
 }
 
-function setTheme(theme) { localStorage.setItem('admin-theme', theme); applyTheme(theme); }
-applyTheme(localStorage.getItem('admin-theme') || 'auto');
+function setTheme(theme) { applyTheme(theme); }
+applyTheme('light');
 
 function badge(stok) {
     stok = Number(stok || 0);
-    return stok <= 0 ? '<span class="stok-badge badge-merah">🔴 Habis (Stok: 0)</span>' : 
-           stok <= 5 ? `<span class="stok-badge badge-kuning">🟡 Terbatas (Stok: ${stok})</span>` : 
-           `<span class="stok-badge badge-hijau">🟢 Tersedia (Stok: ${stok})</span>`;
+    return stok <= 0 ? '<span class="stok-badge badge-merah">Habis (0)</span>' : 
+           stok <= 5 ? `<span class="stok-badge badge-kuning">Sisa ${stok}</span>` : 
+           `<span class="stok-badge badge-hijau">Stok ${stok}</span>`;
 }
 
 function renderMenus() {
@@ -558,33 +495,15 @@ function renderMenus() {
     if (!keys.length) { el.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada menu di Firebase.</div>'; return; }
     el.innerHTML = keys.map(id => {
         let m = menuData[id] || {};
-        return `<div class="menu-item"><img src="${esc(m.gambar || 'https://via.placeholder.com/150')}" class="menu-img"><div class="menu-info"><div style="font-weight:bold;font-size:15px;">${esc(m.nama || id)}</div><div style="font-size:11px;color:var(--text-sub);">Kategori: ${esc(m.kategori || '-')}</div><div style="font-weight:bold;color:var(--primary);font-size:14px;margin-top:4px;">${rupiah(m.harga)}</div>${badge(m.stok)}</div><div style="display:flex;flex-direction:column;gap:8px;"><button style="background:#0ea5e9;color:white;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="editMenu('${esc(id)}')"><i class="fa-solid fa-pen"></i></button><button style="background:#ef4444;color:white;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="deleteMenu('${esc(id)}')"><i class="fa-solid fa-trash"></i></button></div></div>`;
+        return `<div class="menu-item"><img src="${esc(m.gambar || 'https://via.placeholder.com/150')}" class="menu-img"><div class="menu-info"><div style="font-weight:700;font-size:14px;">${esc(m.nama || id)}</div><div style="font-size:11px;color:var(--text-sub);">${esc(m.kategori || '-')}</div><div style="font-weight:700;color:var(--primary);font-size:13px;margin-top:2px;">${rupiah(m.harga)}</div>${badge(m.stok)}</div><div style="display:flex;flex-direction:column;gap:6px;"><button style="background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);padding:6px;border-radius:6px;cursor:pointer;" onclick="editMenu('${esc(id)}')"><i class="fa-solid fa-pen"></i></button><button style="background:#fef2f2;color:#ef4444;border:none;padding:6px;border-radius:6px;cursor:pointer;" onclick="deleteMenu('${esc(id)}')"><i class="fa-solid fa-trash"></i></button></div></div>`;
     }).join('');
-}
-
-function previewImage(input) {
-    let preview = document.getElementById('menu-gambar-preview');
-    let text = document.getElementById('preview-text');
-    if (input.files && input.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            text.style.display = 'none';
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
 }
 
 function resetMenuForm() {
     selectedMenuId = null;
     document.getElementById('menu-edit-id').value = '';
     document.getElementById('menu-modal-title').innerText = 'Tambah Menu';
-    document.getElementById('menu-kategori').value = 'Makanan';
-    ['nama', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = '');
-    document.getElementById('menu-gambar-file').value = '';
-    document.getElementById('menu-gambar-preview').style.display = 'none';
-    document.getElementById('preview-text').style.display = 'block';
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = '');
 }
 
 function editMenu(id) {
@@ -592,63 +511,31 @@ function editMenu(id) {
     selectedMenuId = id;
     document.getElementById('menu-modal-title').innerText = 'Edit Menu';
     document.getElementById('menu-edit-id').value = id;
-    document.getElementById('menu-nama').value = m.nama || '';
-    document.getElementById('menu-kategori').value = m.kategori || 'Makanan';
-    document.getElementById('menu-deskripsi').value = m.deskripsi || '';
-    document.getElementById('menu-harga').value = m.harga || 0;
-    document.getElementById('menu-stok').value = m.stok || 0;
-    document.getElementById('menu-gambar-file').value = '';
-
-    let preview = document.getElementById('menu-gambar-preview');
-    let text = document.getElementById('preview-text');
-    if (m.gambar) {
-        preview.src = m.gambar;
-        preview.style.display = 'block';
-        text.style.display = 'none';
-    } else {
-        preview.style.display = 'none';
-        text.style.display = 'block';
-    }
+    ['nama', 'kategori', 'gambar', 'deskripsi', 'harga', 'stok'].forEach(x => document.getElementById('menu-' + x).value = m[x] ?? '');
     openModal('modal-menu');
 }
 
 function saveMenu() {
-    let id = selectedMenuId || ('MENU-' + Date.now());
-    let fileInput = document.getElementById('menu-gambar-file');
-    let existingGambar = selectedMenuId && menuData[selectedMenuId] ? menuData[selectedMenuId].gambar : '';
-
-    let performSave = (gambarDataUrl) => {
-        let data = {
-            id: id,
-            nama: document.getElementById('menu-nama').value.trim(),
-            kategori: document.getElementById('menu-kategori').value,
-            gambar: gambarDataUrl || existingGambar || 'https://via.placeholder.com/150',
-            deskripsi: document.getElementById('menu-deskripsi').value.trim(),
-            harga: Number(document.getElementById('menu-harga').value || 0),
-            stok: Number(document.getElementById('menu-stok').value || 0)
-        };
-        if (!data.nama) return Swal.fire('Nama menu wajib diisi', '', 'warning');
-        database.ref('daftar_menu/' + id).set(data).then(() => {
-            closeModal('modal-menu');
-            Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1000, showConfirmButton: false });
-        }).catch(e => Swal.fire('Gagal', e.message, 'error'));
+    let id = selectedMenuId || ('MENU-' + Date.now()), data = {
+        id: id,
+        nama: document.getElementById('menu-nama').value.trim(),
+        kategori: document.getElementById('menu-kategori').value.trim().toLowerCase(),
+        gambar: document.getElementById('menu-gambar').value.trim(),
+        deskripsi: document.getElementById('menu-deskripsi').value.trim(),
+        harga: Number(document.getElementById('menu-harga').value || 0),
+        stok: Number(document.getElementById('menu-stok').value || 0)
     };
-
-    if (fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            performSave(e.target.result);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-    } else {
-        performSave(existingGambar);
-    }
+    if (!data.nama) return Swal.fire('Nama menu wajib diisi', '', 'warning');
+    database.ref('daftar_menu/' + id).set(data).then(() => {
+        closeModal('modal-menu');
+        Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1000, showConfirmButton: false });
+    }).catch(e => Swal.fire('Gagal', e.message, 'error'));
 }
 
 function deleteMenu(id) {
     Swal.fire({
         title: 'Hapus menu?',
-        text: 'Data akan dihapus dari Firebase.',
+        text: 'Data akan dihapus permanen dari Database.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
@@ -661,12 +548,12 @@ function statusClass(st) { return st === 'Selesai' || st === 'Lunas' ? 'status-s
 function renderOrders() {
     let arr = Object.entries(orderData).map(([id, o]) => ({ ...o, _id: id })).sort((a, b) => (b.waktu || 0) - (a.waktu || 0));
     let active = arr.filter(o => !['Selesai', 'Lunas', '❌ Dibatalkan'].includes(o.status));
-    document.getElementById('admin-order-list').innerHTML = active.length ? active.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:bold;">#${esc(o.id || o._id)}</div><div style="font-size:15px;font-weight:bold;margin:4px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:13px;color:var(--text-sub);">${Array.isArray(o.items) ? o.items.length : Object.keys(o.items || {}).length} Item - <strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div style="display:flex;align-items:center;gap:15px;"><span class="order-status ${statusClass(o.status)}">${esc(o.status || 'Menunggu Respon')}</span><button class="btn-primary" onclick="openOrder('${esc(o._id)}')">Lihat Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Tidak ada pesanan aktif.</div>';
+    document.getElementById('admin-order-list').innerHTML = active.length ? active.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:700;">#${esc(o.id || o._id)}</div><div style="font-size:14px;font-weight:700;margin:2px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:12px;color:var(--text-sub);">${Array.isArray(o.items) ? o.items.length : Object.keys(o.items || {}).length} Item - <strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div style="display:flex;align-items:center;gap:12px;"><span class="order-status ${statusClass(o.status)}">${esc(o.status || 'Menunggu Respon')}</span><button class="btn-primary" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Tidak ada pesanan aktif.</div>';
     renderHistory(arr);
 }
 
 function renderHistory(arr) {
-    document.getElementById('admin-history-list').innerHTML = arr.length ? arr.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:bold;">#${esc(o.id || o._id)} <span style="margin-left:8px;font-weight:normal;">${o.waktu ? new Date(o.waktu).toLocaleString('id-ID') : ''}</span></div><div style="font-size:15px;font-weight:bold;margin:4px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:13px;color:var(--text-sub);"><strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status || '-')}</span><button class="btn-primary" style="margin-left:8px;background:var(--secondary);" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada history pesanan.</div>';
+    document.getElementById('admin-history-list').innerHTML = arr.length ? arr.map(o => `<div class="order-card"><div><div style="font-size:11px;color:var(--text-sub);font-weight:700;">#${esc(o.id || o._id)} <span style="margin-left:8px;font-weight:normal;">${o.waktu ? new Date(o.waktu).toLocaleString('id-ID') : ''}</span></div><div style="font-size:14px;font-weight:700;margin:2px 0;">${esc(o.nama || 'Pelanggan')}</div><div style="font-size:12px;color:var(--text-sub);"><strong style="color:var(--primary);">${rupiah(o.total)}</strong></div></div><div><span class="order-status ${statusClass(o.status)}">${esc(o.status || '-')}</span><button class="btn-primary" style="margin-left:8px;background:var(--bg);color:var(--text-main);border:1px solid var(--border-color);" onclick="openOrder('${esc(o._id)}')">Detail</button></div></div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-sub);">Belum ada history pesanan.</div>';
 }
 
 function openOrder(id) {
@@ -676,7 +563,7 @@ function openOrder(id) {
     document.getElementById('order-modal-title').innerText = 'Detail Pesanan #' + (o.id || id);
     document.getElementById('order-status-select').value = o.status || 'Menunggu Respon';
     let items = Array.isArray(o.items) ? o.items : (o.items ? Object.values(o.items) : []);
-    document.getElementById('order-detail-body').innerHTML = `<div style="font-size:13px;line-height:1.6;"><p><b>Pelanggan:</b> ${esc(o.nama || '-')}</p><p><b>User ID:</b> ${esc(o.userId || '-')}</p><p><b>Alamat:</b> ${esc(o.alamat || '-')}</p><p><b>Pembayaran:</b> ${esc(o.pembayaran || '-')} (${esc(o.metode || '-')})</p><hr style="border:none;border-top:1px dashed var(--border-color)"><b>Rincian:</b><div style="margin-top:8px;">${items.map(x => `<div style="display:flex;justify-content:space-between;padding:4px 0;">${esc(x.nama || x)} <span>${x.qty ? `x${esc(x.qty)}` : ''}</span></div>`).join('')}</div><p style="font-weight:bold;color:var(--primary);text-align:right;">Total: ${rupiah(o.total)}</p></div>`;
+    document.getElementById('order-detail-body').innerHTML = `<div style="font-size:13px;line-height:1.6;"><p style="margin:4px 0;"><b>Pelanggan:</b> ${esc(o.nama || '-')}</p><p style="margin:4px 0;"><b>User ID:</b> ${esc(o.userId || '-')}</p><p style="margin:4px 0;"><b>Alamat:</b> ${esc(o.alamat || '-')}</p><p style="margin:4px 0;"><b>Pembayaran:</b> ${esc(o.pembayaran || '-')} (${esc(o.metode || '-')})</p><hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;"><b>Rincian Item:</b><div style="margin-top:6px;">${items.map(x => `<div style="display:flex;justify-content:space-between;padding:3px 0;">${esc(x.nama || x)} <span>${x.qty ? `x${esc(x.qty)}` : ''}</span></div>`).join('')}</div><p style="font-weight:700;color:var(--primary);text-align:right;font-size:15px;margin-top:10px;">Total: ${rupiah(o.total)}</p></div>`;
     openModal('modal-detail-order');
 }
 
@@ -703,7 +590,7 @@ function renderRatings() {
     document.getElementById('rating-average').innerText = avg.toFixed(1);
     document.getElementById('rating-stars').innerText = '★★★★★'.split('').map((x, i) => i < Math.round(avg) ? '★' : '☆').join('');
     document.getElementById('rating-count').innerText = `Berdasarkan ${arr.length} Ulasan`;
-    document.getElementById('admin-rating-list').innerHTML = arr.length ? arr.reverse().map(r => `<div class="rating-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>${esc(r.nama || 'Pelanggan')}</strong><span style="color:#f59e0b;">${'★'.repeat(Number(r.rating || 0))}${'☆'.repeat(5 - Number(r.rating || 0))} ${Number(r.rating || 0)}.0</span></div><div style="font-size:13px;font-style:italic;">${esc(r.ulasan || r.review || '')}</div></div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--text-sub);">Belum ada ulasan pada node <b>ratings</b>.</div>';
+    document.getElementById('admin-rating-list').innerHTML = arr.length ? arr.reverse().map(r => `<div class="rating-card"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong>${esc(r.nama || 'Pelanggan')}</strong><span style="color:#f59e0b;font-size:12px;">${'★'.repeat(Number(r.rating || 0))}${'☆'.repeat(5 - Number(r.rating || 0))} ${Number(r.rating || 0)}.0</span></div><div style="font-size:13px;color:var(--text-sub);">${esc(r.ulasan || r.review || '')}</div></div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--text-sub);">Belum ada ulasan.</div>';
 }
 
 function renderStats() {
@@ -730,7 +617,7 @@ function updateChart(orders) {
 
     let ctx = document.getElementById('revenueChart').getContext('2d');
     let gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(255, 107, 53, 0.4)');
+    gradient.addColorStop(0, 'rgba(255, 107, 53, 0.2)');
     gradient.addColorStop(1, 'rgba(255, 107, 53, 0)');
 
     if (revenueChart) revenueChart.destroy();
@@ -739,22 +626,22 @@ function updateChart(orders) {
         data: {
             labels,
             datasets: [{
-                label: 'Pendapatan (Rp)',
+                label: 'Pendapatan',
                 data,
                 borderColor: '#ff6b35',
                 backgroundColor: gradient,
-                borderWidth: 3,
-                pointBackgroundColor: '#004e64',
-                pointRadius: 4,
+                borderWidth: 2,
+                pointBackgroundColor: '#ff6b35',
+                pointRadius: 3,
                 fill: true,
-                tension: 0.4
+                tension: 0.3
             }]
         },
         options: {
             responsive: true,
             plugins: { legend: { display: false } },
             scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.5)' } },
+                y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.4)' } },
                 x: { grid: { display: false } }
             }
         }

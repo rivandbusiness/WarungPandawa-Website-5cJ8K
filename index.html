@@ -55,18 +55,73 @@
         body.dark-mode .brand-logo { color: var(--primary); }
         .hamburger-btn { background: var(--bg); border: none; font-size: 16px; color: var(--text-main); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        /* Clean Drawer Navigation Styling */
+        .drawer-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.4); 
+            backdrop-filter: blur(4px); 
+            z-index: 1000; opacity: 0; visibility: hidden; 
+            transition: all 0.3s ease; 
+        }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer-content { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1001; transition: 0.3s ease-in-out; padding: 24px; box-shadow: -5px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .drawer-content.active { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px; }
 
-        .user-box { text-align: center; background: var(--bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 14px; margin-bottom: 16px; }
-        .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 8px auto; display: none; }
-        
-        .drawer-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: none; background: transparent; border-radius: 10px; font-size: 13.5px; font-weight: 600; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
-        .drawer-item:hover { background: var(--bg); }
-        .drawer-item i { font-size: 17px; width: 22px; text-align: center; }
+        .drawer-content { 
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%; 
+            background: var(--card-bg); color: var(--text-main); 
+            z-index: 1001; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            padding: 24px 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.08); 
+            display: flex; flex-direction: column; 
+            border-top-left-radius: 20px; border-bottom-left-radius: 20px;
+        }
+        .drawer-content.active { transform: translateX(-320px); }
+
+        .drawer-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding-bottom: 16px; margin-bottom: 20px; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        .drawer-header strong { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .close-drawer-btn {
+            background: var(--bg); border: none; width: 32px; height: 32px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--text-sub); cursor: pointer; transition: 0.2s;
+        }
+        .close-drawer-btn:hover { color: var(--text-main); background: var(--border-color); }
+
+        /* User Profile Box */
+        .user-box { 
+            text-align: center; background: var(--bg); 
+            border: 1px solid var(--border-color); 
+            padding: 20px 16px; border-radius: 16px; 
+            margin-bottom: 20px; transition: 0.2s;
+        }
+        .user-avatar-wrapper { position: relative; width: 68px; height: 68px; margin: 0 auto 10px auto; }
+        .user-avatar { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            object-fit: cover; border: 2.5px solid var(--primary); 
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+        }
+        .user-name { font-weight: 700; font-size: 14.5px; color: var(--text-main); margin-bottom: 2px; }
+        .user-email { font-size: 11.5px; color: var(--text-sub); word-break: break-all; }
+
+        /* Clean Navigation Items */
+        .drawer-actions-container { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .drawer-item { 
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; padding: 12px 14px; border: none; 
+            background: transparent; border-radius: 12px; 
+            font-size: 13.5px; font-weight: 600; color: var(--text-main); 
+            cursor: pointer; text-align: left; transition: all 0.2s; 
+        }
+        .drawer-item:hover { background: var(--bg); transform: translateX(2px); }
+        .drawer-item-left { display: flex; align-items: center; gap: 14px; }
+        .drawer-icon-box {
+            width: 34px; height: 34px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; background: var(--bg); border: 1px solid var(--border-color);
+        }
+        .drawer-arrow { font-size: 11px; color: var(--text-sub); transition: 0.2s; }
+        .drawer-item:hover .drawer-arrow { color: var(--primary); transform: translateX(2px); }
 
         .modal-full-container { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: var(--card-bg); color: var(--text-main); z-index: 1005; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         .modal-full-container.active { bottom: 0; }
@@ -82,7 +137,7 @@
         .cat-btn { background: var(--card-bg); color: var(--text-sub); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* TAMPILAN CLEAN MENU GRID (2 Kolom di Ponsel) */
+        /* MENU GRID CLEAN */
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
         @media (max-width: 360px) {
             .menu-grid { grid-template-columns: 1fr; }
@@ -110,7 +165,7 @@
         .menu-img-wrapper {
             position: relative;
             width: 100%;
-            padding-top: 75%; /* Aspect Ratio 4:3 */
+            padding-top: 75%;
             border-radius: 12px;
             overflow: hidden;
             background: var(--bg);
@@ -204,17 +259,19 @@
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
     <div class="drawer-header">
-        <strong style="font-size:15px;"><i class="fa-solid fa-bars"></i> Menu Utama</strong>
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:18px;" onclick="toggleDrawer()"></i>
+        <strong>Menu Utama</strong>
+        <button class="close-drawer-btn" onclick="toggleDrawer()"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <div class="user-box">
-        <img id="drawer-user-img" class="user-avatar" src="">
-        <div id="drawer-user-name" style="font-weight:700; font-size:14px;">Tamu</div>
-        <div id="drawer-user-email" style="font-size:11px; color:var(--text-sub);">Belum Masuk</div>
+        <div class="user-avatar-wrapper">
+            <img id="drawer-user-img" class="user-avatar" src="https://via.placeholder.com/68">
+        </div>
+        <div id="drawer-user-name" class="user-name">Tamu</div>
+        <div id="drawer-user-email" class="user-email">Silakan masuk untuk berbelanja</div>
     </div>
 
-    <div id="drawer-actions"></div>
+    <div id="drawer-actions" class="drawer-actions-container"></div>
 </div>
 
 <!-- Modal Pengaturan -->
@@ -270,39 +327,47 @@
     <div class="modal-full-body">
         <div id="sec-profil-main">
             <div class="drawer-item" onclick="bukaSubProfil('pribadi')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-id-card" style="color:var(--primary);"></i>
-                <div style="flex:1;">
-                    <strong>Data Pribadi</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Nametag, Bio & Foto Profil</div>
+                <div class="drawer-item-left">
+                    <div class="drawer-icon-box" style="color:var(--primary); background:rgba(255,107,53,0.08); border-color:transparent;"><i class="fa-solid fa-id-card"></i></div>
+                    <div>
+                        <strong>Data Pribadi</strong>
+                        <div style="font-size: 12px; color: var(--text-sub);">Nametag, Bio & Foto Profil</div>
+                    </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
+                <i class="fa-solid fa-chevron-right drawer-arrow"></i>
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('alamat')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-location-dot" style="color:#0EA5E9;"></i>
-                <div style="flex:1;">
-                    <strong>📍 Alamat Saya</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Kelola alamat & titik lokasi Peta</div>
+                <div class="drawer-item-left">
+                    <div class="drawer-icon-box" style="color:#0EA5E9; background:rgba(14,165,233,0.08); border-color:transparent;"><i class="fa-solid fa-location-dot"></i></div>
+                    <div>
+                        <strong>📍 Alamat Saya</strong>
+                        <div style="font-size: 12px; color: var(--text-sub);">Kelola alamat & titik lokasi Peta</div>
+                    </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
+                <i class="fa-solid fa-chevron-right drawer-arrow"></i>
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('pengaturan')" style="border-bottom: 1px solid var(--border-color); padding: 16px 12px;">
-                <i class="fa-solid fa-clock-rotate-left" style="color:#8B5CF6;"></i>
-                <div style="flex:1;">
-                    <strong>📜 Pesanan & Riwayat Saya</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Lihat pesanan aktif & transaksi lama</div>
+                <div class="drawer-item-left">
+                    <div class="drawer-icon-box" style="color:#8B5CF6; background:rgba(139,92,246,0.08); border-color:transparent;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div>
+                        <strong>📜 Pesanan & Riwayat Saya</strong>
+                        <div style="font-size: 12px; color: var(--text-sub);">Lihat pesanan aktif & transaksi lama</div>
+                    </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
+                <i class="fa-solid fa-chevron-right drawer-arrow"></i>
             </div>
 
             <div class="drawer-item" onclick="bukaSubProfil('keamanan')" style="padding: 16px 12px;">
-                <i class="fa-solid fa-shield-halved" style="color:#10B981;"></i>
-                <div style="flex:1;">
-                    <strong>🔒 Keamanan</strong>
-                    <div style="font-size: 12px; color: var(--text-sub);">Verifikasi OTP WhatsApp/SMS & Logout</div>
+                <div class="drawer-item-left">
+                    <div class="drawer-icon-box" style="color:#10B981; background:rgba(16,185,129,0.08); border-color:transparent;"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <strong>🔒 Keamanan</strong>
+                        <div style="font-size: 12px; color: var(--text-sub);">Verifikasi OTP WhatsApp/SMS & Logout</div>
+                    </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--border-color);"></i>
+                <i class="fa-solid fa-chevron-right drawer-arrow"></i>
             </div>
         </div>
 
@@ -499,36 +564,56 @@
     }
     function tutupModalPengaturan() { document.getElementById('modal-pengaturan').classList.remove('active'); }
 
+    /* RENDER DRAWER MENU USER DENGAN TAMPILAN CLEAN */
     auth.onAuthStateChanged((user) => {
         const actionBox = document.getElementById('drawer-actions');
         if (user) {
-            document.getElementById('drawer-user-img').src = user.photoURL || 'https://via.placeholder.com/60';
+            document.getElementById('drawer-user-img').src = user.photoURL || 'https://via.placeholder.com/68';
             document.getElementById('drawer-user-img').style.display = 'block';
             document.getElementById('drawer-user-name').innerText = user.displayName;
             document.getElementById('drawer-user-email').innerText = user.email;
 
             actionBox.innerHTML = `
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalProfil();">
-                    <i class="fa-solid fa-circle-user" style="color:var(--primary);"></i> Profil Pelanggan
+                    <div class="drawer-item-left">
+                        <div class="drawer-icon-box" style="color:var(--primary); background:rgba(255,107,53,0.08); border-color:transparent;"><i class="fa-solid fa-circle-user"></i></div>
+                        <span>Profil Pelanggan</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right drawer-arrow"></i>
                 </button>
+
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
-                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
+                    <div class="drawer-item-left">
+                        <div class="drawer-icon-box" style="color:#6366f1; background:rgba(99,102,241,0.08); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
+                        <span>Pengaturan</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right drawer-arrow"></i>
                 </button>
+
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalUlasan();">
-                    <i class="fa-solid fa-star" style="color:#f59e0b;"></i> Beri Ulasan & Rating
+                    <div class="drawer-item-left">
+                        <div class="drawer-icon-box" style="color:#f59e0b; background:rgba(245,158,11,0.08); border-color:transparent;"><i class="fa-solid fa-star"></i></div>
+                        <span>Beri Ulasan & Rating</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right drawer-arrow"></i>
                 </button>
             `;
         } else {
             document.getElementById('drawer-user-img').style.display = 'none';
             document.getElementById('drawer-user-name').innerText = 'Tamu';
-            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk pesanan';
+            document.getElementById('drawer-user-email').innerText = 'Silakan masuk untuk berbelanja';
 
             actionBox.innerHTML = `
-                <button class="drawer-item" onclick="loginGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Masuk Google
+                <button class="drawer-item" onclick="loginGoogle()" style="background:var(--bg); border:1px solid var(--border-color); justify-content:center; padding:12px; margin-bottom:8px;">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" style="margin-right:8px;"> 
+                    <span>Masuk dengan Google</span>
                 </button>
                 <button class="drawer-item" onclick="toggleDrawer(); bukaModalPengaturan();">
-                    <i class="fa-solid fa-gear" style="color:#6366f1;"></i> Pengaturan
+                    <div class="drawer-item-left">
+                        <div class="drawer-icon-box" style="color:#6366f1; background:rgba(99,102,241,0.08); border-color:transparent;"><i class="fa-solid fa-gear"></i></div>
+                        <span>Pengaturan</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right drawer-arrow"></i>
                 </button>
             `;
         }
@@ -822,7 +907,6 @@
         keys.forEach(key => {
             let item = semuaMenuData[key];
             
-            // Filter kategori fleksibel (case insensitive)
             if (kategoriAktif !== 'semua' && String(item.kategori || '').toLowerCase() !== kategoriAktif) return;
 
             let stokValue = (item.stok !== undefined && item.stok !== null) ? parseInt(item.stok) : 0;

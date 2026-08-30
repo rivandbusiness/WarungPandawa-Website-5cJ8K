@@ -223,6 +223,24 @@
         .commit-ver { font-weight: 700; font-size: 13px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         .commit-date { font-size: 11px; color: var(--text-sub); }
         .commit-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-main); line-height: 1.5; }
+
+        /* Style Opsional untuk Kartu Pilih Alamat Fullscreen */
+        .select-address-item {
+            background: var(--bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .select-address-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
     </style>
 </head>
 <body>
@@ -255,7 +273,7 @@
         <span style="font-size: 11px; opacity: 0.8; display: block;">Total Pesanan:</span>
         <strong id="cart-total" style="font-size: 15px; color: #ffc107;">Rp 0</strong>
     </div>
-    <button class="btn-checkout" onclick="prosesPesanan()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
+    <button class="btn-checkout" onclick="bukaModalCheckout()"><i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang</button>
 </div>
 
 <!-- Drawer Menu Utama Clean UI -->
@@ -275,6 +293,31 @@
     </div>
 
     <div id="drawer-actions" class="drawer-actions-container"></div>
+</div>
+
+<!-- Modal Fullscreen Checkout / Konfirmasi Pembayaran -->
+<div id="modal-checkout-full" class="modal-full-container">
+    <div class="modal-full-header">
+        <strong style="font-size: 16px;"><i class="fa-solid fa-wallet"></i> Lanjut Pembayaran</strong>
+        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalCheckout()"></i>
+    </div>
+    <div class="modal-full-body" id="checkout-full-body">
+        <!-- Rincian Checkout Dimuat Lewat JS -->
+    </div>
+</div>
+
+<!-- Modal Fullscreen Pilih Alamat Pengiriman -->
+<div id="modal-pilih-alamat" class="modal-full-container">
+    <div class="modal-full-header">
+        <strong style="font-size: 16px;"><i class="fa-solid fa-location-dot"></i> Pilih Alamat Pengiriman</strong>
+        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="tutupModalPilihAlamat()"></i>
+    </div>
+    <div class="modal-full-body">
+        <div id="list-opsi-alamat-checkout"></div>
+        <button onclick="tutupModalPilihAlamat(); bukaModalProfil(); bukaSubProfil('form-alamat-baru');" style="width:100%; margin-top:15px; background:var(--bg); border:1px dashed var(--primary); color:var(--primary); padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">
+            <i class="fa-solid fa-plus"></i> Tambah Alamat Baru
+        </button>
+    </div>
 </div>
 
 <!-- Modal Pengaturan -->
@@ -979,30 +1022,8 @@
         renderMenu();
     }
 
-    function gantiAlamatCheckout(userKeys) {
-        let optionsObj = {};
-        userKeys.forEach(k => {
-            let item = userAlamatList[k];
-            optionsObj[k] = `🏠 ${item.label} (${item.penerima} - ${item.jalan})`;
-        });
-
-        Swal.fire({
-            title: 'Pilih Alamat Pengiriman',
-            input: 'select',
-            inputOptions: optionsObj,
-            inputValue: selectedAlamatKeyCheckout,
-            showCancelButton: true,
-            confirmButtonText: 'Gunakan Alamat Ini',
-            confirmButtonColor: '#ff6b35'
-        }).then((res) => {
-            if (res.isConfirmed && res.value) {
-                selectedAlamatKeyCheckout = res.value;
-                prosesPesanan();
-            }
-        });
-    }
-
-    function prosesPesanan() {
+    /* SISTEM CHECKOUT MODAL FULLSCREEN MODERN */
+    function bukaModalCheckout() {
         const user = auth.currentUser;
         if (!user) {
             Swal.fire({ title: 'Belum Login', text: 'Silakan login terlebih dahulu!', icon: 'warning', confirmButtonText: 'Login', confirmButtonColor: '#ff6b35' }).then((res) => { if (res.isConfirmed) loginGoogle(); });
@@ -1010,130 +1031,179 @@
         }
 
         let totalHarga = 0;
-        let itemsArray = [];
+        let itemsListHTML = '';
+        let itemsCount = 0;
+
         Object.keys(keranjang).forEach(id => {
             let item = keranjang[id];
             totalHarga += item.harga * item.qty;
-            itemsArray.push(`${item.nama} (${item.qty}x)`);
+            itemsCount += item.qty;
+            itemsListHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:13px;">
+                    <div><b>${item.nama}</b> <span style="color:var(--text-sub);">(${item.qty}x)</span></div>
+                    <div style="font-weight:bold;">Rp ${(item.harga * item.qty).toLocaleString('id-ID')}</div>
+                </div>
+            `;
         });
 
-        if (itemsArray.length === 0) { Swal.fire('Keranjang Kosong', 'Pilih minimal 1 menu!', 'warning'); return; }
+        if (itemsCount === 0) { Swal.fire('Keranjang Kosong', 'Pilih minimal 1 menu!', 'warning'); return; }
 
         database.ref(`users/${user.uid}`).once('value', (snap) => {
             const val = snap.val() || {};
             userAlamatList = val.alamat_list || {};
             let userKeys = Object.keys(userAlamatList);
 
-            let alamatAktifObj = null;
-
             if (!selectedAlamatKeyCheckout || !userAlamatList[selectedAlamatKeyCheckout]) {
                 userKeys.forEach(k => { if (userAlamatList[k].isUtama) selectedAlamatKeyCheckout = k; });
                 if (!selectedAlamatKeyCheckout && userKeys.length > 0) selectedAlamatKeyCheckout = userKeys[0];
             }
 
-            if (selectedAlamatKeyCheckout && userAlamatList[selectedAlamatKeyCheckout]) {
-                alamatAktifObj = userAlamatList[selectedAlamatKeyCheckout];
-            }
+            let alamatAktifObj = (selectedAlamatKeyCheckout && userAlamatList[selectedAlamatKeyCheckout]) ? userAlamatList[selectedAlamatKeyCheckout] : null;
 
-            let alamatHTML = '';
+            let alamatBoxHTML = '';
             if (userKeys.length === 0) {
-                alamatHTML = `<div style="color:#ef4444; font-size:11px;">⚠️ Belum ada alamat tersimpan di profil!</div>`;
-            } else if (userKeys.length === 1) {
-                alamatHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <strong style="color:var(--secondary); font-size:12px;"><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman (${alamatAktifObj.label}):</strong>
-                            <div style="color:var(--text-sub); font-size:11px; margin-top:3px; line-height:1.4;">
-                                ${alamatAktifObj.jalan}, Desa ${alamatAktifObj.desa}, Kec. ${alamatAktifObj.kecamatan} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})
-                            </div>
-                        </div>
-                        <span style="font-size:10px; background:var(--border-color); color:var(--text-main); padding:2px 6px; border-radius:4px; font-weight:bold; white-space:nowrap;">Tunggal</span>
+                alamatBoxHTML = `
+                    <div style="background:rgba(239,68,68,0.08); border:1px solid #ef4444; padding:12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="color:#ef4444; font-size:12px; font-weight:bold;"><i class="fa-solid fa-triangle-exclamation"></i> Belum ada alamat tersimpan!</span>
+                        <button onclick="tutupModalCheckout(); bukaModalProfil(); bukaSubProfil('form-alamat-baru');" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">+ Tambah</button>
                     </div>
                 `;
             } else {
-                alamatHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                alamatBoxHTML = `
+                    <div style="background:var(--bg); border:1px solid var(--border-color); padding:14px; border-radius:14px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
                         <div>
-                            <strong style="color:var(--secondary); font-size:12px;"><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman (${alamatAktifObj.label}):</strong>
-                            <div style="color:var(--text-sub); font-size:11px; margin-top:3px; line-height:1.4;">
-                                ${alamatAktifObj.jalan}, Desa ${alamatAktifObj.desa}, Kec. ${alamatAktifObj.kecamatan} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})
+                            <div style="font-size:11px; font-weight:700; color:var(--secondary); text-transform:uppercase; margin-bottom:4px;">
+                                <i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> Alamat Pengiriman (${alamatAktifObj ? alamatAktifObj.label : ''})
+                            </div>
+                            <div style="font-weight:700; font-size:13px;">${alamatAktifObj ? alamatAktifObj.penerima : ''} <span style="font-size:12px; font-weight:400; color:var(--text-sub);">(${alamatAktifObj ? alamatAktifObj.hp : ''})</span></div>
+                            <div style="font-size:12px; color:var(--text-sub); margin-top:2px; line-height:1.4;">
+                                ${alamatAktifObj ? alamatAktifObj.jalan : ''}, Desa ${alamatAktifObj ? alamatAktifObj.desa : ''}, Kec. ${alamatAktifObj ? alamatAktifObj.kecamatan : ''}
                             </div>
                         </div>
-                        <button onclick="gantiAlamatCheckout(${JSON.stringify(userKeys).replace(/"/g, '&quot;')})" style="background:var(--secondary); color:white; border:none; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                        <button onclick="bukaModalPilihAlamat()" style="background:var(--card-bg); border:1.5px solid var(--border-color); color:var(--secondary); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
                             <i class="fa-solid fa-arrows-rotate"></i> Ganti Alamat
                         </button>
                     </div>
                 `;
             }
 
-            let textAlamatRingkas = alamatAktifObj ? `${alamatAktifObj.jalan}, ${alamatAktifObj.desa} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})` : 'Tanpa Alamat';
+            const body = document.getElementById('checkout-full-body');
+            body.innerHTML = `
+                ${alamatBoxHTML}
 
-            Swal.fire({
-                title: 'Lanjut Pembayaran',
-                html: `
-                    <div style="text-align:left; font-size:13px; line-height:1.6;">
-                        <div style="background:var(--bg); border:1px solid var(--border-color); padding:10px 12px; border-radius:8px; margin-bottom:12px;">
-                            ${alamatHTML}
-                        </div>
+                <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:14px; border-radius:14px; margin-bottom:15px;">
+                    <strong style="font-size:13px; color:var(--secondary); display:block; margin-bottom:10px;"><i class="fa-solid fa-bag-shopping" style="color:var(--primary);"></i> Rincian Pesanan</strong>
+                    ${itemsListHTML}
+                </div>
 
-                        <div style="margin-bottom:10px;">
-                            <label style="font-weight:bold; display:block; margin-bottom:4px;">Pilih Metode Pembayaran:</label>
-                            <select id="swal-metode-bayar" style="width:100%; padding:10px; border-radius:8px; border:1.5px solid var(--border-color); font-size:13px; background:var(--card-bg); color:var(--text-main);">
-                                <option value="QRIS / E-Wallet (Gopay/OVO/Dana)">📱 QRIS / E-Wallet (Gopay/OVO/Dana)</option>
-                                <option value="Transfer Bank BCA/Mandiri">🏦 Transfer Bank (BCA/Mandiri)</option>
-                                <option value="Bayar Tunai (COD / Bayar di Kasir)">💵 Bayar Tunai (COD / Di Kasir)</option>
-                            </select>
-                        </div>
+                <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:14px; border-radius:14px; margin-bottom:20px;">
+                    <label style="font-weight:700; font-size:13px; color:var(--secondary); display:block; margin-bottom:8px;"><i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Pilih Metode Pembayaran</label>
+                    <select id="full-metode-bayar" class="checkout-input" style="padding:12px; font-weight:600;">
+                        <option value="QRIS / E-Wallet (Gopay/OVO/Dana)">📱 QRIS / E-Wallet (Gopay/OVO/Dana)</option>
+                        <option value="Transfer Bank BCA/Mandiri">🏦 Transfer Bank (BCA/Mandiri)</option>
+                        <option value="Bayar Tunai (COD / Bayar di Kasir)">💵 Bayar Tunai (COD / Di Kasir)</option>
+                    </select>
+                </div>
 
-                        <div style="background:rgba(255,107,53,0.1); border:1px solid var(--primary); padding:10px; border-radius:8px; text-align:center;">
-                            <span style="font-size:12px; color:var(--primary);">Total Tagihan:</span>
-                            <h2 style="margin:2px 0 0 0; color:var(--primary);">Rp ${totalHarga.toLocaleString('id-ID')}</h2>
+                <div style="background:rgba(255,107,53,0.08); border:1.5px solid var(--primary); padding:16px; border-radius:14px; text-align:center; margin-bottom:20px;">
+                    <span style="font-size:12px; color:var(--primary); font-weight:700;">Total Tagihan:</span>
+                    <h2 style="margin:4px 0 0 0; color:var(--primary); font-weight:800; font-size:24px;">Rp ${totalHarga.toLocaleString('id-ID')}</h2>
+                </div>
+
+                <button onclick="eksekusiKirimPesanan(${totalHarga})" style="width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:12px; font-weight:700; font-size:14px; cursor:pointer; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);">
+                    🚀 Kirim Pesanan Sekarang
+                </button>
+            `;
+
+            document.getElementById('modal-checkout-full').classList.add('active');
+        });
+    }
+
+    function tutupModalCheckout() { document.getElementById('modal-checkout-full').classList.remove('active'); }
+
+    function bukaModalPilihAlamat() {
+        const user = auth.currentUser;
+        if (!user) return;
+        const container = document.getElementById('list-opsi-alamat-checkout');
+        container.innerHTML = '';
+
+        let keys = Object.keys(userAlamatList);
+        if (keys.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding:20px;">Belum ada alamat tersimpan.</p>`;
+        } else {
+            keys.forEach(k => {
+                let item = userAlamatList[k];
+                let isSelected = (k === selectedAlamatKeyCheckout);
+                container.innerHTML += `
+                    <div class="select-address-item ${isSelected ? 'selected' : ''}" onclick="pilihAlamatIni('${k}')">
+                        <div>
+                            <div style="font-weight:bold; font-size:13px; color:var(--text-main);">🏠 ${item.label} ${item.isUtama ? '<span style="font-size:10px; background:var(--primary); color:white; padding:2px 6px; border-radius:4px;">Utama</span>' : ''}</div>
+                            <div style="font-size:12px; color:var(--text-sub); margin-top:4px;"><b>${item.penerima}</b> (${item.hp})</div>
+                            <div style="font-size:11px; color:var(--text-sub);">${item.jalan}, Desa ${item.desa}, Kec. ${item.kecamatan}</div>
                         </div>
+                        <i class="fa-solid fa-circle-check" style="font-size:18px; color:${isSelected ? 'var(--primary)' : 'var(--border-color)'};"></i>
                     </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '🚀 Kirim Pesanan Sekarang',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#ff6b35',
-                preConfirm: () => document.getElementById('swal-metode-bayar').value
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const metodePilihan = result.value;
-                    const orderId = "TRX-" + Date.now(); 
-
-                    Swal.fire({ title: 'Mengirim Pesanan...', didOpen: () => Swal.showLoading() });
-
-                    let updates = {};
-                    Object.keys(keranjang).forEach(id => {
-                        let currentStok = (semuaMenuData[id] && semuaMenuData[id].stok !== undefined) ? parseInt(semuaMenuData[id].stok) : 0;
-                        let sisaStok = currentStok - keranjang[id].qty;
-                        if (sisaStok < 0) sisaStok = 0;
-                        updates[`daftar_menu/${id}/stok`] = sisaStok;
-                    });
-
-                    database.ref().update(updates).then(() => {
-                        return database.ref('pesanan/' + orderId).set({
-                            id: orderId,
-                            userId: user.uid,
-                            id_alamat: selectedAlamatKeyCheckout || 'ALM-DEFAULT',
-                            nama: val.nama || user.displayName || 'Pelanggan',
-                            items: itemsArray,
-                            total: totalHarga,
-                            metode: metodePilihan,
-                            pembayaran: 'Belum Bayar (Pending)',
-                            status: 'Menunggu Respon',
-                            alamat: textAlamatRingkas,
-                            waktu: Date.now()
-                        });
-                    }).then(() => {
-                        keranjang = {};
-                        updateTotalKeranjang();
-                        renderMenu();
-                        Swal.close();
-                        bukaModalDetailPesanan(orderId);
-                    });
-                }
+                `;
             });
+        }
+        document.getElementById('modal-pilih-alamat').classList.add('active');
+    }
+
+    function pilihAlamatIni(key) {
+        selectedAlamatKeyCheckout = key;
+        tutupModalPilihAlamat();
+        bukaModalCheckout();
+    }
+
+    function tutupModalPilihAlamat() { document.getElementById('modal-pilih-alamat').classList.remove('active'); }
+
+    function eksekusiKirimPesanan(totalHarga) {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        let itemsArray = [];
+        Object.keys(keranjang).forEach(id => {
+            let item = keranjang[id];
+            itemsArray.push(`${item.nama} (${item.qty}x)`);
+        });
+
+        const metodePilihan = document.getElementById('full-metode-bayar').value;
+        const orderId = "TRX-" + Date.now(); 
+
+        let alamatAktifObj = (selectedAlamatKeyCheckout && userAlamatList[selectedAlamatKeyCheckout]) ? userAlamatList[selectedAlamatKeyCheckout] : null;
+        let textAlamatRingkas = alamatAktifObj ? `${alamatAktifObj.jalan}, ${alamatAktifObj.desa} (${alamatAktifObj.penerima} - ${alamatAktifObj.hp})` : 'Tanpa Alamat';
+
+        tutupModalCheckout();
+        Swal.fire({ title: 'Mengirim Pesanan...', didOpen: () => Swal.showLoading() });
+
+        let updates = {};
+        Object.keys(keranjang).forEach(id => {
+            let currentStok = (semuaMenuData[id] && semuaMenuData[id].stok !== undefined) ? parseInt(semuaMenuData[id].stok) : 0;
+            let sisaStok = currentStok - keranjang[id].qty;
+            if (sisaStok < 0) sisaStok = 0;
+            updates[`daftar_menu/${id}/stok`] = sisaStok;
+        });
+
+        database.ref().update(updates).then(() => {
+            return database.ref('pesanan/' + orderId).set({
+                id: orderId,
+                userId: user.uid,
+                id_alamat: selectedAlamatKeyCheckout || 'ALM-DEFAULT',
+                nama: user.displayName || 'Pelanggan',
+                items: itemsArray,
+                total: totalHarga,
+                metode: metodePilihan,
+                pembayaran: 'Belum Bayar (Pending)',
+                status: 'Menunggu Respon',
+                alamat: textAlamatRingkas,
+                waktu: Date.now()
+            });
+        }).then(() => {
+            keranjang = {};
+            updateTotalKeranjang();
+            renderMenu();
+            Swal.close();
+            bukaModalDetailPesanan(orderId);
         });
     }
 

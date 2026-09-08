@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Video Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d0f12; /* Warna latar belakang gelap premium */
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px; /* Lebar maksimal agar tetap rapi di desktop & mobile */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* --- 1. BANNER IKLAN (AD BOARD) --- */
+    .ad-banner {
+      width: 100%;
+      max-width: 600px;
+      height: 70px;
+      background-color: #15181e;
+      border: 1px dashed #2d3340;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 40px;
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .ad-banner:hover {
+      border-color: #4f46e5;
+      background-color: #1a1e26;
+      color: #94a3b8;
+    }
+
+    .ad-badge {
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: #0d0f12;
+      color: #475569;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 0 8px;
+      text-transform: uppercase;
+    }
+
+    /* --- 2. HEADER TEXT --- */
+    .header-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header-title h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .header-title p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    /* --- 3. SEARCH BAR PREMIUM --- */
+    .search-wrapper {
+      width: 100%;
+      background: #1a1d24;
+      border: 1px solid #2d3340;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      padding: 6px 6px 6px 20px;
+      transition: all 0.3s ease;
+      margin-bottom: 40px;
+    }
+
+    /* Efek menyala (Glow) saat kotak pencarian di-klik */
+    .search-wrapper:focus-within {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+      background: #1e222a;
+    }
+
+    .search-icon {
+      color: #64748b;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-wrapper input::placeholder {
+      color: #64748b;
+    }
+
+    .search-wrapper button {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .search-wrapper button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* --- 4. PEMUTAR VIDEO (PLAYER) --- */
+    #playerContainer {
+      width: 100%;
+      display: none; /* Disembunyikan sampai ada pencarian */
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .video-ratio {
+      position: relative;
+      padding-bottom: 56.25%; /* Rasio Aspek 16:9 */
+      height: 0;
+    }
+
+    .video-ratio iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsif untuk layar HP */
+    @media (max-width: 480px) {
+      .search-wrapper {
+        flex-direction: column;
+        border-radius: 24px;
+        padding: 10px;
+      }
+      .search-wrapper input {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .search-wrapper button {
+        width: 100%;
+      }
+      .search-icon {
+        display: none; /* Sembunyikan ikon kaca pembesar di HP */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- 1. Papan Iklan (Ad Board) -->
+    <div class="ad-banner">
+      <span class="ad-badge">Sponsored</span>
+      Tempat Iklan / Banner Anda (468x60)
+    </div>
+
+    <!-- 2. Header Teks -->
+    <div class="header-title">
+      <h1>StreamPlay</h1>
+      <p>Tonton tanpa gangguan, langsung dari sini.</p>
+    </div>
+
+    <!-- 3. Kotak Pencarian Premium -->
+    <div class="search-wrapper">
+      <div class="search-icon">
+        <!-- Ikon Kaca Pembesar -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <input type="text" id="searchInput" placeholder="Ketik judul lagu, film, atau video..." onkeypress="handleKeyPress(event)" autocomplete="off">
+      <button onclick="searchVideo()">Cari Video</button>
+    </div>
+
+    <!-- 4. Area Pemutar Video -->
+    <div id="playerContainer">
+      <div class="video-ratio">
+        <!-- Iframe akan diisi otomatis oleh JavaScript -->
+        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Fitur agar tombol "Enter" di keyboard bisa dipakai untuk mencari
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        searchVideo();
+      }
+    }
+
+    function searchVideo() {
+      const query = document.getElementById("searchInput").value.trim();
+      const playerContainer = document.getElementById("playerContainer");
+      const videoFrame = document.getElementById("videoFrame");
+
+      // Jika input kosong, jangan lakukan apa-apa
+      if (query === "") return;
+
+      // Memunculkan kotak video
+      playerContainer.style.display = "block";
+
+      // Mengubah input teks menjadi format URL yang aman
+      const encodedQuery = encodeURIComponent(query);
+      
+      // Memuat pencarian video ke dalam iframe YouTube tanpa UI berlebihan
+      videoFrame.src = `https://www.youtube.com/embed?listType=search&list=${encodedQuery}&autoplay=1`;
+    }
+  </script>
+
+</body>
+</html>

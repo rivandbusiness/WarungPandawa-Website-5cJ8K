@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
+    <style>
+        /* CSS Styling */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;500;700&display=swap');
+
+        :root {
+            --primary-blue: #1A5296;
+            --primary-orange: #F26522;
+            --accent-yellow: #FFC20E;
+            --accent-red: #E32636;
+            --text-dark: #333;
+            --bg-light: #F9F9F9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-right: 25px;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #007676; /* Matching the logo's teal color */
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .brand-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #3B82F6 100%);
+            color: white;
+            padding: 80px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: var(--accent-yellow);
+            transform: skewY(-3deg);
+            z-index: 1;
+        }
+
+        .hero-text {
+            max-width: 50%;
+            z-index: 2;
+        }
+
+        .hero-text h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--accent-yellow);
+            text-shadow: 3px 3px 0px var(--accent-red);
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-buy {
+            background-color: var(--accent-red);
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(227, 38, 54, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-buy:hover {
+            transform: scale(1.05);
+            background-color: #c01b2a;
+        }
+
+        .hero-image {
+            max-width: 45%;
+            z-index: 2;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: rotate(5deg);
+            border: 5px solid white;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(5deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(5deg); }
+        }
+
+        /* Features/Tags Section */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 60px 20px 20px;
+            background-color: var(--accent-yellow);
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-badge {
+            background-color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 3px dashed var(--primary-orange);
+        }
+
+        /* Product Info Section */
+        .product-info {
+            padding: 80px 50px;
+            background-color: white;
+            text-align: center;
+        }
+
+        .product-info h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 50px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .info-card {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 8px solid var(--primary-orange);
+            text-align: left;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .info-card h4 {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card h4 span {
+            font-size: 2rem;
+        }
+
+        .info-card ul {
+            list-style-type: none;
+        }
+
+        .info-card ul li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .info-card ul li::before {
+            content: '🌮';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1rem;
+        }
+
+        /* Packaging Section */
+        .packaging {
+            padding: 80px 50px;
+            background-color: var(--bg-light);
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .packaging-text {
+            flex: 1;
+        }
+
+        .packaging-text h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-orange);
+            margin-bottom: 20px;
+        }
+
+        .packaging-image {
+            flex: 1;
+        }
+
+        .packaging-image img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9rem;
+        }
+        
+        footer img {
+            width: 40px;
+            vertical-align: middle;
+            margin: 0 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero, .packaging {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 20px;
+            }
+            .hero-text, .hero-image {
+                max-width: 100%;
+            }
+            .hero-image {
+                margin-top: 40px;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .features {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="nav-links">
+            <a href="#home">Beranda</a>
+            <a href="#info">Informasi Produk</a>
+            <a href="#kemasan">Desain Kemasan</a>
+        </div>
+        <!-- Brand Rivora dan Logo di sebelah Kanan -->
+        <div class="brand-logo">
+            <h1>RIVORA</h1>
+            <img src="1000125757_a066c6.png" alt="Logo Rivora">
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-text">
+            <h2>NacSoay</h2>
+            <p>Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!</p>
+            <button class="btn-buy">Beli Sekarang!</button>
+        </div>
+        <div class="hero-image">
+            <!-- Menampilkan gambar produk tampak depan -->
+            <img src="1000132242_a066c6.png" alt="Kemasan Nacsoay Snacks">
+        </div>
+    </section>
+
+    <!-- Features Badges -->
+    <section class="features">
+        <div class="feature-badge">🔥 Bold Flavor Explosion!</div>
+        <div class="feature-badge">🌿 Mint & Chili Kick!</div>
+        <div class="feature-badge">📦 10 Individual Packs Inside</div>
+        <div class="feature-badge">💼 Grab & Go Easy Carry Handle</div>
+    </section>
+
+    <!-- Product Information Section -->
+    <section id="info" class="product-info">
+        <h3>Di Balik Kelezatan Nacsoay</h3>
+        <div class="info-grid">
+            
+            <!-- Komposisi -->
+            <div class="info-card">
+                <h4><span>🌽</span> Komposisi Pilihan</h4>
+                <p>Nacsoay dibuat dari bahan-bahan berkualitas tinggi untuk memastikan rasa yang autentik:</p>
+                <br>
+                <ul>
+                    <li>Tepung Jagung Utuh Berkualitas</li>
+                    <li>Minyak Nabati Premium</li>
+                    <li>Ekstrak Cabai Segar (Chili Kick)</li>
+                    <li>Ekstrak Daun Mint Alami</li>
+                    <li>Garam Laut & Rempah Rahasia</li>
+                    <li>Saus Tomat & Salsa (Sebagai perisa pelengkap)</li>
+                </ul>
+            </div>
+
+            <!-- Cara Mengolah -->
+            <div class="info-card">
+                <h4><span>👨‍🍳</span> Cara Mengolah</h4>
+                <p>Proses higienis berstandar tinggi untuk menghasilkan keripik yang super renyah:</p>
+                <br>
+                <ul>
+                    <li><strong>Nixtamalization:</strong> Biji jagung direndam agar nutrisinya keluar maksimal.</li>
+                    <li><strong>Penggilingan:</strong> Diubah menjadi adonan masa yang lembut.</li>
+                    <li><strong>Pembentukan:</strong> Dicetak membentuk segitiga ikonik Nachos.</li>
+                    <li><strong>Pemanggangan Flash:</strong> Dipanggang sejenak untuk mengunci rasa jagung.</li>
+                    <li><strong>Penggorengan:</strong> Digoreng kilat agar teksturnya sangat renyah.</li>
+                    <li><strong>Seasoning:</strong> Ditaburi bumbu *Mint & Chili* secara merata selagi hangat.</li>
+                </ul>
+            </div>
+
+            <!-- Alat yang Digunakan -->
+            <div class="info-card">
+                <h4><span>⚙️</span> Alat Berteknologi Tinggi</h4>
+                <p>Kami menggunakan mesin industri canggih (Food Grade) agar kualitas tetap terjaga:</p>
+                <br>
+                <ul>
+                    <li><strong>Industrial Corn Mill:</strong> Penggiling jagung otomatis.</li>
+                    <li><strong>Sheeter & Rotary Cutter:</strong> Mesin pemipih dan pemotong bentuk segitiga presisi.</li>
+                    <li><strong>Continuous Fryer:</strong> Penggorengan konveyor dengan pengatur suhu otomatis.</li>
+                    <li><strong>Rotary Seasoning Drum:</strong> Tabung putar raksasa yang memastikan bumbu merata di setiap keping.</li>
+                    <li><strong>Automated Packaging Machine:</strong> Mesin pengemas ke dalam 10 pack individu berukuran 20g.</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Packaging/Dieline Section -->
+    <section id="kemasan" class="packaging">
+        <div class="packaging-text">
+            <h3>Desain Kemasan Pintar!</h3>
+            <p>Kemasan Nacsoay dari <strong>Rivora</strong> tidak hanya melindungi keripik agar tetap renyah, tapi juga dirancang sangat fungsional. Dilengkapi dengan <em>Grab & Go Easy Carry Handle</em>, Anda bisa membawanya dengan mudah kemana saja!</p>
+            <br>
+            <p>Dengan berat bersih <strong>200g</strong>, di dalamnya terdapat 10 kemasan individual (masing-masing 20g) sehingga keripik tetap higienis, tidak mudah melempem, dan pas untuk dibagikan ke teman-teman.</p>
+        </div>
+        <div class="packaging-image">
+            <!-- Menampilkan gambar pola layout kemasan (dieline) -->
+            <img src="1000130939_a066c6.jpg" alt="Layout Desain Kemasan Nacsoay">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 RIVORA <img src="1000125757_a066c6.png" alt="Logo"> All Rights Reserved.</p>
+        <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
+    </footer>
+
+</body>
+</html>

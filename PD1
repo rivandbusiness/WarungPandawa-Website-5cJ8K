@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
+    <style>
+        /* Font Ceria & Bersih */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        
+        :root {
+            /* Palet Warna diambil dari referensi gambar */
+            --color-hero-bg: #2C64B4; 
+            --color-feature-bg: #F0B325; 
+            --color-light-bg: #F8F9FA; 
+            --color-text-dark: #1F2937;
+            --color-text-light: #6B7280;
+            --color-orange-btn: #E06738;
+            --color-navy: #152238; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* =========================================
+           STYLE UNTUK VIDEO JEMPUTAN VIP (BARU!)
+           ========================================= */
+        #vip-transfer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000; /* Layar hitam selama video main */
+            z-index: 99999; /* Paling atas menutupi semuanya */
+            display: none; /* Disembunyikan dulu, Javascript yang akan buka */
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        #vip-transfer video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Biar video memenuhi layar HP/Laptop tanpa gepeng */
+        }
+
+        .content-wrap { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+        
+        /* HEADER */
+        header { 
+            background: #ffffff; 
+            padding: 20px 0; 
+            position: fixed; 
+            width: 100%;
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.4s ease;
+        }
+        
+        body { padding-top: 80px; } 
+
+        header .content-wrap { display: flex; justify-content: space-between; align-items: center; }
+        
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; font-size: 1rem; font-weight: 700; color: var(--color-navy); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--color-hero-bg); }
+
+        .brand-logo { display: flex; align-items: center; gap: 10px; }
+        .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: #1E829D; font-weight: 800; letter-spacing: -0.5px; }
+        .brand-logo img { width: 50px; }
+
+        /* HERO SECTION */
+        .hero-section { background: var(--color-hero-bg); padding: 80px 0; color: white; position: relative; overflow: hidden; }
+        .hero-section .content-wrap { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+        
+        .hero-text { flex: 1; max-width: 550px; z-index: 2; }
+        .hero-text h2 { font-family: 'Fredoka One', cursive; font-size: 4.5rem; font-weight: 800; color: #F0B325; margin-bottom: 20px; line-height: 1.1; letter-spacing: -1px; }
+        .hero-text p { font-size: 1.25rem; line-height: 1.6; margin-bottom: 40px; font-weight: 400; }
+        
+        .btn-buy { background: var(--color-orange-btn); color: white; padding: 16px 40px; font-size: 1.1rem; font-weight: 700; border: none; border-radius: 30px; cursor: pointer; transition: background 0.3s, transform 0.2s; }
+        .btn-buy:hover { background: #c55325; transform: translateY(-2px); }
+        
+        .hero-image { flex: 1; display: flex; justify-content: flex-end; z-index: 2; }
+        
+        @keyframes float-gentle {
+            0% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(-3deg); }
+            100% { transform: translateY(0px) rotate(-5deg); }
+        }
+        .hero-image img { width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 20px 20px 40px rgba(0,0,0,0.2); animation: float-gentle 6s ease-in-out infinite; background: white; padding: 10px;}
+
+        /* FEATURES SECTION */
+        .features-section { background: var(--color-feature-bg); padding: 50px 0; }
+        .features-section .content-wrap { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; text-align: center; }
+        
+        .feature-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .feature-icon { width: 70px; height: 70px; background: transparent; border: 2px solid var(--color-text-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .feature-item p { font-weight: 700; color: var(--color-text-dark); font-size: 1.1rem; line-height: 1.4; max-width: 150px; }
+
+        /* INFO PRODUK */
+        .info-section { background: #ffffff; padding: 80px 0; }
+        .section-title { font-size: 2.8rem; font-weight: 800; color: var(--color-navy); text-align: center; margin-bottom: 60px; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .info-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--color-orange-btn); }
+        .info-card.full-width { grid-column: 1 / -1; max-width: 800px; margin: 0 auto; }
+        
+        .info-card h4 { font-size: 1.6rem; color: var(--color-text-dark); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        .info-card h4 span { font-size: 2rem; }
+        .info-card > p { font-size: 1rem; color: var(--color-text-light); margin-bottom: 20px; line-height: 1.6; }
+        
+        .info-card ul { padding-left: 0; list-style: none; }
+        .info-card ul li { margin-bottom: 12px; position: relative; padding-left: 30px; font-size: 1rem; color: var(--color-text-dark); line-height: 1.5; }
+        .info-card ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: white; background: #F0B325; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+
+        /* KEMASAN SECTION */
+        .packaging-section { background: var(--color-light-bg); padding: 80px 0; }
+        .packaging-flex { display: flex; align-items: center; gap: 50px; margin-bottom: 80px; }
+        .packaging-flex.reverse { flex-direction: row-reverse; }
+        
+        .packaging-text { flex: 1; }
+        .packaging-text h3 { font-size: 2.5rem; font-weight: 800; color: var(--color-navy); margin-bottom: 30px; line-height: 1.2; }
+        .packaging-text p { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-dark); margin-bottom: 20px; }
+        .highlight-box { display: inline-block; background: var(--color-feature-bg); color: var(--color-text-dark); font-weight: 700; padding: 8px 20px; border-radius: 8px; margin-top: 15px; }
+
+        .packaging-image { flex: 1; display: flex; justify-content: center; }
+        .packaging-image img { width: 100%; border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+
+        /* Visual 3D Section */
+        .sub-section-title { font-size: 2rem; font-weight: 700; color: var(--color-navy); text-align: center; margin: 40px 0 40px 0; padding-top: 40px; border-top: 1px solid #dee2e6; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .detail-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .detail-card img { width: 100%; border-radius: 8px; margin-bottom: 20px; background: #f9fafb; object-fit: contain; }
+        .detail-card h5 { font-size: 1.3rem; color: var(--color-navy); font-weight: 700; margin-bottom: 10px; }
+        .detail-card p { font-size: 0.95rem; color: var(--color-text-light); }
+
+        /* FOOTER */
+        footer { background: var(--color-navy); color: #9CA3AF; text-align: center; padding: 30px 20px; font-size: 0.9rem; }
+        footer img { width: 25px; vertical-align: middle; margin: 0 8px; opacity: 0.6; }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero-section .content-wrap, .packaging-flex, .packaging-flex.reverse { flex-direction: column; text-align: center; }
+            .hero-text { max-width: 100%; }
+            .hero-text h2 { font-size: 3.5rem; }
+            .features-section .content-wrap { flex-wrap: wrap; }
+            .feature-item { min-width: 45%; margin-bottom: 20px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-card.full-width { grid-column: auto; }
+            .detail-grid { grid-template-columns: 1fr; }
+            header .content-wrap { flex-direction: column; gap: 15px; }
+            .nav-links { gap: 15px; }
+            body { padding-top: 130px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================
+         OVERLAY VIDEO VIP (JEMPUTAN) 
+         ========================================= -->
+    <div id="vip-transfer">
+        <!-- Atribut muted dan playsinline WAJIB ada agar video bisa autoplay di HP -->
+        <video id="transfer-video" muted playsinline></video>
+    </div>
+
+    <!-- HEADER -->
+    <header id="main-header">
+        <div class="content-wrap">
+            <div class="nav-links">
+                <a href="#home">Beranda</a>
+                <a href="#info">Informasi Produk</a>
+                <a href="#kemasan">Desain Kemasan</a>
+            </div>
+            <div class="brand-logo">
+                <h1>RIVORA</h1>
+                <img src="20260925_072539.png" alt="Logo Rivora">
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-section">
+        <div class="content-wrap">
+            <div class="hero-text">
+                <h2>NacSoay</h2>
+                <p>Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!</p>
+                <button class="btn-buy">BELI SEKARANG</button>
+            </div>
+            <div class="hero-image">
+                <img src="1000132795_00be01_2.jpg" alt="Kemasan Nacsoay Snacks"> 
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES BADGE -->
+    <section class="features-section">
+        <div class="content-wrap">
+            <div class="feature-item">
+                <div class="feature-icon">🔥</div>
+                <p>Bold Flavor Explosion!</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🌿</div>
+                <p>Mint & Chili Kick!</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📦</div>
+                <p>10 Individual Packs Inside</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💼</div>
+                <p>Grab & Go Easy Carry Handle</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFO PRODUK -->
+    <section id="info" class="info-section">
+        <div class="content-wrap">
+            <h3 class="section-title">Di Balik Kelezatan Nacsoay</h3>
+            <div class="info-grid">
+                
+                <div class="info-card">
+                    <h4><span>🌽</span> Komposisi Pilihan</h4>
+                    <p>Nacsoay dibuat dari bahan-bahan berkualitas tinggi untuk memastikan rasa yang autentik:</p>
+                    <ul>
+                        <li>Tepung Jagung Utuh Berkualitas</li>
+                        <li>Minyak Nabati Premium</li>
+                        <li>Ekstrak Cabai Segar (Chili Kick)</li>
+                        <li>Ekstrak Daun Mint Alami</li>
+                        <li>Garam Laut & Rempah Rahasia</li>
+                        <li>Saus Tomat & Salsa (Sebagai perisa pelengkap)</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4><span>👨‍🍳</span> Cara Mengolah</h4>
+                    <p>Proses higienis berstandar tinggi untuk menghasilkan keripik yang super renyah:</p>
+                    <ul>
+                        <li><strong>Nixtamalization:</strong> Biji jagung direndam agar nutrisinya keluar maksimal.</li>
+                        <li><strong>Penggilingan:</strong> Diubah menjadi adonan masa yang lembut.</li>
+                        <li><strong>Pembentukan:</strong> Dicetak membentuk segitiga ikonik Nachos.</li>
+                        <li><strong>Pemanggangan Flash:</strong> Dipanggang sejenak untuk mengunci rasa jagung.</li>
+                        <li><strong>Penggorengan:</strong> Digoreng kilat agar teksturnya sangat renyah.</li>
+                        <li><strong>Seasoning:</strong> Ditaburi bumbu *Mint & Chili* secara merata selagi hangat.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card full-width">
+                    <h4><span>⚙️</span> Alat Berteknologi Tinggi</h4>
+                    <p>Kami menggunakan mesin industri canggih (Food Grade) agar kualitas tetap terjaga:</p>
+                    <ul>
+                        <li><strong>Industrial Corn Mill:</strong> Penggiling jagung otomatis.</li>
+                        <li><strong>Sheeter & Rotary Cutter:</strong> Mesin pemipih dan pemotong bentuk segitiga presisi.</li>
+                        <li><strong>Continuous Fryer:</strong> Penggorengan konveyor dengan pengatur suhu otomatis.</li>
+                        <li><strong>Rotary Seasoning Drum:</strong> Tabung putar raksasa yang memastikan bumbu merata di setiap keping.</li>
+                        <li><strong>Automated Packaging Machine:</strong> Mesin pengemas ke dalam 10 pack individu berukuran 20g.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- KEMASAN SECTION -->
+    <section id="kemasan" class="packaging-section">
+        <div class="content-wrap">
+            
+            <div class="packaging-flex">
+                <div class="packaging-text">
+                    <h3>Desain Kemasan Pintar! (Outer Box)</h3>
+                    <p>Kemasan Nacsoay dari <strong>Rivora</strong> tidak hanya melindungi keripik agar tetap renyah, tapi juga dirancang sangat fungsional. Dilengkapi dengan <em>Grab & Go Easy Carry Handle</em>, Anda bisa membawanya dengan mudah kemana saja!</p>
+                    <p>Desain luar ini (Outer Box) berfungsi sebagai pelindung utama dan wadah yang sempurna untuk dibagikan saat kumpul bersama teman-teman.</p>
+                    <div class="highlight-box">Berat Bersih: 200g (Berisi 10 Packs)</div>
+                </div>
+                <div class="packaging-image">
+                    <img src="[MASUKKAN_GAMBAR_LAYOUT_BOX.jpg]" alt="Layout Desain Kemasan Box Nacsoay">
+                </div>
+            </div>
+
+            <div class="packaging-flex reverse">
+                <div class="packaging-text">
+                    <h3>Kemasan Praktis (Inner Sachet)</h3>
+                    <p>Di dalam Outer Box, Anda akan menemukan 10 kemasan sachet individual. Desain sachet ini menggunakan material foil premium yang menjamin keripik tetap higienis dan tidak mudah melempem.</p>
+                    <p>Porsinya yang pas membuatnya sangat cocok untuk dinikmati sendiri (single-serving) atau dibawa sebagai camilan ringan saat bepergian.</p>
+                    <div class="highlight-box">Berat Bersih: 20g per Sachet</div>
+                </div>
+                <div class="packaging-image">
+                    <img src="[MASUKKAN_GAMBAR_LAYOUT_SACHET.jpg]" alt="Layout Desain Kemasan Sachet Nacsoay">
+                </div>
+            </div>
+
+            <h3 class="sub-section-title">Simulasi Visual 3D</h3>
+            
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <img src="[MASUKKAN_GAMBAR_3D_BOX.jpg]" alt="Visual 3D Box">
+                    <h5>Visual 3D Outer Box</h5>
+                    <p>Tampilan bentuk nyata box Premium 200g saat dirakit dan siap pajang.</p>
+                </div>
+                
+                <div class="detail-card">
+                    <img src="[MASUKKAN_GAMBAR_3D_SACHET.jpg]" alt="Visual 3D Sachet">
+                    <h5>Visual 3D Inner Sachet</h5>
+                    <p>Tampilan bentuk nyata sachet foil 20g yang higienis dan praktis.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 RIVORA <img src="20260925_085239.png" alt="Logo"> All Rights Reserved.</p>
+        <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
+    </footer>
+
+    <!-- =========================================
+         SCRIPT JAVASCRIPT (LOGIKA VIP TRANSFER & HEADER)
+         ========================================= -->
+    <script>
+        // --- 1. LOGIKA SMART HEADER (Hide on scroll down) ---
+        let lastScrollTop = 0;
+        const header = document.getElementById("main-header");
+        
+        window.addEventListener("scroll", function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop && currentScroll > 100) {
+                header.style.transform = "translateY(-100%)";
+            } else {
+                header.style.transform = "translateY(0)";
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        // --- 2. LOGIKA JEMPUTAN VIP (Deteksi Platform Asal) ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const vipOverlay = document.getElementById("vip-transfer");
+            const transferVideo = document.getElementById("transfer-video");
+            
+            // Cek URL Parameternya (Contoh: websitemu.com/?dari=wa)
+            const urlParams = new URLSearchParams(window.location.search);
+            const sumberDariLink = urlParams.get('dari'); // Mendeteksi "?dari="
+            
+            // Cek juga pakai Document Referrer (Mendeteksi aplikasi sebelumnya jika memungkinkan)
+            const referrer = document.referrer.toLowerCase();
+
+            let namaFileVideo = "";
+
+            // Menentukan video mana yang dimainkan
+            if (sumberDariLink === 'wa' || referrer.includes('whatsapp') || referrer.includes('wa.me')) {
+                namaFileVideo = "Dari wa menuju Rivora.mp4"; // Nama file persis seperti yang kamu minta
+            } 
+            else if (sumberDariLink === 'youtube' || referrer.includes('youtube.com') || referrer.includes('youtu.be')) {
+                namaFileVideo = "Dari YouTube menuju Rivora.mp4";
+            }
+
+            // Jika terdeteksi datang dari WA atau Youtube
+            if (namaFileVideo !== "") {
+                // Kunci scroll halaman dan munculkan layar hitam overlay
+                document.body.style.overflow = "hidden";
+                vipOverlay.style.display = "flex";
+                
+                // Masukkan video
+                transferVideo.src = namaFileVideo;
+                
+                // Mainkan Video
+                transferVideo.play().catch(error => {
+                    // Jika di-block oleh browser (karena aturan ketat HP), langsung tutup videonya agar web terbuka
+                    console.log("Autoplay dicegah oleh browser HP:", error);
+                    tutupLayarJemputan();
+                });
+
+                // Ketika video durasinya sudah habis/selesai, layar hitam menghilang
+                transferVideo.onended = function() {
+                    tutupLayarJemputan();
+                };
+
+                // Sistem pertahanan (Bila video error/loading lama, paksa buka web dalam 6 detik)
+                setTimeout(() => {
+                    tutupLayarJemputan();
+                }, 6000); 
+
+            } else {
+                // Jika masuk manual dari Chrome (Tidak ada referensi WA/YT)
+                // Biarkan web langsung terbuka seperti biasa
+                vipOverlay.style.display = "none";
+            }
+
+            // Fungsi untuk menghilangkan layar hitam transisi perlahan
+            function tutupLayarJemputan() {
+                vipOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    vipOverlay.style.display = "none";
+                    document.body.style.overflow = "auto"; // Kembalikan fungsi scroll
+                }, 500); // 500ms adalah waktu fade-out
+            }
+        });
+    </script>
+</body>
+</html>

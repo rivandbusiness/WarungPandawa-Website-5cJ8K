@@ -10,7 +10,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
         
         :root {
-            /* Palet Warna diambil dari referensi gambar */
             --color-hero-bg: #2C64B4; 
             --color-feature-bg: #F0B325; 
             --color-light-bg: #F8F9FA; 
@@ -24,7 +23,7 @@
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
         /* =========================================
-           STYLE UNTUK VIDEO JEMPUTAN VIP (BARU!)
+           STYLE UNTUK VIDEO JEMPUTAN VIP (DIPERBARUI)
            ========================================= */
         #vip-transfer {
             position: fixed;
@@ -32,17 +31,35 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000; /* Layar hitam selama video main */
-            z-index: 99999; /* Paling atas menutupi semuanya */
-            display: none; /* Disembunyikan dulu, Javascript yang akan buka */
+            background-color: #000; 
+            z-index: 99999; 
+            display: none; 
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease;
+            /* Transisi diperlambat menjadi 1.5 detik agar elegan dan sinematik */
+            transition: opacity 1.5s ease-in-out;
         }
+        
+        /* Teks loading palsu untuk tes jika video belum ada */
+        #vip-transfer-text {
+            position: absolute;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            animation: pulse-text 1.5s infinite alternate;
+        }
+        @keyframes pulse-text {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         #vip-transfer video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Biar video memenuhi layar HP/Laptop tanpa gepeng */
+            object-fit: cover; 
+            position: relative;
+            z-index: 2; /* Menutupi teks jika video sudah ada */
         }
 
         .content-wrap { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
@@ -162,6 +179,8 @@
          OVERLAY VIDEO VIP (JEMPUTAN) 
          ========================================= -->
     <div id="vip-transfer">
+        <!-- Teks yang muncul untuk tes jika videonya belum diletakkan di folder -->
+        <div id="vip-transfer-text">Menuju Rivora...</div>
         <!-- Atribut muted dan playsinline WAJIB ada agar video bisa autoplay di HP -->
         <video id="transfer-video" muted playsinline></video>
     </div>
@@ -322,7 +341,7 @@
          SCRIPT JAVASCRIPT (LOGIKA VIP TRANSFER & HEADER)
          ========================================= -->
     <script>
-        // --- 1. LOGIKA SMART HEADER (Hide on scroll down) ---
+        // --- 1. LOGIKA SMART HEADER ---
         let lastScrollTop = 0;
         const header = document.getElementById("main-header");
         
@@ -336,67 +355,66 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // --- 2. LOGIKA JEMPUTAN VIP (Deteksi Platform Asal) ---
+        // --- 2. LOGIKA JEMPUTAN VIP (DIPERBARUI) ---
         document.addEventListener("DOMContentLoaded", function() {
             const vipOverlay = document.getElementById("vip-transfer");
             const transferVideo = document.getElementById("transfer-video");
+            const transferText = document.getElementById("vip-transfer-text");
             
-            // Cek URL Parameternya (Contoh: websitemu.com/?dari=wa)
             const urlParams = new URLSearchParams(window.location.search);
-            const sumberDariLink = urlParams.get('dari'); // Mendeteksi "?dari="
-            
-            // Cek juga pakai Document Referrer (Mendeteksi aplikasi sebelumnya jika memungkinkan)
+            const sumberDariLink = urlParams.get('dari'); 
             const referrer = document.referrer.toLowerCase();
 
             let namaFileVideo = "";
 
-            // Menentukan video mana yang dimainkan
             if (sumberDariLink === 'wa' || referrer.includes('whatsapp') || referrer.includes('wa.me')) {
-                namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; // Nama file persis seperti yang kamu minta
+                namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; 
+                transferText.innerText = "Menjemput dari WhatsApp...";
             } 
             else if (sumberDariLink === 'youtube' || referrer.includes('youtube.com') || referrer.includes('youtu.be')) {
                 namaFileVideo = "Dari YouTube menuju Rivora.mp4";
+                transferText.innerText = "Menjemput dari YouTube...";
             }
 
-            // Jika terdeteksi datang dari WA atau Youtube
             if (namaFileVideo !== "") {
-                // Kunci scroll halaman dan munculkan layar hitam overlay
+                // Munculkan layar hitam overlay
                 document.body.style.overflow = "hidden";
                 vipOverlay.style.display = "flex";
                 
-                // Masukkan video
                 transferVideo.src = namaFileVideo;
                 
                 // Mainkan Video
                 transferVideo.play().catch(error => {
-                    // Jika di-block oleh browser (karena aturan ketat HP), langsung tutup videonya agar web terbuka
-                    console.log("Autoplay dicegah oleh browser HP:", error);
-                    tutupLayarJemputan();
+                    console.log("Video belum ada, menjalankan simulasi animasi teks.", error);
+                    // Karena video belum ada di folder, kita paksa tahan layar hitamnya minimal 3.5 Detik
+                    // Biar Anda bisa merasakan efek transisinya!
+                    setTimeout(() => {
+                        tutupLayarJemputan();
+                    }, 3500); 
                 });
 
-                // Ketika video durasinya sudah habis/selesai, layar hitam menghilang
+                // Ketika video durasinya asli sudah habis/selesai
                 transferVideo.onended = function() {
                     tutupLayarJemputan();
                 };
 
-                // Sistem pertahanan (Bila video error/loading lama, paksa buka web dalam 6 detik)
+                // Batas maksimal tahan layar hitam dinaikkan ke 12 Detik (jika video nanti ternyata panjang)
                 setTimeout(() => {
                     tutupLayarJemputan();
-                }, 6000); 
+                }, 12000); 
 
             } else {
-                // Jika masuk manual dari Chrome (Tidak ada referensi WA/YT)
-                // Biarkan web langsung terbuka seperti biasa
+                // Masuk murni dari Chrome = Tidak ada layar hitam
                 vipOverlay.style.display = "none";
             }
 
-            // Fungsi untuk menghilangkan layar hitam transisi perlahan
+            // Fungsi untuk memudarkan layar secara perlahan dan elegan
             function tutupLayarJemputan() {
-                vipOverlay.style.opacity = "0";
+                vipOverlay.style.opacity = "0"; // Mulai memudar (butuh 1.5 detik sesuai CSS)
                 setTimeout(() => {
                     vipOverlay.style.display = "none";
-                    document.body.style.overflow = "auto"; // Kembalikan fungsi scroll
-                }, 500); // 500ms adalah waktu fade-out
+                    document.body.style.overflow = "auto"; 
+                }, 1500); // 1.5 detik pas dengan durasi CSS "transition: opacity 1.5s"
             }
         });
     </script>

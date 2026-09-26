@@ -5,197 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
     <style>
-        /* Font Ceria & Bersih */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        /* Menggabungkan Font dari Konsep Baru */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap');
         
         :root {
-            --color-hero-bg: #2C64B4; 
-            --color-feature-bg: #F0B325; 
-            --color-light-bg: #F8F9FA; 
-            --color-text-dark: #1F2937;
+            --color-primary: #1A5296; /* Biru Header & Text */
+            --color-secondary: #F26522; /* Oranye Hero */
+            --color-accent: #FFC20E; /* Kuning Features */
+            --color-danger: #E32636; /* Merah Aksen */
+            --color-light-bg: #F9F9F9; 
+            --color-text-dark: #333333;
             --color-text-light: #6B7280;
-            --color-orange-btn: #E06738;
-            --color-navy: #152238; 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
         /* =========================================
-           STYLE UNTUK VIDEO JEMPUTAN VIP (DIPERBARUI)
+           STYLE UNTUK VIDEO JEMPUTAN VIP
            ========================================= */
         #vip-transfer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000; 
-            z-index: 99999; 
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            /* Transisi diperlambat menjadi 1.5 detik agar elegan dan sinematik */
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; z-index: 99999; display: none; 
+            justify-content: center; align-items: center;
             transition: opacity 1.5s ease-in-out;
         }
-        
-        /* Teks loading palsu untuk tes jika video belum ada */
         #vip-transfer-text {
-            position: absolute;
-            color: white;
-            font-family: 'Fredoka One', cursive;
-            font-size: 2rem;
-            letter-spacing: 2px;
-            animation: pulse-text 1.5s infinite alternate;
+            position: absolute; color: white; font-family: 'Fredoka One', cursive;
+            font-size: 2rem; letter-spacing: 2px; animation: pulse-text 1.5s infinite alternate;
         }
         @keyframes pulse-text {
             0% { opacity: 0.5; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
         }
-
         #vip-transfer video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; 
-            position: relative;
-            z-index: 2; /* Menutupi teks jika video sudah ada */
+            width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2;
         }
 
-        .content-wrap { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+        .content-wrap { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
         
         /* HEADER */
         header { 
-            background: #ffffff; 
-            padding: 20px 0; 
+            background: var(--color-primary); 
+            padding: 15px 0; 
             position: fixed; 
             width: 100%;
             top: 0; 
             z-index: 1000; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.4s ease;
         }
-        
         body { padding-top: 80px; } 
-
-        header .content-wrap { display: flex; justify-content: space-between; align-items: center; }
+        header .content-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
         
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { text-decoration: none; font-size: 1rem; font-weight: 700; color: var(--color-navy); transition: color 0.3s; }
-        .nav-links a:hover { color: var(--color-hero-bg); }
-
         .brand-logo { display: flex; align-items: center; gap: 10px; }
-        .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: #1E829D; font-weight: 800; letter-spacing: -0.5px; }
-        .brand-logo img { width: 50px; }
+        .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-accent); letter-spacing: 1px; }
+        .brand-logo img { width: 45px; border-radius: 50%; border: 2px solid white; background: white;}
+
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; font-size: 0.95rem; font-weight: 600; color: white; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--color-accent); }
 
         /* HERO SECTION */
-        .hero-section { background: var(--color-hero-bg); padding: 80px 0; color: white; position: relative; overflow: hidden; }
+        .hero-section { background: var(--color-secondary); padding: 70px 0; color: white; position: relative; }
         .hero-section .content-wrap { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
         
         .hero-text { flex: 1; max-width: 550px; z-index: 2; }
-        .hero-text h2 { font-family: 'Fredoka One', cursive; font-size: 4.5rem; font-weight: 800; color: #F0B325; margin-bottom: 20px; line-height: 1.1; letter-spacing: -1px; }
-        .hero-text p { font-size: 1.25rem; line-height: 1.6; margin-bottom: 40px; font-weight: 400; }
+        .hero-text h2 { font-family: 'Fredoka One', cursive; font-size: 4rem; color: var(--color-accent); text-shadow: 3px 3px 0px var(--color-danger); margin-bottom: 20px; line-height: 1.1; }
+        .hero-text p { font-size: 1.15rem; line-height: 1.6; margin-bottom: 30px; font-weight: 400; }
         
-        .btn-buy { background: var(--color-orange-btn); color: white; padding: 16px 40px; font-size: 1.1rem; font-weight: 700; border: none; border-radius: 30px; cursor: pointer; transition: background 0.3s, transform 0.2s; }
-        .btn-buy:hover { background: #c55325; transform: translateY(-2px); }
+        .btn-buy { background: var(--color-primary); color: white; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border: 2px solid white; border-radius: 10px; cursor: pointer; transition: transform 0.2s, background 0.3s; }
+        .btn-buy:hover { background: #123d73; transform: translateY(-3px); }
         
-        .hero-image { flex: 1; display: flex; justify-content: flex-end; z-index: 2; }
-        
+        .hero-image { flex: 1; display: flex; justify-content: center; z-index: 2; }
         @keyframes float-gentle {
-            0% { transform: translateY(0px) rotate(-5deg); }
-            50% { transform: translateY(-10px) rotate(-3deg); }
-            100% { transform: translateY(0px) rotate(-5deg); }
+            0% { transform: translateY(0px) rotate(-3deg); }
+            50% { transform: translateY(-12px) rotate(0deg); }
+            100% { transform: translateY(0px) rotate(-3deg); }
         }
-        .hero-image img { width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 20px 20px 40px rgba(0,0,0,0.2); animation: float-gentle 6s ease-in-out infinite; background: white; padding: 10px;}
+        .hero-image img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 15px 15px 0px rgba(255,194,14,0.4); animation: float-gentle 5s ease-in-out infinite; background: white; padding: 8px;}
 
         /* FEATURES SECTION */
-        .features-section { background: var(--color-feature-bg); padding: 50px 0; }
-        .features-section .content-wrap { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; text-align: center; }
-        
-        .feature-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .feature-icon { width: 70px; height: 70px; background: transparent; border: 2px solid var(--color-text-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        .feature-item p { font-weight: 700; color: var(--color-text-dark); font-size: 1.1rem; line-height: 1.4; max-width: 150px; }
+        .features-section { background: var(--color-accent); padding: 40px 0; }
+        .features-section .content-wrap { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap;}
+        .feature-badge { flex: 1; min-width: 200px; background: white; color: var(--color-danger); padding: 15px; text-align: center; font-weight: 700; font-size: 1.05rem; border-radius: 12px; border: 3px dashed var(--color-danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         /* INFO PRODUK */
-        .info-section { background: #ffffff; padding: 80px 0; }
-        .section-title { font-size: 2.8rem; font-weight: 800; color: var(--color-navy); text-align: center; margin-bottom: 60px; }
+        .info-section { background: var(--color-light-bg); padding: 80px 0; }
+        .section-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-primary); text-align: center; margin-bottom: 50px; }
         
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .info-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--color-orange-btn); }
-        .info-card.full-width { grid-column: 1 / -1; max-width: 800px; margin: 0 auto; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .info-card { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-top: 6px solid var(--color-secondary); position: relative; z-index: 2; }
+        .info-card.full-width { grid-column: 1 / -1; max-width: 850px; margin: 0 auto; }
         
-        .info-card h4 { font-size: 1.6rem; color: var(--color-text-dark); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; font-weight: 700; }
-        .info-card h4 span { font-size: 2rem; }
-        .info-card > p { font-size: 1rem; color: var(--color-text-light); margin-bottom: 20px; line-height: 1.6; }
+        .info-card h4 { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--color-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .info-card h4 span { font-size: 1.8rem; }
+        .info-card > p { font-size: 1rem; color: var(--color-text-dark); margin-bottom: 20px; line-height: 1.7; }
         
         .info-card ul { padding-left: 0; list-style: none; }
-        .info-card ul li { margin-bottom: 12px; position: relative; padding-left: 30px; font-size: 1rem; color: var(--color-text-dark); line-height: 1.5; }
-        .info-card ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: white; background: #F0B325; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .info-card ul li { margin-bottom: 12px; position: relative; padding-left: 30px; font-size: 0.95rem; color: var(--color-text-dark); line-height: 1.6; }
+        .info-card ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: white; background: var(--color-secondary); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
 
         /* KEMASAN SECTION */
-        .packaging-section { background: var(--color-light-bg); padding: 80px 0; }
-        .packaging-flex { display: flex; align-items: center; gap: 50px; margin-bottom: 80px; }
+        .packaging-section { background: #ffffff; padding: 80px 0; }
+        .packaging-flex { display: flex; align-items: center; gap: 40px; margin-bottom: 70px; }
         .packaging-flex.reverse { flex-direction: row-reverse; }
         
         .packaging-text { flex: 1; }
-        .packaging-text h3 { font-size: 2.5rem; font-weight: 800; color: var(--color-navy); margin-bottom: 30px; line-height: 1.2; }
-        .packaging-text p { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-dark); margin-bottom: 20px; }
-        .highlight-box { display: inline-block; background: var(--color-feature-bg); color: var(--color-text-dark); font-weight: 700; padding: 8px 20px; border-radius: 8px; margin-top: 15px; }
+        .packaging-text h3 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--color-danger); margin-bottom: 20px; line-height: 1.2; }
+        .packaging-text p { font-size: 1.05rem; line-height: 1.8; color: var(--color-text-dark); margin-bottom: 15px; }
+        .highlight-box { display: inline-block; background: var(--color-accent); color: var(--color-text-dark); font-weight: 700; padding: 8px 20px; border-radius: 8px; margin-top: 10px; border: 2px dashed var(--color-danger); }
 
-        .packaging-image { flex: 1; display: flex; justify-content: center; }
-        .packaging-image img { width: 100%; border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .packaging-image { flex: 1; display: flex; justify-content: center; position: relative; z-index: 2;}
+        .packaging-image img { width: 100%; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
         /* Visual 3D Section */
-        .sub-section-title { font-size: 2rem; font-weight: 700; color: var(--color-navy); text-align: center; margin: 40px 0 40px 0; padding-top: 40px; border-top: 1px solid #dee2e6; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .detail-card { background: white; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .detail-card img { width: 100%; border-radius: 8px; margin-bottom: 20px; background: #f9fafb; object-fit: contain; }
-        .detail-card h5 { font-size: 1.3rem; color: var(--color-navy); font-weight: 700; margin-bottom: 10px; }
+        .sub-section-title { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-primary); text-align: center; margin: 20px 0 40px 0; padding-top: 40px; border-top: 2px dashed #ddd; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .detail-card { background: var(--color-light-bg); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--color-primary); position: relative; z-index: 2;}
+        .detail-card img { width: 100%; border-radius: 8px; margin-bottom: 20px; background: #fff; object-fit: contain; }
+        .detail-card h5 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-secondary); margin-bottom: 10px; }
         .detail-card p { font-size: 0.95rem; color: var(--color-text-light); }
 
-        /* FOOTER */
-        footer { background: var(--color-navy); color: #9CA3AF; text-align: center; padding: 30px 20px; font-size: 0.9rem; }
-        footer img { width: 25px; vertical-align: middle; margin: 0 8px; opacity: 0.6; }
+        /* =========================================
+           HARGA PROMO SECTION (BARU)
+           ========================================= */
+        .price-section { background: var(--color-primary); padding: 70px 0; color: white; text-align: center; position: relative; z-index: 2; }
+        .price-section h3 { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-accent); margin-bottom: 30px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+        .price-card { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 40px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); border: 4px dashed var(--color-secondary); position: relative; }
+        
+        /* Pita "Best Seller" di kartu harga */
+        .price-ribbon { position: absolute; top: -15px; right: -15px; background: var(--color-danger); color: white; font-weight: bold; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: rotate(5deg); }
+        
+        .price-card h4 { font-size: 1.6rem; color: var(--color-primary); margin-bottom: 10px; font-weight: 700; }
+        .price-coret { text-decoration: line-through; color: #9CA3AF; font-size: 1.2rem; font-weight: 600; display: block; margin-top: 15px; }
+        .price-real { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--color-secondary); margin: 5px 0 15px 0; line-height: 1; }
+        .price-card p { font-size: 1rem; color: var(--color-text-dark); margin-bottom: 25px; line-height: 1.6; }
+        
+        .btn-buy-large { background: var(--color-danger); color: white; width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 5px 15px rgba(227,38,54,0.3); }
+        .btn-buy-large:hover { background: #b81c2a; transform: translateY(-3px); }
+
+        /* =========================================
+           KARAKTER NGINTIP (SCROLL)
+           ========================================= */
+        .chara-float {
+            position: fixed;
+            bottom: -10px;
+            width: 140px; 
+            z-index: 999;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            pointer-events: none; 
+            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.2));
+        }
+        .chara-left { left: 10px; }
+        .chara-right { right: 10px; }
+        .chara-hide { transform: translateY(150%); }
+
+        /* =========================================
+           FOOTER & KARAKTER NGOBROL
+           ========================================= */
+        .footer-dialog {
+            background: #222;
+            padding: 50px 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+        .dialog-wrap {
+            display: flex;
+            align-items: flex-end;
+            max-width: 400px;
+        }
+        .dialog-wrap.right { flex-direction: row-reverse; }
+        .dialog-wrap img { width: 120px; filter: drop-shadow(0 -5px 10px rgba(0,0,0,0.3)); }
+        
+        .bubble {
+            background: white; color: var(--color-text-dark);
+            padding: 12px 18px; border-radius: 20px;
+            font-weight: 600; font-size: 0.95rem;
+            position: relative; margin-bottom: 60px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .dialog-wrap:not(.right) .bubble { border-bottom-left-radius: 0; margin-left: 10px; }
+        .dialog-wrap.right .bubble { border-bottom-right-radius: 0; margin-right: 10px; background: var(--color-accent); }
+
+        footer { background: #111; color: #aaa; text-align: center; padding: 25px 20px; font-size: 0.9rem; position: relative; z-index: 2; }
+        footer img { width: 35px; vertical-align: middle; margin: 0 10px; opacity: 0.8; background: white; border-radius: 50%; padding: 2px;}
 
         /* Responsive Design */
         @media (max-width: 900px) {
             .hero-section .content-wrap, .packaging-flex, .packaging-flex.reverse { flex-direction: column; text-align: center; }
             .hero-text { max-width: 100%; }
-            .hero-text h2 { font-size: 3.5rem; }
-            .features-section .content-wrap { flex-wrap: wrap; }
-            .feature-item { min-width: 45%; margin-bottom: 20px; }
+            .hero-text h2 { font-size: 3.2rem; }
             .info-grid { grid-template-columns: 1fr; }
             .info-card.full-width { grid-column: auto; }
             .detail-grid { grid-template-columns: 1fr; }
-            header .content-wrap { flex-direction: column; gap: 15px; }
-            .nav-links { gap: 15px; }
+            header .content-wrap { justify-content: center; }
             body { padding-top: 130px; }
+            .chara-float { width: 100px; } 
+            .footer-dialog { flex-direction: column; align-items: center; gap: 0; }
+            .dialog-wrap { margin-bottom: 20px; }
+            .bubble { margin-bottom: 20px; }
+            .price-card { max-width: 100%; padding: 30px 20px; }
+            .price-real { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- =========================================
-         OVERLAY VIDEO VIP (JEMPUTAN) 
-         ========================================= -->
+    <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
-        <!-- Teks yang muncul untuk tes jika videonya belum diletakkan di folder -->
         <div id="vip-transfer-text">Menuju Rivora...</div>
-        <!-- Atribut muted dan playsinline WAJIB ada agar video bisa autoplay di HP -->
         <video id="transfer-video" muted playsinline></video>
     </div>
+
+    <!-- KARAKTER NGINTIP (KIRI & KANAN) -->
+    <img src="K1.png" alt="Anime Kiri" class="chara-float chara-left" id="animeKiri">
+    <img src="K2.png" alt="Anime Kanan" class="chara-float chara-right" id="animeKanan">
 
     <!-- HEADER -->
     <header id="main-header">
         <div class="content-wrap">
+            <div class="brand-logo">
+                <img src="LR1.png" alt="Logo Rivora">
+                <h1>RIVORA</h1>
+            </div>
             <div class="nav-links">
                 <a href="#home">Beranda</a>
-                <a href="#info">Informasi Produk</a>
-                <a href="#kemasan">Desain Kemasan</a>
-            </div>
-            <div class="brand-logo">
-                <h1>RIVORA</h1>
-                <img src="20260925_072539.png" alt="Logo Rivora">
+                <a href="#info">Informasi</a>
+                <a href="#kemasan">Kemasan</a>
+                <!-- Link baru langsung lompat ke Harga -->
+                <a href="#harga">Harga Promo</a>
             </div>
         </div>
     </header>
@@ -206,10 +250,10 @@
             <div class="hero-text">
                 <h2>NacSoay</h2>
                 <p>Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!</p>
-                <button class="btn-buy">BELI SEKARANG</button>
+                <a href="#harga" style="text-decoration: none;"><button class="btn-buy">Beli Sekarang!</button></a>
             </div>
             <div class="hero-image">
-                <img src="1000132795_00be01_2.jpg" alt="Kemasan Nacsoay Snacks"> 
+                <img src="D1.png" alt="Kemasan Nacsoay Snacks"> 
             </div>
         </div>
     </section>
@@ -217,22 +261,10 @@
     <!-- FEATURES BADGE -->
     <section class="features-section">
         <div class="content-wrap">
-            <div class="feature-item">
-                <div class="feature-icon">🔥</div>
-                <p>Bold Flavor Explosion!</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">🌿</div>
-                <p>Mint & Chili Kick!</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">📦</div>
-                <p>10 Individual Packs Inside</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">💼</div>
-                <p>Grab & Go Easy Carry Handle</p>
-            </div>
+            <div class="feature-badge">🔥 Bold Flavor Explosion!</div>
+            <div class="feature-badge">🌿 Mint & Chili Kick!</div>
+            <div class="feature-badge">📦 10 Individual Packs Inside</div>
+            <div class="feature-badge">💼 Grab & Go Easy Carry Handle</div>
         </div>
     </section>
 
@@ -296,7 +328,7 @@
                     <div class="highlight-box">Berat Bersih: 200g (Berisi 10 Packs)</div>
                 </div>
                 <div class="packaging-image">
-                    <img src="[MASUKKAN_GAMBAR_LAYOUT_BOX.jpg]" alt="Layout Desain Kemasan Box Nacsoay">
+                    <img src="DK1.png" alt="Layout Desain Kemasan Box Nacsoay">
                 </div>
             </div>
 
@@ -308,7 +340,7 @@
                     <div class="highlight-box">Berat Bersih: 20g per Sachet</div>
                 </div>
                 <div class="packaging-image">
-                    <img src="[MASUKKAN_GAMBAR_LAYOUT_SACHET.jpg]" alt="Layout Desain Kemasan Sachet Nacsoay">
+                    <img src="DK2.png" alt="Layout Desain Kemasan Sachet Nacsoay">
                 </div>
             </div>
 
@@ -316,13 +348,13 @@
             
             <div class="detail-grid">
                 <div class="detail-card">
-                    <img src="[MASUKKAN_GAMBAR_3D_BOX.jpg]" alt="Visual 3D Box">
+                    <img src="D3D1.png" alt="Visual 3D Box">
                     <h5>Visual 3D Outer Box</h5>
                     <p>Tampilan bentuk nyata box Premium 200g saat dirakit dan siap pajang.</p>
                 </div>
                 
                 <div class="detail-card">
-                    <img src="[MASUKKAN_GAMBAR_3D_SACHET.jpg]" alt="Visual 3D Sachet">
+                    <img src="D3D2.png" alt="Visual 3D Sachet">
                     <h5>Visual 3D Inner Sachet</h5>
                     <p>Tampilan bentuk nyata sachet foil 20g yang higienis dan praktis.</p>
                 </div>
@@ -331,90 +363,119 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- =========================================
+         HARGA PROMO SECTION (YANG BARU DITAMBAHKAN)
+         ========================================= -->
+    <section id="harga" class="price-section">
+        <div class="content-wrap">
+            <h3>Promo Spesial Hari Ini!</h3>
+            <div class="price-card">
+                <div class="price-ribbon">⭐ BEST SELLER</div>
+                <h4>Paket Box NacSoay</h4>
+                <p>1 Box Eksklusif (Isi 10 Sachet x 20g)</p>
+                
+                <span class="price-coret">Rp 45.000</span>
+                <div class="price-real">Rp 35.000</div>
+                
+                <button class="btn-buy-large">Amankan Promonya Sekarang!</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- AREA FOOTER DIALOG & COPYRIGHT -->
+    <div class="footer-dialog">
+        <div class="dialog-wrap">
+            <img src="K3.png" alt="Anime Bawah Kiri">
+            <div class="bubble">Wah, harganya lagi promo tuh! Harus cobain nih!</div>
+        </div>
+        <div class="dialog-wrap right">
+            <img src="K4.png" alt="Anime Bawah Kanan">
+            <div class="bubble">Pasti dong! NacSoay emang the best buat nyemil!</div>
+        </div>
+    </div>
+    
     <footer>
-        <p>&copy; 2026 RIVORA <img src="20260925_085239.png" alt="Logo"> All Rights Reserved.</p>
+        <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
         <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
     </footer>
 
-    <!-- =========================================
-         SCRIPT JAVASCRIPT (LOGIKA VIP TRANSFER & HEADER)
-         ========================================= -->
+    <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // --- 1. LOGIKA SMART HEADER ---
-        let lastScrollTop = 0;
-        const header = document.getElementById("main-header");
+        // 1. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
+        var lastScrollTop = 0;
+        var header = document.getElementById("main-header");
+        var animeKiri = document.getElementById("animeKiri");
+        var animeKanan = document.getElementById("animeKanan");
         
         window.addEventListener("scroll", function() {
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
             if (currentScroll > lastScrollTop && currentScroll > 100) {
                 header.style.transform = "translateY(-100%)";
+                animeKiri.classList.add("chara-hide");
+                animeKanan.classList.add("chara-hide");
             } else {
                 header.style.transform = "translateY(0)";
+                animeKiri.classList.remove("chara-hide");
+                animeKanan.classList.remove("chara-hide");
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // --- 2. LOGIKA JEMPUTAN VIP (DIPERBARUI) ---
+        // 2. LOGIKA JEMPUTAN VIP
         document.addEventListener("DOMContentLoaded", function() {
-            const vipOverlay = document.getElementById("vip-transfer");
-            const transferVideo = document.getElementById("transfer-video");
-            const transferText = document.getElementById("vip-transfer-text");
+            var vipOverlay = document.getElementById("vip-transfer");
+            var transferVideo = document.getElementById("transfer-video");
+            var transferText = document.getElementById("vip-transfer-text");
             
-            const urlParams = new URLSearchParams(window.location.search);
-            const sumberDariLink = urlParams.get('dari'); 
-            const referrer = document.referrer.toLowerCase();
+            var urlParams = new URLSearchParams(window.location.search);
+            var sumberDariLink = urlParams.get('dari'); 
+            var referrer = document.referrer.toLowerCase();
 
-            let namaFileVideo = "";
+            var namaFileVideo = "";
 
-            if (sumberDariLink === 'wa' || referrer.includes('whatsapp') || referrer.includes('wa.me')) {
+            if (sumberDariLink === 'wa' || referrer.indexOf('whatsapp') !== -1 || referrer.indexOf('wa.me') !== -1) {
                 namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; 
                 transferText.innerText = "Menjemput dari WhatsApp...";
             } 
-            else if (sumberDariLink === 'youtube' || referrer.includes('youtube.com') || referrer.includes('youtu.be')) {
+            else if (sumberDariLink === 'youtube' || referrer.indexOf('youtube.com') !== -1 || referrer.indexOf('youtu.be') !== -1) {
                 namaFileVideo = "Dari YouTube menuju Rivora.mp4";
                 transferText.innerText = "Menjemput dari YouTube...";
             }
 
             if (namaFileVideo !== "") {
-                // Munculkan layar hitam overlay
                 document.body.style.overflow = "hidden";
                 vipOverlay.style.display = "flex";
                 
                 transferVideo.src = namaFileVideo;
                 
-                // Mainkan Video
-                transferVideo.play().catch(error => {
-                    console.log("Video belum ada, menjalankan simulasi animasi teks.", error);
-                    // Karena video belum ada di folder, kita paksa tahan layar hitamnya minimal 3.5 Detik
-                    // Biar Anda bisa merasakan efek transisinya!
-                    setTimeout(() => {
-                        tutupLayarJemputan();
-                    }, 3500); 
-                });
+                var playPromise = transferVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(function(error) {
+                        setTimeout(function() {
+                            tutupLayarJemputan();
+                        }, 3500); 
+                    });
+                }
 
-                // Ketika video durasinya asli sudah habis/selesai
                 transferVideo.onended = function() {
                     tutupLayarJemputan();
                 };
 
-                // Batas maksimal tahan layar hitam dinaikkan ke 12 Detik (jika video nanti ternyata panjang)
-                setTimeout(() => {
+                setTimeout(function() {
                     tutupLayarJemputan();
                 }, 12000); 
 
             } else {
-                // Masuk murni dari Chrome = Tidak ada layar hitam
                 vipOverlay.style.display = "none";
             }
 
-            // Fungsi untuk memudarkan layar secara perlahan dan elegan
             function tutupLayarJemputan() {
-                vipOverlay.style.opacity = "0"; // Mulai memudar (butuh 1.5 detik sesuai CSS)
-                setTimeout(() => {
+                vipOverlay.style.opacity = "0"; 
+                setTimeout(function() {
                     vipOverlay.style.display = "none";
                     document.body.style.overflow = "auto"; 
-                }, 1500); // 1.5 detik pas dengan durasi CSS "transition: opacity 1.5s"
+                }, 1500); 
             }
         });
     </script>

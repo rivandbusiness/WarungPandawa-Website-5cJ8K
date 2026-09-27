@@ -11,12 +11,12 @@
     <meta name="keywords" content="NacSoay, keripik jagung, snack pedas, cemilan renyah, Rivora, Mint and Chili, keripik pedas, cemilan kekinian, snack Indonesia">
     <meta name="author" content="Rivora">
     <meta name="robots" content="index, follow">
-        <!-- =========================================
+
+    <!-- =========================================
          FAVICON / LOGO WEBSITE (UNTUK GOOGLE & TAB)
          ========================================= -->
     <link rel="icon" href="https://rivandcronz.biz.id/LR1.png" type="image/png">
     <link rel="apple-touch-icon" href="https://rivandcronz.biz.id/LR1.png">
-    
 
     <!-- =========================================
          WARNA TEMA BROWSER
@@ -67,7 +67,7 @@
         
         /* =========================================
            BADGE TESTING & SCHOOL ASSIGNMENT DI HEADER
-           ========================================= -->
+           ========================================= */
         .testing-badge-header {
             display: inline-flex;
             align-items: center;
@@ -149,7 +149,7 @@
 
         /* =========================================
            MODAL POP-UP SCHOOL ASSIGNMENT
-           ========================================= -->
+           ========================================= */
         #school-modal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
@@ -183,7 +183,7 @@
 
         /* =========================================
            STYLE UNTUK VIDEO JEMPUTAN VIP
-           ========================================= -->
+           ========================================= */
         #vip-transfer {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #000; z-index: 99999; display: none; 
@@ -632,8 +632,8 @@
             document.body.style.overflow = "hidden";
         }
 
-        btnOpenDesktop.addEventListener("click", bukaModal);
-        btnOpenMobile.addEventListener("click", bukaModal);
+        if (btnOpenDesktop) btnOpenDesktop.addEventListener("click", bukaModal);
+        if (btnOpenMobile) btnOpenMobile.addEventListener("click", bukaModal);
 
         function tutupModal() {
             modal.style.opacity = "0";
@@ -644,12 +644,14 @@
             }, 300);
         }
 
-        btnClose.addEventListener("click", tutupModal);
-        modal.addEventListener("click", function(e) {
-            if (e.target === modal) {
-                tutupModal();
-            }
-        });
+        if (btnClose) btnClose.addEventListener("click", tutupModal);
+        if (modal) {
+            modal.addEventListener("click", function(e) {
+                if (e.target === modal) {
+                    tutupModal();
+                }
+            });
+        }
 
         // 3. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
         var lastScrollTop = 0;
@@ -662,12 +664,12 @@
             
             if (currentScroll > lastScrollTop && currentScroll > 100) {
                 header.style.transform = "translateY(-100%)";
-                animeKiri.classList.add("chara-hide");
-                animeKanan.classList.add("chara-hide");
+                if (animeKiri) animeKiri.classList.add("chara-hide");
+                if (animeKanan) animeKanan.classList.add("chara-hide");
             } else {
                 header.style.transform = "translateY(0)";
-                animeKiri.classList.remove("chara-hide");
-                animeKanan.classList.remove("chara-hide");
+                if (animeKiri) animeKiri.classList.remove("chara-hide");
+                if (animeKanan) animeKanan.classList.remove("chara-hide");
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
@@ -686,14 +688,14 @@
 
             if (sumberDariLink === 'wa' || referrer.indexOf('whatsapp') !== -1 || referrer.indexOf('wa.me') !== -1) {
                 namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; 
-                transferText.innerText = "Menjemput dari WhatsApp...";
+                if (transferText) transferText.innerText = "Menjemput dari WhatsApp...";
             } 
             else if (sumberDariLink === 'youtube' || referrer.indexOf('youtube.com') !== -1 || referrer.indexOf('youtu.be') !== -1) {
                 namaFileVideo = "Dari YouTube menuju Rivora.mp4";
-                transferText.innerText = "Menjemput dari YouTube...";
+                if (transferText) transferText.innerText = "Menjemput dari YouTube...";
             }
 
-            if (namaFileVideo !== "") {
+            if (namaFileVideo !== "" && vipOverlay && transferVideo) {
                 document.body.style.overflow = "hidden";
                 vipOverlay.style.display = "flex";
                 
@@ -716,16 +718,18 @@
                     tutupLayarJemputan();
                 }, 12000); 
 
-            } else {
+            } else if (vipOverlay) {
                 vipOverlay.style.display = "none";
             }
 
             function tutupLayarJemputan() {
-                vipOverlay.style.opacity = "0"; 
-                setTimeout(function() {
-                    vipOverlay.style.display = "none";
-                    document.body.style.overflow = "auto"; 
-                }, 1500); 
+                if (vipOverlay) {
+                    vipOverlay.style.opacity = "0"; 
+                    setTimeout(function() {
+                        vipOverlay.style.display = "none";
+                        document.body.style.overflow = "auto"; 
+                    }, 1500); 
+                }
             }
         });
     </script>

@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- =========================================
+         KONFIGURASI DASAR & SEO BROWSER
+         ========================================= -->
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rasakan Bold Flavor Explosion dari NacSoay by Rivora! Keripik jagung super renyah dengan sensasi Mint & Chili Kick yang bikin nagih. Dapatkan promo spesialnya sekarang!">
+    <meta name="keywords" content="NacSoay, keripik jagung, snack pedas, cemilan renyah, Rivora, Mint and Chili, keripik pedas, cemilan kekinian, snack Indonesia">
+    <meta name="author" content="Rivora">
+    <meta name="robots" content="index, follow">
+
+    <!-- =========================================
+         WARNA TEMA BROWSER
+         ========================================= -->
+    <meta name="theme-color" content="#1A5296">
+    <meta name="msapplication-navbutton-color" content="#1A5296">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1A5296">
+
+    <!-- =========================================
+         OPEN GRAPH (SOCIAL MEDIA SHARE)
+         ========================================= -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rivandcronz.biz.id/">
+    <meta property="og:title" content="Nacsoay by Rivora - Bold Flavor Explosion!">
+    <meta property="og:description" content="Keripik jagung super renyah dengan sensasi Mint & Chili Kick dari Rivora. Kepoin promonya sekarang!">
+    <meta property="og:image" content="https://rivandcronz.biz.id/D1.png">
+
+    <!-- =========================================
+         TWITTER CARD
+         ========================================= -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nacsoay by Rivora - Bold Flavor Explosion!">
+    <meta name="twitter:description" content="Keripik jagung super renyah dengan sensasi Mint & Chili Kick dari Rivora!">
+    <meta name="twitter:image" content="https://rivandcronz.biz.id/D1.png">
+
+    <!-- =========================================
+         TAG VERIFIKASI GOOGLE SEARCH CONSOLE
+         ========================================= -->
     <meta name="google-site-verification" content="--_XiJejaF-8mTz9vauRtYbN7WNoX-YNBmWT1tY1_ok" />
+
     <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
     <style>
-        /* Menggabungkan Font dari Konsep Baru */
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap');
         
         :root {
-            --color-primary: #1A5296; /* Biru Header & Text */
-            --color-secondary: #F26522; /* Oranye Hero */
-            --color-accent: #FFC20E; /* Kuning Features */
-            --color-danger: #E32636; /* Merah Aksen */
+            --color-primary: #1A5296; 
+            --color-secondary: #F26522; 
+            --color-accent: #FFC20E; 
+            --color-danger: #E32636; 
             --color-light-bg: #F9F9F9; 
             --color-text-dark: #333333;
             --color-text-light: #6B7280;
@@ -22,6 +58,72 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
+        /* =========================================
+           WATERMARK TESTING (RESPONSIF DESKTOP & HP)
+           ========================================= -->
+        /* Mode Desktop: Teks Besar Melayang di Tengah */
+        .testing-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5rem;
+            color: rgba(227, 38, 54, 0.15);
+            text-align: center;
+            z-index: 998;
+            pointer-events: none;
+            white-space: nowrap;
+            animation: float-watermark 4s ease-in-out infinite;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+
+        @keyframes float-watermark {
+            0% { transform: translate(-50%, -50%) rotate(-15deg) translateY(0px); }
+            50% { transform: translate(-50%, -50%) rotate(-15deg) translateY(-15px); }
+            100% { transform: translate(-50%, -50%) rotate(-15deg) translateY(0px); }
+        }
+
+        /* Mode HP (Layar kecil < 900px): Berubah jadi Lingkaran Merah Ikon Uji Coba */
+        @media (max-width: 900px) {
+            .testing-watermark {
+                position: fixed;
+                top: auto;
+                bottom: 20px;
+                left: 20px;
+                transform: none;
+                font-size: 0.8rem;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 700;
+                background: rgba(227, 38, 54, 0.9);
+                color: white;
+                padding: 8px 14px;
+                border-radius: 50px; /* Bentuk pil / kapsul lonjong yang rapi */
+                box-shadow: 0 4px 15px rgba(227, 38, 54, 0.4);
+                animation: pulse-badge 2s infinite;
+                z-index: 998;
+                white-space: normal;
+                max-width: 150px;
+                text-align: left;
+                pointer-events: auto;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            /* Menambahkan ikon kecil lab/uji coba di depannya */
+            .testing-watermark::before {
+                content: '🧪';
+                font-size: 1rem;
+            }
+        }
+
+        @keyframes pulse-badge {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(227, 38, 54, 0.6); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(227, 38, 54, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
+        }
+
         /* =========================================
            STYLE UNTUK VIDEO JEMPUTAN VIP
            ========================================= */
@@ -128,14 +230,11 @@
         .detail-card h5 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-secondary); margin-bottom: 10px; }
         .detail-card p { font-size: 0.95rem; color: var(--color-text-light); }
 
-        /* =========================================
-           HARGA PROMO SECTION (BARU)
-           ========================================= */
+        /* HARGA PROMO SECTION */
         .price-section { background: var(--color-primary); padding: 70px 0; color: white; text-align: center; position: relative; z-index: 2; }
         .price-section h3 { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-accent); margin-bottom: 30px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
         .price-card { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 40px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); border: 4px dashed var(--color-secondary); position: relative; }
         
-        /* Pita "Best Seller" di kartu harga */
         .price-ribbon { position: absolute; top: -15px; right: -15px; background: var(--color-danger); color: white; font-weight: bold; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: rotate(5deg); }
         
         .price-card h4 { font-size: 1.6rem; color: var(--color-primary); margin-bottom: 10px; font-weight: 700; }
@@ -146,9 +245,7 @@
         .btn-buy-large { background: var(--color-danger); color: white; width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 5px 15px rgba(227,38,54,0.3); }
         .btn-buy-large:hover { background: #b81c2a; transform: translateY(-3px); }
 
-        /* =========================================
-           KARAKTER NGINTIP (SCROLL)
-           ========================================= */
+        /* KARAKTER NGINTIP (SCROLL) */
         .chara-float {
             position: fixed;
             bottom: -10px;
@@ -162,9 +259,7 @@
         .chara-right { right: 10px; }
         .chara-hide { transform: translateY(150%); }
 
-        /* =========================================
-           FOOTER & KARAKTER NGOBROL
-           ========================================= */
+        /* FOOTER & KARAKTER NGOBROL */
         .footer-dialog {
             background: #222;
             padding: 50px 20px 0;
@@ -218,6 +313,9 @@
 </head>
 <body>
 
+    <!-- WATERMARK / BADGE TESTING (OTOMATIS MENYESUAIKAN HP/DESKTOP) -->
+    <div class="testing-watermark">Testing Mode</div>
+
     <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
         <div id="vip-transfer-text">Menuju Rivora...</div>
@@ -239,7 +337,6 @@
                 <a href="#home">Beranda</a>
                 <a href="#info">Informasi</a>
                 <a href="#kemasan">Kemasan</a>
-                <!-- Link baru langsung lompat ke Harga -->
                 <a href="#harga">Harga Promo</a>
             </div>
         </div>
@@ -364,9 +461,7 @@
         </div>
     </section>
 
-    <!-- =========================================
-         HARGA PROMO SECTION (YANG BARU DITAMBAHKAN)
-         ========================================= -->
+    <!-- HARGA PROMO SECTION -->
     <section id="harga" class="price-section">
         <div class="content-wrap">
             <h3>Promo Spesial Hari Ini!</h3>

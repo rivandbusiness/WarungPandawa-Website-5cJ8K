@@ -50,7 +50,7 @@
             --color-secondary: #F26522; 
             --color-accent: #FFC20E; 
             --color-danger: #E32636; 
-            --color-success: #22C55E; /* Hijau Elegan untuk School Assignment */
+            --color-success: #22C55E; 
             --color-light-bg: #F9F9F9; 
             --color-text-dark: #333333;
             --color-text-light: #6B7280;
@@ -84,18 +84,16 @@
             100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
         }
 
-        /* Teks Hijau School Assignment khusus Desktop */
         .school-assignment-desktop {
-            color: #4ade80; /* Hijau cerah agar kontras dan tetap estetik di background biru */
+            color: #4ade80;
             font-size: 0.8rem;
             font-weight: 500;
             font-style: italic;
             letter-spacing: 0.3px;
         }
 
-        /* Teks Hijau School Assignment khusus HP (Pindah ke bawah footer) */
         .school-assignment-mobile {
-            display: none; /* Sembunyikan secara default di desktop */
+            display: none; 
             color: var(--color-success);
             font-size: 0.85rem;
             font-weight: 600;
@@ -103,17 +101,54 @@
             text-align: center;
             margin-bottom: 10px;
             background: rgba(34, 197, 94, 0.1);
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 8px;
             border: 1px dashed var(--color-success);
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
         }
+        .school-assignment-mobile:active { transform: scale(0.95); background: rgba(34, 197, 94, 0.2); }
+
+        /* =========================================
+           MODAL POP-UP SCHOOL ASSIGNMENT (MOBILE)
+           ========================================= -->
+        #school-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 99999; display: none; justify-content: center; align-items: center;
+            padding: 20px; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-card {
+            background: white; width: 100%; max-width: 380px; border-radius: 20px;
+            padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative;
+            transform: scale(0.9); transition: transform 0.3s ease;
+            border-top: 6px solid var(--color-success);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h4 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-primary); }
+        .modal-close {
+            background: #eee; border: none; width: 32px; height: 32px; border-radius: 50%;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #555; transition: background 0.2s;
+        }
+        .modal-close:hover { background: var(--color-danger); color: white; }
+        
+        .modal-body p { font-size: 0.95rem; line-height: 1.6; color: var(--color-text-dark); margin-bottom: 20px; }
+        
+        .lang-selector-label { font-size: 0.8rem; font-weight: 700; color: var(--color-text-light); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .lang-buttons { display: flex; gap: 8px; }
+        .lang-btn {
+            flex: 1; padding: 8px 0; border: 2px solid #ddd; background: white; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--color-text-dark);
+        }
+        .lang-btn.active { border-color: var(--color-success); background: rgba(34, 197, 94, 0.1); color: var(--color-success); }
 
         /* =========================================
            STYLE UNTUK VIDEO JEMPUTAN VIP
-           ========================================= */
+           ========================================= -->
         #vip-transfer {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #000; z-index: 99999; display: none; 
@@ -297,13 +332,31 @@
             .price-card { max-width: 100%; padding: 30px 20px; }
             .price-real { font-size: 3rem; }
             
-            /* Tampilkan teks hijau khusus HP di atas footer */
             .school-assignment-desktop { display: none; }
             .school-assignment-mobile { display: block; }
         }
     </style>
 </head>
 <body>
+
+    <!-- MODAL POP-UP SCHOOL ASSIGNMENT (KHUSUS MOBILE) -->
+    <div id="school-modal">
+        <div class="modal-card" id="modal-card-box">
+            <div class="modal-header">
+                <h4 id="modal-title">Tentang Projek</h4>
+                <button class="modal-close" id="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-desc">Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami.</p>
+                <div class="lang-selector-label">Pilih Bahasa / Language:</div>
+                <div class="lang-buttons">
+                    <button class="lang-btn active" onclick="changeLang('id')">Indonesian</button>
+                    <button class="lang-btn" onclick="changeLang('en')">English</button>
+                    <button class="lang-btn" onclick="changeLang('jp')">Japanese</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
@@ -486,8 +539,8 @@
     </div>
     
     <footer>
-        <!-- Teks Hijau School Assignment khusus HP (Nongol di atas copyright) -->
-        <div class="school-assignment-mobile">this is just a school assignment</div>
+        <!-- Teks Hijau School Assignment khusus HP yang bisa ditekan untuk buka Pop-up -->
+        <div class="school-assignment-mobile" id="btn-open-modal">this is just a school assignment</div>
         
         <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
         <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
@@ -495,7 +548,67 @@
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
+        // 1. KAMUS MULTI-BAHASA UNTUK POP-UP
+        const translations = {
+            id: {
+                title: "Tentang Projek",
+                desc: "Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami."
+            },
+            en: {
+                title: "About Project",
+                desc: "This website is a trial project themed around a unique product created by our group."
+            },
+            jp: {
+                title: "プロジェクトについて",
+                desc: "このウェブサイトは、私たちのグループによって作成されたユニークな商品をテーマにしたテストプロジェクトです。"
+            }
+        };
+
+        function changeLang(lang) {
+            // Update teks modal
+            document.getElementById("modal-title").innerText = translations[lang].title;
+            document.getElementById("modal-desc").innerText = translations[lang].desc;
+            
+            // Update tombol aktif
+            var buttons = document.querySelectorAll(".lang-btn");
+            buttons.forEach(function(btn) {
+                btn.classList.remove("active");
+            });
+            event.target.classList.add("active");
+        }
+
+        // 2. LOGIKA BUKA-TUTUP MODAL POP-UP
+        const modal = document.getElementById("school-modal");
+        const modalCard = document.getElementById("modal-card-box");
+        const btnOpen = document.getElementById("btn-open-modal");
+        const btnClose = document.getElementById("btn-close-modal");
+
+        btnOpen.addEventListener("click", function() {
+            modal.style.display = "flex";
+            setTimeout(function() {
+                modal.style.opacity = "1";
+                modalCard.style.transform = "scale(1)";
+            }, 10);
+            document.body.style.overflow = "hidden"; // Kunci scroll belakang
+        });
+
+        function tutupModal() {
+            modal.style.opacity = "0";
+            modalCard.style.transform = "scale(0.9)";
+            setTimeout(function() {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto"; // Buka kembali scroll
+            }, 300);
+        }
+
+        btnClose.addEventListener("click", tutupModal);
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) {
+                tutupModal();
+            }
+        });
+
+        // 3. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
         var lastScrollTop = 0;
         var header = document.getElementById("main-header");
         var animeKiri = document.getElementById("animeKiri");
@@ -516,7 +629,7 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // 2. LOGIKA JEMPUTAN VIP
+        // 4. LOGIKA JEMPUTAN VIP
         document.addEventListener("DOMContentLoaded", function() {
             var vipOverlay = document.getElementById("vip-transfer");
             var transferVideo = document.getElementById("transfer-video");

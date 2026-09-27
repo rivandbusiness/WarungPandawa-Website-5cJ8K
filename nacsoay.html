@@ -59,69 +59,28 @@
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
         /* =========================================
-           WATERMARK TESTING (RESPONSIF DESKTOP & HP)
-           ========================================= -->
-        /* Mode Desktop: Teks Besar Melayang di Tengah */
-        .testing-watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5rem;
-            color: rgba(227, 38, 54, 0.15);
-            text-align: center;
-            z-index: 998;
-            pointer-events: none;
-            white-space: nowrap;
-            animation: float-watermark 4s ease-in-out infinite;
-            letter-spacing: 2px;
-            user-select: none;
+           BADGE TESTING KOTAK MERAH DI HEADER
+           ========================================= */
+        .testing-badge-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--color-danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px; /* Bentuk kotak dengan sudut melengkung halus */
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(227, 38, 54, 0.6); /* Efek glow / partikel cahaya halus */
+            animation: pulse-glow 2s infinite;
         }
 
-        @keyframes float-watermark {
-            0% { transform: translate(-50%, -50%) rotate(-15deg) translateY(0px); }
-            50% { transform: translate(-50%, -50%) rotate(-15deg) translateY(-15px); }
-            100% { transform: translate(-50%, -50%) rotate(-15deg) translateY(0px); }
-        }
-
-        /* Mode HP (Layar kecil < 900px): Berubah jadi Lingkaran Merah Ikon Uji Coba */
-        @media (max-width: 900px) {
-            .testing-watermark {
-                position: fixed;
-                top: auto;
-                bottom: 20px;
-                left: 20px;
-                transform: none;
-                font-size: 0.8rem;
-                font-family: 'Poppins', sans-serif;
-                font-weight: 700;
-                background: rgba(227, 38, 54, 0.9);
-                color: white;
-                padding: 8px 14px;
-                border-radius: 50px; /* Bentuk pil / kapsul lonjong yang rapi */
-                box-shadow: 0 4px 15px rgba(227, 38, 54, 0.4);
-                animation: pulse-badge 2s infinite;
-                z-index: 998;
-                white-space: normal;
-                max-width: 150px;
-                text-align: left;
-                pointer-events: auto;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-            /* Menambahkan ikon kecil lab/uji coba di depannya */
-            .testing-watermark::before {
-                content: '🧪';
-                font-size: 1rem;
-            }
-        }
-
-        @keyframes pulse-badge {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(227, 38, 54, 0.6); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(227, 38, 54, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(227, 38, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
         }
 
         /* =========================================
@@ -161,6 +120,7 @@
         body { padding-top: 80px; } 
         header .content-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
         
+        .brand-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .brand-logo { display: flex; align-items: center; gap: 10px; }
         .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-accent); letter-spacing: 1px; }
         .brand-logo img { width: 45px; border-radius: 50%; border: 2px solid white; background: white;}
@@ -313,9 +273,6 @@
 </head>
 <body>
 
-    <!-- WATERMARK / BADGE TESTING (OTOMATIS MENYESUAIKAN HP/DESKTOP) -->
-    <div class="testing-watermark">Testing Mode</div>
-
     <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
         <div id="vip-transfer-text">Menuju Rivora...</div>
@@ -329,9 +286,13 @@
     <!-- HEADER -->
     <header id="main-header">
         <div class="content-wrap">
-            <div class="brand-logo">
-                <img src="LR1.png" alt="Logo Rivora">
-                <h1>RIVORA</h1>
+            <div class="brand-container">
+                <div class="brand-logo">
+                    <img src="LR1.png" alt="Logo Rivora">
+                    <h1>RIVORA</h1>
+                </div>
+                <!-- Badge Kotak Merah Berpartikel di Sebelah Logo -->
+                <div class="testing-badge-header">🧪 Testing Mode</div>
             </div>
             <div class="nav-links">
                 <a href="#home">Beranda</a>

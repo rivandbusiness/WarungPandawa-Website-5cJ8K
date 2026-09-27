@@ -21,16 +21,18 @@
     <meta name="twitter:description" content="Keripik jagung super renyah dengan sensasi Mint & Chili Kick dari Rivora!">
     <meta name="twitter:image" content="https://rivandcronz.biz.id/D1.png">
     <meta name="google-site-verification" content="--_XiJejaF-8mTz9vauRtYbN7WNoX-YNBmWT1tY1_ok" />
+    <link rel="icon" href="https://rivandcronz.biz.id/LR1.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://rivandcronz.biz.id/LR1.png">
     <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
     <style>
-        /* Menggabungkan Font dari Konsep Baru */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;500;600;700;800&display=swap');
         
         :root {
-            --color-primary: #1A5296; /* Biru Header & Text */
-            --color-secondary: #F26522; /* Oranye Hero */
-            --color-accent: #FFC20E; /* Kuning Features */
-            --color-danger: #E32636; /* Merah Aksen */
+            --color-primary: #1A5296; 
+            --color-secondary: #F26522; 
+            --color-accent: #FFC20E; 
+            --color-danger: #E32636; 
+            --color-success: #22C55E; 
             --color-light-bg: #F9F9F9; 
             --color-text-dark: #333333;
             --color-text-light: #6B7280;
@@ -39,6 +41,122 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
+        /* =========================================
+           BADGE TESTING & SCHOOL ASSIGNMENT DI HEADER
+           ========================================= */
+        .testing-badge-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--color-danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(227, 38, 54, 0.6);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(227, 38, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
+        }
+
+        /* Container Teks Hijau + Tombol Tanda Seru (!) untuk Desktop */
+        .school-assignment-desktop {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4ade80;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        /* Tombol Tanda Seru (!) Interaktif */
+        .info-btn-trigger {
+            background: #4ade80;
+            color: #111;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 900;
+            font-style: normal;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .info-btn-trigger:hover {
+            transform: scale(1.2);
+            background: #fff;
+        }
+
+        /* Teks Hijau School Assignment khusus HP (Pindah ke bawah footer) */
+        .school-assignment-mobile {
+            display: none; 
+            color: var(--color-success);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 10px;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px dashed var(--color-success);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .school-assignment-mobile:active { transform: scale(0.95); background: rgba(34, 197, 94, 0.2); }
+
+        /* =========================================
+           MODAL POP-UP SCHOOL ASSIGNMENT
+           ========================================= */
+        #school-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 99999; display: none; justify-content: center; align-items: center;
+            padding: 20px; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-card {
+            background: white; width: 100%; max-width: 380px; border-radius: 20px;
+            padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative;
+            transform: scale(0.9); transition: transform 0.3s ease;
+            border-top: 6px solid var(--color-success);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h4 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-primary); }
+        .modal-close {
+            background: #eee; border: none; width: 32px; height: 32px; border-radius: 50%;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #555; transition: background 0.2s;
+        }
+        .modal-close:hover { background: var(--color-danger); color: white; }
+        
+        .modal-body p { font-size: 0.95rem; line-height: 1.6; color: var(--color-text-dark); margin-bottom: 20px; }
+        
+        .lang-selector-label { font-size: 0.8rem; font-weight: 700; color: var(--color-text-light); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .lang-buttons { display: flex; gap: 8px; }
+        .lang-btn {
+            flex: 1; padding: 8px 0; border: 2px solid #ddd; background: white; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--color-text-dark);
+        }
+        .lang-btn.active { border-color: var(--color-success); background: rgba(34, 197, 94, 0.1); color: var(--color-success); }
+
         /* =========================================
            STYLE UNTUK VIDEO JEMPUTAN VIP
            ========================================= */
@@ -76,6 +194,7 @@
         body { padding-top: 80px; } 
         header .content-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
         
+        .brand-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .brand-logo { display: flex; align-items: center; gap: 10px; }
         .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-accent); letter-spacing: 1px; }
         .brand-logo img { width: 45px; border-radius: 50%; border: 2px solid white; background: white;}
@@ -145,14 +264,11 @@
         .detail-card h5 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-secondary); margin-bottom: 10px; }
         .detail-card p { font-size: 0.95rem; color: var(--color-text-light); }
 
-        /* =========================================
-           HARGA PROMO SECTION (BARU)
-           ========================================= */
+        /* HARGA PROMO SECTION */
         .price-section { background: var(--color-primary); padding: 70px 0; color: white; text-align: center; position: relative; z-index: 2; }
         .price-section h3 { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-accent); margin-bottom: 30px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
         .price-card { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 40px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); border: 4px dashed var(--color-secondary); position: relative; }
         
-        /* Pita "Best Seller" di kartu harga */
         .price-ribbon { position: absolute; top: -15px; right: -15px; background: var(--color-danger); color: white; font-weight: bold; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: rotate(5deg); }
         
         .price-card h4 { font-size: 1.6rem; color: var(--color-primary); margin-bottom: 10px; font-weight: 700; }
@@ -163,9 +279,7 @@
         .btn-buy-large { background: var(--color-danger); color: white; width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 5px 15px rgba(227,38,54,0.3); }
         .btn-buy-large:hover { background: #b81c2a; transform: translateY(-3px); }
 
-        /* =========================================
-           KARAKTER NGINTIP (SCROLL)
-           ========================================= */
+        /* KARAKTER NGINTIP (SCROLL) */
         .chara-float {
             position: fixed;
             bottom: -10px;
@@ -179,9 +293,7 @@
         .chara-right { right: 10px; }
         .chara-hide { transform: translateY(150%); }
 
-        /* =========================================
-           FOOTER & KARAKTER NGOBROL
-           ========================================= */
+        /* FOOTER & KARAKTER NGOBROL */
         .footer-dialog {
             background: #222;
             padding: 50px 20px 0;
@@ -230,10 +342,32 @@
             .bubble { margin-bottom: 20px; }
             .price-card { max-width: 100%; padding: 30px 20px; }
             .price-real { font-size: 3rem; }
+            
+            .school-assignment-desktop { display: none; }
+            .school-assignment-mobile { display: flex; }
         }
     </style>
 </head>
 <body>
+
+    <!-- MODAL POP-UP SCHOOL ASSIGNMENT -->
+    <div id="school-modal">
+        <div class="modal-card" id="modal-card-box">
+            <div class="modal-header">
+                <h4 id="modal-title">Tentang Projek</h4>
+                <button class="modal-close" id="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-desc">Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami.</p>
+                <div class="lang-selector-label">Pilih Bahasa / Language:</div>
+                <div class="lang-buttons">
+                    <button class="lang-btn active" onclick="changeLang('id')">Indonesian</button>
+                    <button class="lang-btn" onclick="changeLang('en')">English</button>
+                    <button class="lang-btn" onclick="changeLang('jp')">Japanese</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
@@ -248,15 +382,23 @@
     <!-- HEADER -->
     <header id="main-header">
         <div class="content-wrap">
-            <div class="brand-logo">
-                <img src="LR1.png" alt="Logo Rivora">
-                <h1>RIVORA</h1>
+            <div class="brand-container">
+                <div class="brand-logo">
+                    <img src="LR1.png" alt="Logo Rivora">
+                    <h1>RIVORA</h1>
+                </div>
+                <!-- Badge Kotak Merah Testing Mode -->
+                <div class="testing-badge-header">🧪 Testing Mode</div>
+                <!-- Teks Hijau + Tombol Tanda Seru (!) Khusus Desktop -->
+                <span class="school-assignment-desktop">
+                    this is just a school assignment 
+                    <span class="info-btn-trigger" id="btn-open-modal-desktop">!</span>
+                </span>
             </div>
             <div class="nav-links">
                 <a href="#home">Beranda</a>
                 <a href="#info">Informasi</a>
                 <a href="#kemasan">Kemasan</a>
-                <!-- Link baru langsung lompat ke Harga -->
                 <a href="#harga">Harga Promo</a>
             </div>
         </div>
@@ -381,9 +523,7 @@
         </div>
     </section>
 
-    <!-- =========================================
-         HARGA PROMO SECTION (YANG BARU DITAMBAHKAN)
-         ========================================= -->
+    <!-- HARGA PROMO SECTION -->
     <section id="harga" class="price-section">
         <div class="content-wrap">
             <h3>Promo Spesial Hari Ini!</h3>
@@ -413,13 +553,83 @@
     </div>
     
     <footer>
+        <!-- Teks Hijau + Tanda Seru (!) Khusus HP di atas copyright -->
+        <div class="school-assignment-mobile" id="btn-open-modal-mobile">
+            <span>this is just a school assignment</span>
+            <span class="info-btn-trigger">!</span>
+        </div>
+        
         <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
         <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
     </footer>
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
+        // 1. KAMUS MULTI-BAHASA UNTUK POP-UP
+        const translations = {
+            id: {
+                title: "Tentang Projek",
+                desc: "Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami."
+            },
+            en: {
+                title: "About Project",
+                desc: "This website is a trial project themed around a unique product created by our group."
+            },
+            jp: {
+                title: "プロジェクトについて",
+                desc: "このウェブサイトは、私たちのグループによって作成されたユニークな商品をテーマにしたテストプロジェクトです。"
+            }
+        };
+
+        function changeLang(lang) {
+            document.getElementById("modal-title").innerText = translations[lang].title;
+            document.getElementById("modal-desc").innerText = translations[lang].desc;
+            
+            var buttons = document.querySelectorAll(".lang-btn");
+            buttons.forEach(function(btn) {
+                btn.classList.remove("active");
+            });
+            event.target.classList.add("active");
+        }
+
+        // 2. LOGIKA BUKA-TUTUP MODAL POP-UP
+        const modal = document.getElementById("school-modal");
+        const modalCard = document.getElementById("modal-card-box");
+        const btnOpenDesktop = document.getElementById("btn-open-modal-desktop");
+        const btnOpenMobile = document.getElementById("btn-open-modal-mobile");
+        const btnClose = document.getElementById("btn-close-modal");
+
+        function bukaModal() {
+            modal.style.display = "flex";
+            setTimeout(function() {
+                modal.style.opacity = "1";
+                modalCard.style.transform = "scale(1)";
+            }, 10);
+            document.body.style.overflow = "hidden";
+        }
+
+        if (btnOpenDesktop) btnOpenDesktop.addEventListener("click", bukaModal);
+        if (btnOpenMobile) btnOpenMobile.addEventListener("click", bukaModal);
+
+        function tutupModal() {
+            modal.style.opacity = "0";
+            modalCard.style.transform = "scale(0.9)";
+            setTimeout(function() {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto";
+            }, 300);
+        }
+
+        if (btnClose) btnClose.addEventListener("click", tutupModal);
+        if (modal) {
+            modal.addEventListener("click", function(e) {
+                if (e.target === modal) {
+                    tutupModal();
+                }
+            });
+        }
+
+        // 3. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
         var lastScrollTop = 0;
         var header = document.getElementById("main-header");
         var animeKiri = document.getElementById("animeKiri");
@@ -430,17 +640,17 @@
             
             if (currentScroll > lastScrollTop && currentScroll > 100) {
                 header.style.transform = "translateY(-100%)";
-                animeKiri.classList.add("chara-hide");
-                animeKanan.classList.add("chara-hide");
+                if (animeKiri) animeKiri.classList.add("chara-hide");
+                if (animeKanan) animeKanan.classList.add("chara-hide");
             } else {
                 header.style.transform = "translateY(0)";
-                animeKiri.classList.remove("chara-hide");
-                animeKanan.classList.remove("chara-hide");
+                if (animeKiri) animeKiri.classList.remove("chara-hide");
+                if (animeKanan) animeKanan.classList.remove("chara-hide");
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // 2. LOGIKA JEMPUTAN VIP
+        // 4. LOGIKA JEMPUTAN VIP
         document.addEventListener("DOMContentLoaded", function() {
             var vipOverlay = document.getElementById("vip-transfer");
             var transferVideo = document.getElementById("transfer-video");
@@ -454,14 +664,14 @@
 
             if (sumberDariLink === 'wa' || referrer.indexOf('whatsapp') !== -1 || referrer.indexOf('wa.me') !== -1) {
                 namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; 
-                transferText.innerText = "Menjemput dari WhatsApp...";
+                if (transferText) transferText.innerText = "Menjemput dari WhatsApp...";
             } 
             else if (sumberDariLink === 'youtube' || referrer.indexOf('youtube.com') !== -1 || referrer.indexOf('youtu.be') !== -1) {
                 namaFileVideo = "Dari YouTube menuju Rivora.mp4";
-                transferText.innerText = "Menjemput dari YouTube...";
+                if (transferText) transferText.innerText = "Menjemput dari YouTube...";
             }
 
-            if (namaFileVideo !== "") {
+            if (namaFileVideo !== "" && vipOverlay && transferVideo) {
                 document.body.style.overflow = "hidden";
                 vipOverlay.style.display = "flex";
                 
@@ -484,16 +694,18 @@
                     tutupLayarJemputan();
                 }, 12000); 
 
-            } else {
+            } else if (vipOverlay) {
                 vipOverlay.style.display = "none";
             }
 
             function tutupLayarJemputan() {
-                vipOverlay.style.opacity = "0"; 
-                setTimeout(function() {
-                    vipOverlay.style.display = "none";
-                    document.body.style.overflow = "auto"; 
-                }, 1500); 
+                if (vipOverlay) {
+                    vipOverlay.style.opacity = "0"; 
+                    setTimeout(function() {
+                        vipOverlay.style.display = "none";
+                        document.body.style.overflow = "auto"; 
+                    }, 1500); 
+                }
             }
         });
     </script>

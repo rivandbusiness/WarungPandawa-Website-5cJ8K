@@ -84,7 +84,11 @@
             100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
         }
 
+        /* Container Teks Hijau + Tombol Tanda Seru (!) untuk Desktop */
         .school-assignment-desktop {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             color: #4ade80;
             font-size: 0.8rem;
             font-weight: 500;
@@ -92,6 +96,29 @@
             letter-spacing: 0.3px;
         }
 
+        /* Tombol Tanda Seru (!) Interaktif */
+        .info-btn-trigger {
+            background: #4ade80;
+            color: #111;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 900;
+            font-style: normal;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .info-btn-trigger:hover {
+            transform: scale(1.2);
+            background: #fff;
+        }
+
+        /* Teks Hijau School Assignment khusus HP (Pindah ke bawah footer) */
         .school-assignment-mobile {
             display: none; 
             color: var(--color-success);
@@ -107,13 +134,15 @@
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
         }
         .school-assignment-mobile:active { transform: scale(0.95); background: rgba(34, 197, 94, 0.2); }
 
         /* =========================================
-           MODAL POP-UP SCHOOL ASSIGNMENT (MOBILE)
+           MODAL POP-UP SCHOOL ASSIGNMENT
            ========================================= -->
         #school-modal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -333,13 +362,13 @@
             .price-real { font-size: 3rem; }
             
             .school-assignment-desktop { display: none; }
-            .school-assignment-mobile { display: block; }
+            .school-assignment-mobile { display: flex; }
         }
     </style>
 </head>
 <body>
 
-    <!-- MODAL POP-UP SCHOOL ASSIGNMENT (KHUSUS MOBILE) -->
+    <!-- MODAL POP-UP SCHOOL ASSIGNMENT -->
     <div id="school-modal">
         <div class="modal-card" id="modal-card-box">
             <div class="modal-header">
@@ -378,8 +407,11 @@
                 </div>
                 <!-- Badge Kotak Merah Testing Mode -->
                 <div class="testing-badge-header">🧪 Testing Mode</div>
-                <!-- Teks Hijau School Assignment (Hanya muncul di Desktop) -->
-                <span class="school-assignment-desktop">this is just a school assignment</span>
+                <!-- Teks Hijau + Tombol Tanda Seru (!) Khusus Desktop -->
+                <span class="school-assignment-desktop">
+                    this is just a school assignment 
+                    <span class="info-btn-trigger" id="btn-open-modal-desktop">!</span>
+                </span>
             </div>
             <div class="nav-links">
                 <a href="#home">Beranda</a>
@@ -539,8 +571,11 @@
     </div>
     
     <footer>
-        <!-- Teks Hijau School Assignment khusus HP yang bisa ditekan untuk buka Pop-up -->
-        <div class="school-assignment-mobile" id="btn-open-modal">this is just a school assignment</div>
+        <!-- Teks Hijau + Tanda Seru (!) Khusus HP di atas copyright -->
+        <div class="school-assignment-mobile" id="btn-open-modal-mobile">
+            <span>this is just a school assignment</span>
+            <span class="info-btn-trigger">!</span>
+        </div>
         
         <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
         <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
@@ -565,11 +600,9 @@
         };
 
         function changeLang(lang) {
-            // Update teks modal
             document.getElementById("modal-title").innerText = translations[lang].title;
             document.getElementById("modal-desc").innerText = translations[lang].desc;
             
-            // Update tombol aktif
             var buttons = document.querySelectorAll(".lang-btn");
             buttons.forEach(function(btn) {
                 btn.classList.remove("active");
@@ -580,24 +613,28 @@
         // 2. LOGIKA BUKA-TUTUP MODAL POP-UP
         const modal = document.getElementById("school-modal");
         const modalCard = document.getElementById("modal-card-box");
-        const btnOpen = document.getElementById("btn-open-modal");
+        const btnOpenDesktop = document.getElementById("btn-open-modal-desktop");
+        const btnOpenMobile = document.getElementById("btn-open-modal-mobile");
         const btnClose = document.getElementById("btn-close-modal");
 
-        btnOpen.addEventListener("click", function() {
+        function bukaModal() {
             modal.style.display = "flex";
             setTimeout(function() {
                 modal.style.opacity = "1";
                 modalCard.style.transform = "scale(1)";
             }, 10);
-            document.body.style.overflow = "hidden"; // Kunci scroll belakang
-        });
+            document.body.style.overflow = "hidden";
+        }
+
+        btnOpenDesktop.addEventListener("click", bukaModal);
+        btnOpenMobile.addEventListener("click", bukaModal);
 
         function tutupModal() {
             modal.style.opacity = "0";
             modalCard.style.transform = "scale(0.9)";
             setTimeout(function() {
                 modal.style.display = "none";
-                document.body.style.overflow = "auto"; // Buka kembali scroll
+                document.body.style.overflow = "auto";
             }, 300);
         }
 

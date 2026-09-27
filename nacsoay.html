@@ -43,13 +43,14 @@
 
     <title>Nacsoay by Rivora - Bold Flavor Explosion!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;500;600;700;800&display=swap');
         
         :root {
             --color-primary: #1A5296; 
             --color-secondary: #F26522; 
             --color-accent: #FFC20E; 
             --color-danger: #E32636; 
+            --color-success: #22C55E; /* Hijau Elegan untuk School Assignment */
             --color-light-bg: #F9F9F9; 
             --color-text-dark: #333333;
             --color-text-light: #6B7280;
@@ -59,8 +60,8 @@
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
         /* =========================================
-           BADGE TESTING KOTAK MERAH DI HEADER
-           ========================================= */
+           BADGE TESTING & SCHOOL ASSIGNMENT DI HEADER
+           ========================================= -->
         .testing-badge-header {
             display: inline-flex;
             align-items: center;
@@ -70,10 +71,10 @@
             font-size: 0.75rem;
             font-weight: 700;
             padding: 4px 10px;
-            border-radius: 6px; /* Bentuk kotak dengan sudut melengkung halus */
+            border-radius: 6px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(227, 38, 54, 0.6); /* Efek glow / partikel cahaya halus */
+            box-shadow: 0 0 10px rgba(227, 38, 54, 0.6);
             animation: pulse-glow 2s infinite;
         }
 
@@ -81,6 +82,33 @@
             0% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0.7); }
             70% { box-shadow: 0 0 0 6px rgba(227, 38, 54, 0); }
             100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
+        }
+
+        /* Teks Hijau School Assignment khusus Desktop */
+        .school-assignment-desktop {
+            color: #4ade80; /* Hijau cerah agar kontras dan tetap estetik di background biru */
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        /* Teks Hijau School Assignment khusus HP (Pindah ke bawah footer) */
+        .school-assignment-mobile {
+            display: none; /* Sembunyikan secara default di desktop */
+            color: var(--color-success);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 10px;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--color-success);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* =========================================
@@ -268,6 +296,10 @@
             .bubble { margin-bottom: 20px; }
             .price-card { max-width: 100%; padding: 30px 20px; }
             .price-real { font-size: 3rem; }
+            
+            /* Tampilkan teks hijau khusus HP di atas footer */
+            .school-assignment-desktop { display: none; }
+            .school-assignment-mobile { display: block; }
         }
     </style>
 </head>
@@ -291,8 +323,10 @@
                     <img src="LR1.png" alt="Logo Rivora">
                     <h1>RIVORA</h1>
                 </div>
-                <!-- Badge Kotak Merah Berpartikel di Sebelah Logo -->
+                <!-- Badge Kotak Merah Testing Mode -->
                 <div class="testing-badge-header">🧪 Testing Mode</div>
+                <!-- Teks Hijau School Assignment (Hanya muncul di Desktop) -->
+                <span class="school-assignment-desktop">this is just a school assignment</span>
             </div>
             <div class="nav-links">
                 <a href="#home">Beranda</a>
@@ -452,6 +486,9 @@
     </div>
     
     <footer>
+        <!-- Teks Hijau School Assignment khusus HP (Nongol di atas copyright) -->
+        <div class="school-assignment-mobile">this is just a school assignment</div>
+        
         <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
         <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
     </footer>

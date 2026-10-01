@@ -65,23 +65,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: #ffffff; color: var(--color-text-dark); overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* =========================================
-           BADGE TESTING & SCHOOL ASSIGNMENT DI HEADER
-           ========================================= */
+        /* BADGE TESTING & SCHOOL ASSIGNMENT DI HEADER */
         .testing-badge-header {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--color-danger);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(227, 38, 54, 0.6);
-            animation: pulse-glow 2s infinite;
+            display: inline-flex; align-items: center; gap: 5px; background: var(--color-danger); color: white;
+            font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px;
+            text-transform: uppercase; box-shadow: 0 0 10px rgba(227, 38, 54, 0.6); animation: pulse-glow 2s infinite;
         }
 
         @keyframes pulse-glow {
@@ -90,77 +78,38 @@
             100% { box-shadow: 0 0 0 0 rgba(227, 38, 54, 0); }
         }
 
-        /* Container Teks Hijau + Tombol Tanda Seru (!) untuk Desktop */
         .school-assignment-desktop {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #4ade80;
-            font-size: 0.8rem;
-            font-weight: 500;
-            font-style: italic;
-            letter-spacing: 0.3px;
+            display: inline-flex; align-items: center; gap: 6px; color: #4ade80;
+            font-size: 0.8rem; font-weight: 500; font-style: italic; letter-spacing: 0.3px;
         }
 
-        /* Tombol Tanda Seru (!) Interaktif */
         .info-btn-trigger {
-            background: #4ade80;
-            color: #111;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 0.7rem;
-            font-weight: 900;
-            font-style: normal;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            background: #4ade80; color: #111; width: 18px; height: 18px; border-radius: 50%;
+            font-size: 0.7rem; font-weight: 900; font-style: normal; display: inline-flex;
+            align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, background 0.2s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .info-btn-trigger:hover {
-            transform: scale(1.2);
-            background: #fff;
-        }
+        .info-btn-trigger:hover { transform: scale(1.2); background: #fff; }
 
-        /* Teks Hijau School Assignment khusus HP (Pindah ke bawah footer) */
         .school-assignment-mobile {
-            display: none; 
-            color: var(--color-success);
-            font-size: 0.85rem;
-            font-weight: 600;
-            font-style: italic;
-            text-align: center;
-            margin-bottom: 10px;
-            background: rgba(34, 197, 94, 0.1);
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 1px dashed var(--color-success);
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            display: none; color: var(--color-success); font-size: 0.85rem; font-weight: 600;
+            font-style: italic; text-align: center; margin-bottom: 10px; background: rgba(34, 197, 94, 0.1);
+            padding: 8px 14px; border-radius: 8px; border: 1px dashed var(--color-success);
+            width: fit-content; margin-left: auto; margin-right: auto; align-items: center; gap: 8px;
+            cursor: pointer; transition: transform 0.2s, background 0.2s;
         }
         .school-assignment-mobile:active { transform: scale(0.95); background: rgba(34, 197, 94, 0.2); }
 
-        /* =========================================
-           MODAL POP-UP SCHOOL ASSIGNMENT
-           ========================================= */
+        /* MODAL POP-UP SCHOOL ASSIGNMENT */
         #school-modal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
-            z-index: 99999; display: none; justify-content: center; align-items: center;
-            padding: 20px; opacity: 0; transition: opacity 0.3s ease;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 99999; display: none;
+            justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease;
         }
         .modal-card {
             background: white; width: 100%; max-width: 380px; border-radius: 20px;
             padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative;
-            transform: scale(0.9); transition: transform 0.3s ease;
-            border-top: 6px solid var(--color-success);
+            transform: scale(0.9); transition: transform 0.3s ease; border-top: 6px solid var(--color-success);
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-header h4 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-primary); }
@@ -170,9 +119,7 @@
             color: #555; transition: background 0.2s;
         }
         .modal-close:hover { background: var(--color-danger); color: white; }
-        
         .modal-body p { font-size: 0.95rem; line-height: 1.6; color: var(--color-text-dark); margin-bottom: 20px; }
-        
         .lang-selector-label { font-size: 0.8rem; font-weight: 700; color: var(--color-text-light); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
         .lang-buttons { display: flex; gap: 8px; }
         .lang-btn {
@@ -181,106 +128,68 @@
         }
         .lang-btn.active { border-color: var(--color-success); background: rgba(34, 197, 94, 0.1); color: var(--color-success); }
 
-        /* =========================================
-           STYLE UNTUK VIDEO JEMPUTAN VIP
-           ========================================= */
+        /* VIDEO JEMPUTAN VIP */
         #vip-transfer {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; z-index: 99999; display: none; 
-            justify-content: center; align-items: center;
-            transition: opacity 1.5s ease-in-out;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000;
+            z-index: 99999; display: none; justify-content: center; align-items: center; transition: opacity 1.5s ease-in-out;
         }
         #vip-transfer-text {
-            position: absolute; color: white; font-family: 'Fredoka One', cursive;
-            font-size: 2rem; letter-spacing: 2px; animation: pulse-text 1.5s infinite alternate;
+            position: absolute; color: white; font-family: 'Fredoka One', cursive; font-size: 2rem;
+            letter-spacing: 2px; animation: pulse-text 1.5s infinite alternate;
         }
-        @keyframes pulse-text {
-            0% { opacity: 0.5; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        #vip-transfer video {
-            width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2;
-        }
+        @keyframes pulse-text { 0% { opacity: 0.5; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        #vip-transfer video { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; }
 
         .content-wrap { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
         
-        /* HEADER */
-        header { 
-            background: var(--color-primary); 
-            padding: 15px 0; 
-            position: fixed; 
-            width: 100%;
-            top: 0; 
-            z-index: 1000; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.4s ease;
-        }
+        header { background: var(--color-primary); padding: 15px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.4s ease; }
         body { padding-top: 80px; } 
         header .content-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
-        
         .brand-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .brand-logo { display: flex; align-items: center; gap: 10px; }
         .brand-logo h1 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-accent); letter-spacing: 1px; }
         .brand-logo img { width: 45px; border-radius: 50%; border: 2px solid white; background: white;}
-
         .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
         .nav-links a { text-decoration: none; font-size: 0.95rem; font-weight: 600; color: white; transition: color 0.3s; }
         .nav-links a:hover { color: var(--color-accent); }
 
-        /* HERO SECTION */
         .hero-section { background: var(--color-secondary); padding: 70px 0; color: white; position: relative; }
         .hero-section .content-wrap { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
-        
         .hero-text { flex: 1; max-width: 550px; z-index: 2; }
         .hero-text h2 { font-family: 'Fredoka One', cursive; font-size: 4rem; color: var(--color-accent); text-shadow: 3px 3px 0px var(--color-danger); margin-bottom: 20px; line-height: 1.1; }
         .hero-text p { font-size: 1.15rem; line-height: 1.6; margin-bottom: 30px; font-weight: 400; }
-        
         .btn-buy { background: var(--color-primary); color: white; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border: 2px solid white; border-radius: 10px; cursor: pointer; transition: transform 0.2s, background 0.3s; }
         .btn-buy:hover { background: #123d73; transform: translateY(-3px); }
-        
         .hero-image { flex: 1; display: flex; justify-content: center; z-index: 2; }
-        @keyframes float-gentle {
-            0% { transform: translateY(0px) rotate(-3deg); }
-            50% { transform: translateY(-12px) rotate(0deg); }
-            100% { transform: translateY(0px) rotate(-3deg); }
-        }
+        @keyframes float-gentle { 0% { transform: translateY(0px) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(0deg); } 100% { transform: translateY(0px) rotate(-3deg); } }
         .hero-image img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 15px 15px 0px rgba(255,194,14,0.4); animation: float-gentle 5s ease-in-out infinite; background: white; padding: 8px;}
 
-        /* FEATURES SECTION */
         .features-section { background: var(--color-accent); padding: 40px 0; }
         .features-section .content-wrap { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap;}
         .feature-badge { flex: 1; min-width: 200px; background: white; color: var(--color-danger); padding: 15px; text-align: center; font-weight: 700; font-size: 1.05rem; border-radius: 12px; border: 3px dashed var(--color-danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* INFO PRODUK */
         .info-section { background: var(--color-light-bg); padding: 80px 0; }
         .section-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-primary); text-align: center; margin-bottom: 50px; }
-        
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .info-card { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-top: 6px solid var(--color-secondary); position: relative; z-index: 2; }
         .info-card.full-width { grid-column: 1 / -1; max-width: 850px; margin: 0 auto; }
-        
         .info-card h4 { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--color-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
         .info-card h4 span { font-size: 1.8rem; }
         .info-card > p { font-size: 1rem; color: var(--color-text-dark); margin-bottom: 20px; line-height: 1.7; }
-        
         .info-card ul { padding-left: 0; list-style: none; }
         .info-card ul li { margin-bottom: 12px; position: relative; padding-left: 30px; font-size: 0.95rem; color: var(--color-text-dark); line-height: 1.6; }
         .info-card ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: white; background: var(--color-secondary); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
 
-        /* KEMASAN SECTION */
         .packaging-section { background: #ffffff; padding: 80px 0; }
         .packaging-flex { display: flex; align-items: center; gap: 40px; margin-bottom: 70px; }
         .packaging-flex.reverse { flex-direction: row-reverse; }
-        
         .packaging-text { flex: 1; }
         .packaging-text h3 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--color-danger); margin-bottom: 20px; line-height: 1.2; }
         .packaging-text p { font-size: 1.05rem; line-height: 1.8; color: var(--color-text-dark); margin-bottom: 15px; }
         .highlight-box { display: inline-block; background: var(--color-accent); color: var(--color-text-dark); font-weight: 700; padding: 8px 20px; border-radius: 8px; margin-top: 10px; border: 2px dashed var(--color-danger); }
-
         .packaging-image { flex: 1; display: flex; justify-content: center; position: relative; z-index: 2;}
         .packaging-image img { width: 100%; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
-        /* Visual 3D Section */
         .sub-section-title { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--color-primary); text-align: center; margin: 20px 0 40px 0; padding-top: 40px; border-top: 2px dashed #ddd; }
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .detail-card { background: var(--color-light-bg); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--color-primary); position: relative; z-index: 2;}
@@ -288,69 +197,33 @@
         .detail-card h5 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--color-secondary); margin-bottom: 10px; }
         .detail-card p { font-size: 0.95rem; color: var(--color-text-light); }
 
-        /* HARGA PROMO SECTION */
         .price-section { background: var(--color-primary); padding: 70px 0; color: white; text-align: center; position: relative; z-index: 2; }
         .price-section h3 { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--color-accent); margin-bottom: 30px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
         .price-card { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 40px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); border: 4px dashed var(--color-secondary); position: relative; }
-        
         .price-ribbon { position: absolute; top: -15px; right: -15px; background: var(--color-danger); color: white; font-weight: bold; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: rotate(5deg); }
-        
         .price-card h4 { font-size: 1.6rem; color: var(--color-primary); margin-bottom: 10px; font-weight: 700; }
         .price-coret { text-decoration: line-through; color: #9CA3AF; font-size: 1.2rem; font-weight: 600; display: block; margin-top: 15px; }
         .price-real { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--color-secondary); margin: 5px 0 15px 0; line-height: 1; }
         .price-card p { font-size: 1rem; color: var(--color-text-dark); margin-bottom: 25px; line-height: 1.6; }
-        
         .btn-buy-large { background: var(--color-danger); color: white; width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 5px 15px rgba(227,38,54,0.3); }
         .btn-buy-large:hover { background: #b81c2a; transform: translateY(-3px); }
 
-        /* KARAKTER NGINTIP (SCROLL) */
-        .chara-float {
-            position: fixed;
-            bottom: -10px;
-            width: 140px; 
-            z-index: 999;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            pointer-events: none; 
-            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.2));
-        }
+        .chara-float { position: fixed; bottom: -10px; width: 140px; z-index: 999; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); pointer-events: none; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.2)); }
         .chara-left { left: 10px; }
         .chara-right { right: 10px; }
         .chara-hide { transform: translateY(150%); }
 
-        /* FOOTER & KARAKTER NGOBROL */
-        .footer-dialog {
-            background: #222;
-            padding: 50px 20px 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 20px;
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-        }
-        .dialog-wrap {
-            display: flex;
-            align-items: flex-end;
-            max-width: 400px;
-        }
+        .footer-dialog { background: #222; padding: 50px 20px 0; display: flex; justify-content: center; align-items: flex-end; gap: 20px; overflow: hidden; position: relative; z-index: 2; }
+        .dialog-wrap { display: flex; align-items: flex-end; max-width: 400px; }
         .dialog-wrap.right { flex-direction: row-reverse; }
         .dialog-wrap img { width: 120px; filter: drop-shadow(0 -5px 10px rgba(0,0,0,0.3)); }
-        
-        .bubble {
-            background: white; color: var(--color-text-dark);
-            padding: 12px 18px; border-radius: 20px;
-            font-weight: 600; font-size: 0.95rem;
-            position: relative; margin-bottom: 60px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .bubble { background: white; color: var(--color-text-dark); padding: 12px 18px; border-radius: 20px; font-weight: 600; font-size: 0.95rem; position: relative; margin-bottom: 60px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .dialog-wrap:not(.right) .bubble { border-bottom-left-radius: 0; margin-left: 10px; }
         .dialog-wrap.right .bubble { border-bottom-right-radius: 0; margin-right: 10px; background: var(--color-accent); }
 
         footer { background: #111; color: #aaa; text-align: center; padding: 25px 20px; font-size: 0.9rem; position: relative; z-index: 2; }
         footer img { width: 35px; vertical-align: middle; margin: 0 10px; opacity: 0.8; background: white; border-radius: 50%; padding: 2px;}
 
-        /* Responsive Design */
         @media (max-width: 900px) {
             .hero-section .content-wrap, .packaging-flex, .packaging-flex.reverse { flex-direction: column; text-align: center; }
             .hero-text { max-width: 100%; }
@@ -366,7 +239,6 @@
             .bubble { margin-bottom: 20px; }
             .price-card { max-width: 100%; padding: 30px 20px; }
             .price-real { font-size: 3rem; }
-            
             .school-assignment-desktop { display: none; }
             .school-assignment-mobile { display: flex; }
         }
@@ -378,12 +250,12 @@
     <div id="school-modal">
         <div class="modal-card" id="modal-card-box">
             <div class="modal-header">
-                <h4 id="modal-title">Tentang Projek</h4>
+                <h4 id="modal-title" data-i18n="modal_title">Tentang Projek</h4>
                 <button class="modal-close" id="btn-close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <p id="modal-desc">Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami.</p>
-                <div class="lang-selector-label">Pilih Bahasa / Language:</div>
+                <p id="modal-desc" data-i18n="modal_desc">Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami.</p>
+                <div class="lang-selector-label" data-i18n="lang_label">Pilih Bahasa / Language:</div>
                 <div class="lang-buttons">
                     <button class="lang-btn active" onclick="changeLang('id')">Indonesian</button>
                     <button class="lang-btn" onclick="changeLang('en')">English</button>
@@ -395,11 +267,10 @@
 
     <!-- OVERLAY VIDEO VIP -->
     <div id="vip-transfer">
-        <div id="vip-transfer-text">Menuju Rivora...</div>
+        <div id="vip-transfer-text" data-i18n="vip_text">Menuju Rivora...</div>
         <video id="transfer-video" muted playsinline></video>
     </div>
 
-    <!-- KARAKTER NGINTIP (KIRI & KANAN) -->
     <img src="K1.png" alt="Anime Kiri" class="chara-float chara-left" id="animeKiri">
     <img src="K2.png" alt="Anime Kanan" class="chara-float chara-right" id="animeKanan">
 
@@ -411,19 +282,17 @@
                     <img src="LR1.png" alt="Logo Rivora">
                     <h1>RIVORA</h1>
                 </div>
-                <!-- Badge Kotak Merah Testing Mode -->
-                <div class="testing-badge-header">🧪 Testing Mode</div>
-                <!-- Teks Hijau + Tombol Tanda Seru (!) Khusus Desktop -->
+                <div class="testing-badge-header" data-i18n="testing_badge">🧪 Testing Mode</div>
                 <span class="school-assignment-desktop">
-                    this is just a school assignment 
+                    <span data-i18n="school_assign">this is just a school assignment</span> 
                     <span class="info-btn-trigger" id="btn-open-modal-desktop">!</span>
                 </span>
             </div>
             <div class="nav-links">
-                <a href="#home">Beranda</a>
-                <a href="#info">Informasi</a>
-                <a href="#kemasan">Kemasan</a>
-                <a href="#harga">Harga Promo</a>
+                <a href="#home" data-i18n="nav_home">Beranda</a>
+                <a href="#info" data-i18n="nav_info">Informasi</a>
+                <a href="#kemasan" data-i18n="nav_kemasan">Kemasan</a>
+                <a href="#harga" data-i18n="nav_harga">Harga Promo</a>
             </div>
         </div>
     </header>
@@ -433,8 +302,8 @@
         <div class="content-wrap">
             <div class="hero-text">
                 <h2>NacSoay</h2>
-                <p>Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!</p>
-                <a href="#harga" style="text-decoration: none;"><button class="btn-buy">Beli Sekarang!</button></a>
+                <p data-i18n="hero_desc">Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!</p>
+                <a href="#harga" style="text-decoration: none;"><button class="btn-buy" data-i18n="btn_buy">Beli Sekarang!</button></a>
             </div>
             <div class="hero-image">
                 <img src="D1.png" alt="Kemasan Nacsoay Snacks"> 
@@ -445,54 +314,54 @@
     <!-- FEATURES BADGE -->
     <section class="features-section">
         <div class="content-wrap">
-            <div class="feature-badge">🔥 Bold Flavor Explosion!</div>
-            <div class="feature-badge">🌿 Mint & Chili Kick!</div>
-            <div class="feature-badge">📦 10 Individual Packs Inside</div>
-            <div class="feature-badge">💼 Grab & Go Easy Carry Handle</div>
+            <div class="feature-badge" data-i18n="feat_1">🔥 Bold Flavor Explosion!</div>
+            <div class="feature-badge" data-i18n="feat_2">🌿 Mint & Chili Kick!</div>
+            <div class="feature-badge" data-i18n="feat_3">📦 10 Individual Packs Inside</div>
+            <div class="feature-badge" data-i18n="feat_4">💼 Grab & Go Easy Carry Handle</div>
         </div>
     </section>
 
     <!-- INFO PRODUK -->
     <section id="info" class="info-section">
         <div class="content-wrap">
-            <h3 class="section-title">Di Balik Kelezatan Nacsoay</h3>
+            <h3 class="section-title" data-i18n="info_title">Di Balik Kelezatan Nacsoay</h3>
             <div class="info-grid">
                 
                 <div class="info-card">
-                    <h4><span>🌽</span> Komposisi Pilihan</h4>
-                    <p>Nacsoay dibuat dari bahan-bahan berkualitas tinggi untuk memastikan rasa yang autentik:</p>
+                    <h4><span>🌽</span> <span data-i18n="info_c1_title">Komposisi Pilihan</span></h4>
+                    <p data-i18n="info_c1_desc">Nacsoay dibuat dari bahan-bahan berkualitas tinggi untuk memastikan rasa yang autentik:</p>
                     <ul>
-                        <li>Tepung Jagung Utuh Berkualitas</li>
-                        <li>Minyak Nabati Premium</li>
-                        <li>Ekstrak Cabai Segar (Chili Kick)</li>
-                        <li>Ekstrak Daun Mint Alami</li>
-                        <li>Garam Laut & Rempah Rahasia</li>
-                        <li>Saus Tomat & Salsa (Sebagai perisa pelengkap)</li>
+                        <li data-i18n="info_c1_l1">Tepung Jagung Utuh Berkualitas</li>
+                        <li data-i18n="info_c1_l2">Minyak Nabati Premium</li>
+                        <li data-i18n="info_c1_l3">Ekstrak Cabai Segar (Chili Kick)</li>
+                        <li data-i18n="info_c1_l4">Ekstrak Daun Mint Alami</li>
+                        <li data-i18n="info_c1_l5">Garam Laut & Rempah Rahasia</li>
+                        <li data-i18n="info_c1_l6">Saus Tomat & Salsa (Sebagai perisa pelengkap)</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
-                    <h4><span>👨‍🍳</span> Cara Mengolah</h4>
-                    <p>Proses higienis berstandar tinggi untuk menghasilkan keripik yang super renyah:</p>
+                    <h4><span>👨‍🍳</span> <span data-i18n="info_c2_title">Cara Mengolah</span></h4>
+                    <p data-i18n="info_c2_desc">Proses higienis berstandar tinggi untuk menghasilkan keripik yang super renyah:</p>
                     <ul>
-                        <li><strong>Nixtamalization:</strong> Biji jagung direndam agar nutrisinya keluar maksimal.</li>
-                        <li><strong>Penggilingan:</strong> Diubah menjadi adonan masa yang lembut.</li>
-                        <li><strong>Pembentukan:</strong> Dicetak membentuk segitiga ikonik Nachos.</li>
-                        <li><strong>Pemanggangan Flash:</strong> Dipanggang sejenak untuk mengunci rasa jagung.</li>
-                        <li><strong>Penggorengan:</strong> Digoreng kilat agar teksturnya sangat renyah.</li>
-                        <li><strong>Seasoning:</strong> Ditaburi bumbu *Mint & Chili* secara merata selagi hangat.</li>
+                        <li data-i18n="info_c2_l1"><strong>Nixtamalization:</strong> Biji jagung direndam agar nutrisinya keluar maksimal.</li>
+                        <li data-i18n="info_c2_l2"><strong>Penggilingan:</strong> Diubah menjadi adonan masa yang lembut.</li>
+                        <li data-i18n="info_c2_l3"><strong>Pembentukan:</strong> Dicetak membentuk segitiga ikonik Nachos.</li>
+                        <li data-i18n="info_c2_l4"><strong>Pemanggangan Flash:</strong> Dipanggang sejenak untuk mengunci rasa jagung.</li>
+                        <li data-i18n="info_c2_l5"><strong>Penggorengan:</strong> Digoreng kilat agar teksturnya sangat renyah.</li>
+                        <li data-i18n="info_c2_l6"><strong>Seasoning:</strong> Ditaburi bumbu *Mint & Chili* secara merata selagi hangat.</li>
                     </ul>
                 </div>
 
                 <div class="info-card full-width">
-                    <h4><span>⚙️</span> Alat Berteknologi Tinggi</h4>
-                    <p>Kami menggunakan mesin industri canggih (Food Grade) agar kualitas tetap terjaga:</p>
+                    <h4><span>⚙️</span> <span data-i18n="info_c3_title">Alat Berteknologi Tinggi</span></h4>
+                    <p data-i18n="info_c3_desc">Kami menggunakan mesin industri canggih (Food Grade) agar kualitas tetap terjaga:</p>
                     <ul>
-                        <li><strong>Industrial Corn Mill:</strong> Penggiling jagung otomatis.</li>
-                        <li><strong>Sheeter & Rotary Cutter:</strong> Mesin pemipih dan pemotong bentuk segitiga presisi.</li>
-                        <li><strong>Continuous Fryer:</strong> Penggorengan konveyor dengan pengatur suhu otomatis.</li>
-                        <li><strong>Rotary Seasoning Drum:</strong> Tabung putar raksasa yang memastikan bumbu merata di setiap keping.</li>
-                        <li><strong>Automated Packaging Machine:</strong> Mesin pengemas ke dalam 10 pack individu berukuran 20g.</li>
+                        <li data-i18n="info_c3_l1"><strong>Industrial Corn Mill:</strong> Penggiling jagung otomatis.</li>
+                        <li data-i18n="info_c3_l2"><strong>Sheeter & Rotary Cutter:</strong> Mesin pemipih dan pemotong bentuk segitiga presisi.</li>
+                        <li data-i18n="info_c3_l3"><strong>Continuous Fryer:</strong> Penggorengan konveyor dengan pengatur suhu otomatis.</li>
+                        <li data-i18n="info_c3_l4"><strong>Rotary Seasoning Drum:</strong> Tabung putar raksasa yang memastikan bumbu merata di setiap keping.</li>
+                        <li data-i18n="info_c3_l5"><strong>Automated Packaging Machine:</strong> Mesin pengemas ke dalam 10 pack individu berukuran 20g.</li>
                     </ul>
                 </div>
 
@@ -506,10 +375,10 @@
             
             <div class="packaging-flex">
                 <div class="packaging-text">
-                    <h3>Desain Kemasan Pintar! (Outer Box)</h3>
-                    <p>Kemasan Nacsoay dari <strong>Rivora</strong> tidak hanya melindungi keripik agar tetap renyah, tapi juga dirancang sangat fungsional. Dilengkapi dengan <em>Grab & Go Easy Carry Handle</em>, Anda bisa membawanya dengan mudah kemana saja!</p>
-                    <p>Desain luar ini (Outer Box) berfungsi sebagai pelindung utama dan wadah yang sempurna untuk dibagikan saat kumpul bersama teman-teman.</p>
-                    <div class="highlight-box">Berat Bersih: 200g (Berisi 10 Packs)</div>
+                    <h3 data-i18n="pack_title1">Desain Kemasan Pintar! (Outer Box)</h3>
+                    <p data-i18n="pack_desc1a">Kemasan Nacsoay dari <strong>Rivora</strong> tidak hanya melindungi keripik agar tetap renyah, tapi juga dirancang sangat fungsional. Dilengkapi dengan <em>Grab & Go Easy Carry Handle</em>, Anda bisa membawanya dengan mudah kemana saja!</p>
+                    <p data-i18n="pack_desc1b">Desain luar ini (Outer Box) berfungsi sebagai pelindung utama dan wadah yang sempurna untuk dibagikan saat kumpul bersama teman-teman.</p>
+                    <div class="highlight-box" data-i18n="pack_high1">Berat Bersih: 200g (Berisi 10 Packs)</div>
                 </div>
                 <div class="packaging-image">
                     <img src="DK1.png" alt="Layout Desain Kemasan Box Nacsoay">
@@ -518,29 +387,29 @@
 
             <div class="packaging-flex reverse">
                 <div class="packaging-text">
-                    <h3>Kemasan Praktis (Inner Sachet)</h3>
-                    <p>Di dalam Outer Box, Anda akan menemukan 10 kemasan sachet individual. Desain sachet ini menggunakan material foil premium yang menjamin keripik tetap higienis dan tidak mudah melempem.</p>
-                    <p>Porsinya yang pas membuatnya sangat cocok untuk dinikmati sendiri (single-serving) atau dibawa sebagai camilan ringan saat bepergian.</p>
-                    <div class="highlight-box">Berat Bersih: 20g per Sachet</div>
+                    <h3 data-i18n="pack_title2">Kemasan Praktis (Inner Sachet)</h3>
+                    <p data-i18n="pack_desc2a">Di dalam Outer Box, Anda akan menemukan 10 kemasan sachet individual. Desain sachet ini menggunakan material foil premium yang menjamin keripik tetap higienis dan tidak mudah melempem.</p>
+                    <p data-i18n="pack_desc2b">Porsinya yang pas membuatnya sangat cocok untuk dinikmati sendiri (single-serving) atau dibawa sebagai camilan ringan saat bepergian.</p>
+                    <div class="highlight-box" data-i18n="pack_high2">Berat Bersih: 20g per Sachet</div>
                 </div>
                 <div class="packaging-image">
                     <img src="DK2.png" alt="Layout Desain Kemasan Sachet Nacsoay">
                 </div>
             </div>
 
-            <h3 class="sub-section-title">Simulasi Visual 3D</h3>
+            <h3 class="sub-section-title" data-i18n="pack_sub">Simulasi Visual 3D</h3>
             
             <div class="detail-grid">
                 <div class="detail-card">
                     <img src="D3D1.png" alt="Visual 3D Box">
-                    <h5>Visual 3D Outer Box</h5>
-                    <p>Tampilan bentuk nyata box Premium 200g saat dirakit dan siap pajang.</p>
+                    <h5 data-i18n="3d_t1">Visual 3D Outer Box</h5>
+                    <p data-i18n="3d_d1">Tampilan bentuk nyata box Premium 200g saat dirakit dan siap pajang.</p>
                 </div>
                 
                 <div class="detail-card">
                     <img src="D3D2.png" alt="Visual 3D Sachet">
-                    <h5>Visual 3D Inner Sachet</h5>
-                    <p>Tampilan bentuk nyata sachet foil 20g yang higienis dan praktis.</p>
+                    <h5 data-i18n="3d_t2">Visual 3D Inner Sachet</h5>
+                    <p data-i18n="3d_d2">Tampilan bentuk nyata sachet foil 20g yang higienis dan praktis.</p>
                 </div>
             </div>
 
@@ -550,16 +419,16 @@
     <!-- HARGA PROMO SECTION -->
     <section id="harga" class="price-section">
         <div class="content-wrap">
-            <h3>Promo Spesial Hari Ini!</h3>
+            <h3 data-i18n="price_title">Promo Spesial Hari Ini!</h3>
             <div class="price-card">
-                <div class="price-ribbon">⭐ BEST SELLER</div>
-                <h4>Paket Box NacSoay</h4>
-                <p>1 Box Eksklusif (Isi 10 Sachet x 20g)</p>
+                <div class="price-ribbon" data-i18n="price_ribbon">⭐ BEST SELLER</div>
+                <h4 data-i18n="price_p_title">Paket Box NacSoay</h4>
+                <p data-i18n="price_p_desc">1 Box Eksklusif (Isi 10 Sachet x 20g)</p>
                 
                 <span class="price-coret">Rp 45.000</span>
                 <div class="price-real">Rp 35.000</div>
                 
-                <button class="btn-buy-large">Amankan Promonya Sekarang!</button>
+                <button class="btn-buy-large" data-i18n="price_btn">Amankan Promonya Sekarang!</button>
             </div>
         </div>
     </section>
@@ -568,55 +437,248 @@
     <div class="footer-dialog">
         <div class="dialog-wrap">
             <img src="K3.png" alt="Anime Bawah Kiri">
-            <div class="bubble">Wah, harganya lagi promo tuh! Harus cobain nih!</div>
+            <div class="bubble" data-i18n="bubble_l">Wah, harganya lagi promo tuh! Harus cobain nih!</div>
         </div>
         <div class="dialog-wrap right">
             <img src="K4.png" alt="Anime Bawah Kanan">
-            <div class="bubble">Pasti dong! NacSoay emang the best buat nyemil!</div>
+            <div class="bubble" data-i18n="bubble_r">Pasti dong! NacSoay emang the best buat nyemil!</div>
         </div>
     </div>
     
     <footer>
-        <!-- Teks Hijau + Tanda Seru (!) Khusus HP di atas copyright -->
         <div class="school-assignment-mobile" id="btn-open-modal-mobile">
-            <span>this is just a school assignment</span>
+            <span data-i18n="school_assign_mob">this is just a school assignment</span>
             <span class="info-btn-trigger">!</span>
         </div>
-        
-        <p>&copy; 2026 RIVORA <img src="LR1.png" alt="Logo"> All Rights Reserved.</p>
-        <p>Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
+        <p><span data-i18n="foot_copy">&copy; 2026 RIVORA</span> <img src="LR1.png" alt="Logo"> <span data-i18n="foot_rights">All Rights Reserved.</span></p>
+        <p data-i18n="foot_desc">Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia.</p>
     </footer>
 
     <!-- SCRIPT JAVASCRIPT -->
     <script>
-        // 1. KAMUS MULTI-BAHASA UNTUK POP-UP
+        // KAMUS MULTI-BAHASA LENGKAP
         const translations = {
             id: {
-                title: "Tentang Projek",
-                desc: "Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami."
+                modal_title: "Tentang Projek",
+                modal_desc: "Website ini merupakan projek uji coba bertemakan produk unik yang dibuat oleh kelompok kami.",
+                lang_label: "Pilih Bahasa / Language:",
+                vip_text: "Menuju Rivora...",
+                testing_badge: "🧪 Testing Mode",
+                school_assign: "this is just a school assignment",
+                nav_home: "Beranda",
+                nav_info: "Informasi",
+                nav_kemasan: "Kemasan",
+                nav_harga: "Harga Promo",
+                hero_desc: "Rasakan <strong>Bold Flavor Explosion!</strong> dalam setiap gigitan renyah keripik jagung kami. Sensasi pedas dan segar dari <strong>Mint & Chili Kick</strong> siap menemanimu kapan saja!",
+                btn_buy: "Beli Sekarang!",
+                feat_1: "🔥 Bold Flavor Explosion!",
+                feat_2: "🌿 Mint & Chili Kick!",
+                feat_3: "📦 10 Individual Packs Inside",
+                feat_4: "💼 Grab & Go Easy Carry Handle",
+                info_title: "Di Balik Kelezatan Nacsoay",
+                info_c1_title: "Komposisi Pilihan",
+                info_c1_desc: "Nacsoay dibuat dari bahan-bahan berkualitas tinggi untuk memastikan rasa yang autentik:",
+                info_c1_l1: "Tepung Jagung Utuh Berkualitas",
+                info_c1_l2: "Minyak Nabati Premium",
+                info_c1_l3: "Ekstrak Cabai Segar (Chili Kick)",
+                info_c1_l4: "Ekstrak Daun Mint Alami",
+                info_c1_l5: "Garam Laut & Rempah Rahasia",
+                info_c1_l6: "Saus Tomat & Salsa (Sebagai perisa pelengkap)",
+                info_c2_title: "Cara Mengolah",
+                info_c2_desc: "Proses higienis berstandar tinggi untuk menghasilkan keripik yang super renyah:",
+                info_c2_l1: "<strong>Nixtamalization:</strong> Biji jagung direndam agar nutrisinya keluar maksimal.",
+                info_c2_l2: "<strong>Penggilingan:</strong> Diubah menjadi adonan masa yang lembut.",
+                info_c2_l3: "<strong>Pembentukan:</strong> Dicetak membentuk segitiga ikonik Nachos.",
+                info_c2_l4: "<strong>Pemanggangan Flash:</strong> Dipanggang sejenak untuk mengunci rasa jagung.",
+                info_c2_l5: "<strong>Penggorengan:</strong> Digoreng kilat agar teksturnya sangat renyah.",
+                info_c2_l6: "<strong>Seasoning:</strong> Ditaburi bumbu *Mint & Chili* secara merata selagi hangat.",
+                info_c3_title: "Alat Berteknologi Tinggi",
+                info_c3_desc: "Kami menggunakan mesin industri canggih (Food Grade) agar kualitas tetap terjaga:",
+                info_c3_l1: "<strong>Industrial Corn Mill:</strong> Penggiling jagung otomatis.",
+                info_c3_l2: "<strong>Sheeter & Rotary Cutter:</strong> Mesin pemipih dan pemotong bentuk segitiga presisi.",
+                info_c3_l3: "<strong>Continuous Fryer:</strong> Penggorengan konveyor dengan pengatur suhu otomatis.",
+                info_c3_l4: "<strong>Rotary Seasoning Drum:</strong> Tabung putar raksasa yang memastikan bumbu merata di setiap keping.",
+                info_c3_l5: "<strong>Automated Packaging Machine:</strong> Mesin pengemas ke dalam 10 pack individu berukuran 20g.",
+                pack_title1: "Desain Kemasan Pintar! (Outer Box)",
+                pack_desc1a: "Kemasan Nacsoay dari <strong>Rivora</strong> tidak hanya melindungi keripik agar tetap renyah, tapi juga dirancang sangat fungsional. Dilengkapi dengan <em>Grab & Go Easy Carry Handle</em>, Anda bisa membawanya dengan mudah kemana saja!",
+                pack_desc1b: "Desain luar ini (Outer Box) berfungsi sebagai pelindung utama dan wadah yang sempurna untuk dibagikan saat kumpul bersama teman-teman.",
+                pack_high1: "Berat Bersih: 200g (Berisi 10 Packs)",
+                pack_title2: "Kemasan Praktis (Inner Sachet)",
+                pack_desc2a: "Di dalam Outer Box, Anda akan menemukan 10 kemasan sachet individual. Desain sachet ini menggunakan material foil premium yang menjamin keripik tetap higienis dan tidak mudah melempem.",
+                pack_desc2b: "Porsinya yang pas membuatnya sangat cocok untuk dinikmati sendiri (single-serving) atau dibawa sebagai camilan ringan saat bepergian.",
+                pack_high2: "Berat Bersih: 20g per Sachet",
+                pack_sub: "Simulasi Visual 3D",
+                "3d_t1": "Visual 3D Outer Box",
+                "3d_d1": "Tampilan bentuk nyata box Premium 200g saat dirakit dan siap pajang.",
+                "3d_t2": "Visual 3D Inner Sachet",
+                "3d_d2": "Tampilan bentuk nyata sachet foil 20g yang higienis dan praktis.",
+                price_title: "Promo Spesial Hari Ini!",
+                price_ribbon: "⭐ BEST SELLER",
+                price_p_title: "Paket Box NacSoay",
+                price_p_desc: "1 Box Eksklusif (Isi 10 Sachet x 20g)",
+                price_btn: "Amankan Promonya Sekarang!",
+                bubble_l: "Wah, harganya lagi promo tuh! Harus cobain nih!",
+                bubble_r: "Pasti dong! NacSoay emang the best buat nyemil!",
+                school_assign_mob: "this is just a school assignment",
+                foot_copy: "&copy; 2026 RIVORA",
+                foot_rights: "All Rights Reserved.",
+                foot_desc: "Diproduksi dengan penuh inovasi untuk pecinta snack Indonesia."
             },
             en: {
-                title: "About Project",
-                desc: "This website is a trial project themed around a unique product created by our group."
+                modal_title: "About Project",
+                modal_desc: "This website is a trial project themed around a unique product created by our group.",
+                lang_label: "Select Language:",
+                vip_text: "Heading to Rivora...",
+                testing_badge: "🧪 Testing Mode",
+                school_assign: "this is just a school assignment",
+                nav_home: "Home",
+                nav_info: "Information",
+                nav_kemasan: "Packaging",
+                nav_harga: "Promo Price",
+                hero_desc: "Experience a <strong>Bold Flavor Explosion!</strong> in every crunchy bite of our corn chips. The spicy and fresh sensation of the <strong>Mint & Chili Kick</strong> is ready to accompany you anytime!",
+                btn_buy: "Buy Now!",
+                feat_1: "🔥 Bold Flavor Explosion!",
+                feat_2: "🌿 Mint & Chili Kick!",
+                feat_3: "📦 10 Individual Packs Inside",
+                feat_4: "💼 Grab & Go Easy Carry Handle",
+                info_title: "Behind the Taste of Nacsoay",
+                info_c1_title: "Selected Ingredients",
+                info_c1_desc: "Nacsoay is made from high-quality ingredients to ensure an authentic taste:",
+                info_c1_l1: "High-Quality Whole Corn Flour",
+                info_c1_l2: "Premium Vegetable Oil",
+                info_c1_l3: "Fresh Chili Extract (Chili Kick)",
+                info_c1_l4: "Natural Mint Leaf Extract",
+                info_c1_l5: "Sea Salt & Secret Spices",
+                info_c1_l6: "Tomato Sauce & Salsa (As complementary flavors)",
+                info_c2_title: "Processing Method",
+                info_c2_desc: "High-standard hygienic process to produce super crunchy chips:",
+                info_c2_l1: "<strong>Nixtamalization:</strong> Corn kernels are soaked to maximize nutrient release.",
+                info_c2_l2: "<strong>Grinding:</strong> Turned into soft masa dough.",
+                info_c2_l3: "<strong>Shaping:</strong> Molded into the iconic Nacho triangle shape.",
+                info_c2_l4: "<strong>Flash Baking:</strong> Briefly baked to lock in the corn flavor.",
+                info_c2_l5: "<strong>Frying:</strong> Flash-fried for an ultra-crunchy texture.",
+                info_c2_l6: "<strong>Seasoning:</strong> Evenly dusted with *Mint & Chili* seasoning while warm.",
+                info_c3_title: "High-Tech Equipment",
+                info_c3_desc: "We use advanced industrial machines (Food Grade) to maintain quality:",
+                info_c3_l1: "<strong>Industrial Corn Mill:</strong> Automated corn grinder.",
+                info_c3_l2: "<strong>Sheeter & Rotary Cutter:</strong> Precision flattener and triangle cutter.",
+                info_c3_l3: "<strong>Continuous Fryer:</strong> Conveyor fryer with automatic temperature control.",
+                info_c3_l4: "<strong>Rotary Seasoning Drum:</strong> Giant spinning drum ensuring even seasoning.",
+                info_c3_l5: "<strong>Automated Packaging Machine:</strong> Packs into 10 individual 20g sachets.",
+                pack_title1: "Smart Packaging Design! (Outer Box)",
+                pack_desc1a: "Nacsoay packaging by <strong>Rivora</strong> not only protects the chips to keep them crunchy, but is also designed to be highly functional. Equipped with a <em>Grab & Go Easy Carry Handle</em>, you can take it anywhere with ease!",
+                pack_desc1b: "This outer design serves as the main protector and the perfect container for sharing during gatherings with friends.",
+                pack_high1: "Net Weight: 200g (Contains 10 Packs)",
+                pack_title2: "Practical Packaging (Inner Sachet)",
+                pack_desc2a: "Inside the Outer Box, you will find 10 individual sachet packs. This sachet design uses premium foil material that guarantees the chips remain hygienic and don't go stale.",
+                pack_desc2b: "The perfect portion makes it highly suitable to enjoy alone (single-serving) or brought as a light snack while traveling.",
+                pack_high2: "Net Weight: 20g per Sachet",
+                pack_sub: "3D Visual Simulation",
+                "3d_t1": "Outer Box 3D Visual",
+                "3d_d1": "Real-life look of the 200g Premium box when assembled and ready for display.",
+                "3d_t2": "Inner Sachet 3D Visual",
+                "3d_d2": "Real-life look of the 20g foil sachet that is hygienic and practical.",
+                price_title: "Today's Special Promo!",
+                price_ribbon: "⭐ BEST SELLER",
+                price_p_title: "NacSoay Box Package",
+                price_p_desc: "1 Exclusive Box (10 Sachets x 20g)",
+                price_btn: "Secure the Promo Now!",
+                bubble_l: "Wow, the price is on promo! Gotta try this!",
+                bubble_r: "Absolutely! NacSoay is the best for snacking!",
+                school_assign_mob: "this is just a school assignment",
+                foot_copy: "&copy; 2026 RIVORA",
+                foot_rights: "All Rights Reserved.",
+                foot_desc: "Produced with full innovation for Indonesian snack lovers."
             },
             jp: {
-                title: "プロジェクトについて",
-                desc: "このウェブサイトは、私たちのグループによって作成されたユニークな商品をテーマにしたテストプロジェクトです。"
+                modal_title: "プロジェクトについて",
+                modal_desc: "このウェブサイトは、私たちのグループによって作成されたユニークな商品をテーマにしたテストプロジェクトです。",
+                lang_label: "言語を選択:",
+                vip_text: "リボラへ向かっています...",
+                testing_badge: "🧪 テストモード",
+                school_assign: "これは単なる学校の課題です",
+                nav_home: "ホーム",
+                nav_info: "情報",
+                nav_kemasan: "パッケージ",
+                nav_harga: "プロモ価格",
+                hero_desc: "コーンチップスのサクサクした一口ごとに<strong>大胆な風味の爆発</strong>を体験してください！<strong>ミント＆チリキック</strong>のピリッとした爽やかな感覚がいつでもあなたのお供をします！",
+                btn_buy: "今すぐ購入！",
+                feat_1: "🔥 大胆な風味の爆発！",
+                feat_2: "🌿 ミント＆チリキック！",
+                feat_3: "📦 10個の個別パック入り",
+                feat_4: "💼 持ち運びに便利なハンドル",
+                info_title: "ナクソアイの味の秘密",
+                info_c1_title: "厳選された原材料",
+                info_c1_desc: "ナクソアイは本物の味を保証するために高品質な原材料で作られています:",
+                info_c1_l1: "高品質の全粒トウモロコシ粉",
+                info_c1_l2: "プレミアム植物油",
+                info_c1_l3: "新鮮なチリエキス（チリキック）",
+                info_c1_l4: "天然ミント葉エキス",
+                info_c1_l5: "海塩＆秘密のスパイス",
+                info_c1_l6: "トマトソース＆サルサ（補完的な風味として）",
+                info_c2_title: "加工方法",
+                info_c2_desc: "超サクサクのチップスを製造するための高水準の衛生プロセス:",
+                info_c2_l1: "<strong>ニクスタマリゼーション:</strong> 栄養素の放出を最大化するためにトウモロコシの粒を浸します。",
+                info_c2_l2: "<strong>粉砕:</strong> 柔らかいマサ生地にします。",
+                info_c2_l3: "<strong>成形:</strong> 象徴的なナチョスの三角形に成形します。",
+                info_c2_l4: "<strong>フラッシュベイキング:</strong> トウモロコシの風味を閉じ込めるために短時間焼きます。",
+                info_c2_l5: "<strong>揚げる:</strong> 超サクサクの食感にするためにサッと揚げます。",
+                info_c2_l6: "<strong>味付け:</strong> 温かいうちに*ミント＆チリ*の調味料を均等にまぶします。",
+                info_c3_title: "ハイテク機器",
+                info_c3_desc: "品質を維持するために高度な産業用機械（食品グレード）を使用しています:",
+                info_c3_l1: "<strong>産業用コーンミル:</strong> 自動トウモロコシ粉砕機。",
+                info_c3_l2: "<strong>シーター＆ロータリーカッター:</strong> 精密な平坦化および三角形カッター。",
+                info_c3_l3: "<strong>連続フライヤー:</strong> 自動温度制御付きのコンベヤーフライヤー。",
+                info_c3_l4: "<strong>ロータリー調味料ドラム:</strong> 均等な味付けを保証する巨大な回転ドラム。",
+                info_c3_l5: "<strong>自動包装機:</strong> 20gの個別サシェを10個にパックします。",
+                pack_title1: "スマートなパッケージデザイン！ (アウターボックス)",
+                pack_desc1a: "<strong>リボラ</strong>のナクソアイのパッケージは、チップスをサクサクに保つだけでなく、非常に機能的に設計されています。<em>持ち運びに便利なハンドル</em>が付いており、どこへでも簡単に持ち運べます！",
+                pack_desc1b: "この外側のデザインは主な保護材として機能し、友達との集まりでシェアするのに最適な容器です。",
+                pack_high1: "正味重量: 200g (10パック入り)",
+                pack_title2: "実用的なパッケージ (インナーサシェ)",
+                pack_desc2a: "アウターボックスの中には、10個の個別サシェパックが入っています。このサシェデザインは、チップスが衛生的であり、湿気ないことを保証するプレミアムホイル素材を使用しています。",
+                pack_desc2b: "完璧なポーションは、一人で楽しむ（1人前）のにも、旅行中の軽いスナックとして持っていくのにも非常に適しています。",
+                pack_high2: "正味重量: 各サシェ 20g",
+                pack_sub: "3Dビジュアルシミュレーション",
+                "3d_t1": "アウターボックス 3Dビジュアル",
+                "3d_d1": "組み立てられてディスプレイの準備ができた200gプレミアムボックスの実際の外観。",
+                "3d_t2": "インナーサシェ 3Dビジュアル",
+                "3d_d2": "衛生的で実用的な20gのホイルサシェの実際の外観。",
+                price_title: "本日の特別プロモ！",
+                price_ribbon: "⭐ ベストセラー",
+                price_p_title: "ナクソアイ ボックスパッケージ",
+                price_p_desc: "1 専用ボックス (10 サシェ x 20g)",
+                price_btn: "今すぐプロモを確保する！",
+                bubble_l: "うわー、価格がプロモ中だ！ これ試さなきゃ！",
+                bubble_r: "もちろんだよ！ ナクソアイはスナックに最高だよ！",
+                school_assign_mob: "これは単なる学校の課題です",
+                foot_copy: "&copy; 2026 リボラ",
+                foot_rights: "全著作権所有。",
+                foot_desc: "インドネシアのスナック愛好家のために完全な革新をもって生産されました。"
             }
         };
 
+        // FUNGSI GANTI BAHASA
         function changeLang(lang) {
-            document.getElementById("modal-title").innerText = translations[lang].title;
-            document.getElementById("modal-desc").innerText = translations[lang].desc;
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
             
             var buttons = document.querySelectorAll(".lang-btn");
             buttons.forEach(function(btn) {
                 btn.classList.remove("active");
             });
-            event.target.classList.add("active");
+            
+            if (event && event.target) {
+                event.target.classList.add("active");
+            }
         }
 
-        // 2. LOGIKA BUKA-TUTUP MODAL POP-UP
+        // LOGIKA BUKA-TUTUP MODAL POP-UP
         const modal = document.getElementById("school-modal");
         const modalCard = document.getElementById("modal-card-box");
         const btnOpenDesktop = document.getElementById("btn-open-modal-desktop");
@@ -653,7 +715,7 @@
             });
         }
 
-        // 3. LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
+        // LOGIKA SMART SCROLL (HEADER & KARAKTER NGINTIP)
         var lastScrollTop = 0;
         var header = document.getElementById("main-header");
         var animeKiri = document.getElementById("animeKiri");
@@ -674,7 +736,7 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // 4. LOGIKA JEMPUTAN VIP
+        // LOGIKA JEMPUTAN VIP
         document.addEventListener("DOMContentLoaded", function() {
             var vipOverlay = document.getElementById("vip-transfer");
             var transferVideo = document.getElementById("transfer-video");
@@ -688,11 +750,9 @@
 
             if (sumberDariLink === 'wa' || referrer.indexOf('whatsapp') !== -1 || referrer.indexOf('wa.me') !== -1) {
                 namaFileVideo = "buatkan_video_intro_animasi_be.mp4"; 
-                if (transferText) transferText.innerText = "Menjemput dari WhatsApp...";
             } 
             else if (sumberDariLink === 'youtube' || referrer.indexOf('youtube.com') !== -1 || referrer.indexOf('youtu.be') !== -1) {
                 namaFileVideo = "Dari YouTube menuju Rivora.mp4";
-                if (transferText) transferText.innerText = "Menjemput dari YouTube...";
             }
 
             if (namaFileVideo !== "" && vipOverlay && transferVideo) {
